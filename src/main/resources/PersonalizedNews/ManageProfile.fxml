@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ManageProfile">
+   <children>
+      <Pane layoutY="1.0" prefHeight="71.0" prefWidth="602.0">
+         <children>
+            <Text layoutX="278.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manage Profile" />
+         </children>
+      </Pane>
+      <Text layoutX="62.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email: " />
+      <TextField fx:id="email" layoutX="112.0" layoutY="79.0" />
+      <Button layoutX="313.0" layoutY="79.0" mnemonicParsing="false" onAction="#onClickCheck" text="Check" />
+      <Separator layoutX="35.0" layoutY="117.0" prefHeight="8.0" prefWidth="526.0" />
+      <Text layoutX="62.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:" />
+      <Text layoutX="62.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:" />
+      <Text layoutX="62.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Password:" />
+      <Text layoutX="62.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm New Password:" />
+      <Text layoutX="62.0" layoutY="301.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences:" />
+      <Text layoutX="338.0" layoutY="156.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DOB:" />
+      <Text layoutX="340.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" />
+      <RadioButton fx:id="radioFemale" layoutX="402.0" layoutY="183.0" mnemonicParsing="false" text="Female" />
+      <RadioButton fx:id="radioMale" layoutX="501.0" layoutY="183.0" mnemonicParsing="false" text="Male" />
+      <TextField fx:id="fName" layoutX="142.0" layoutY="139.0" />
+      <TextField fx:id="lName" layoutX="134.0" layoutY="179.0" />
+      <PasswordField fx:id="newPassword" layoutX="152.0" layoutY="221.0" />
+      <PasswordField fx:id="confirmNewPassword" layoutX="209.0" layoutY="248.0" />
+      <TextField fx:id="viewNewPassword" layoutX="174.0" layoutY="222.0" />
+      <TextField fx:id="viewNewConfirmPassword" layoutX="227.0" layoutY="248.0" />
+      <CheckBox fx:id="checkAI" layoutX="138.0" layoutY="288.0" mnemonicParsing="false" text="AI" />
+      <CheckBox fx:id="checkTech" layoutX="225.0" layoutY="288.0" mnemonicParsing="false" text="Technology" />
+      <CheckBox fx:id="checkHealth" layoutX="315.0" layoutY="288.0" mnemonicParsing="false" text="Health" />
+      <CheckBox fx:id="checkSports" layoutX="189.0" layoutY="322.0" mnemonicParsing="false" text="Sports" />
+      <CheckBox fx:id="checkTravel" layoutX="287.0" layoutY="322.0" mnemonicParsing="false" text="Travel" />
+      <DatePicker fx:id="dOB" layoutX="375.0" layoutY="139.0" />
+      <Button layoutX="148.0" layoutY="361.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Submit" />
+      <Button layoutX="351.0" layoutY="361.0" mnemonicParsing="false" onAction="#onClickCancel" text="Cancel" />
+      <Button layoutX="351.0" layoutY="222.0" mnemonicParsing="false" onAction="#onViewPassword" text="View" />
+      <Button layoutX="393.0" layoutY="240.0" mnemonicParsing="false" onAction="#onViewConfirm" text="View" />
+   </children>
+</AnchorPane>

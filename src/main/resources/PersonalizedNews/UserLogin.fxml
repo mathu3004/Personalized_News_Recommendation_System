@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserLogin">
+   <children>
+      <Pane layoutY="1.0" prefHeight="126.0" prefWidth="603.0">
+         <children>
+            <Text layoutX="290.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login  " />
+         </children>
+      </Pane>
+      <Text layoutX="73.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+      <Text layoutX="73.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
+      <TextField fx:id="email" layoutX="153.0" layoutY="143.0" />
+      <PasswordField fx:id="password" layoutX="154.0" layoutY="188.0" />
+      <TextField fx:id="viewPassword" layoutX="178.0" layoutY="188.0" />
+      <Button layoutX="363.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
+      <Button layoutX="250.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Submit" />
+   </children>
+</AnchorPane>
