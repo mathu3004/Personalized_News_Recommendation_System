@@ -10,12 +10,12 @@ import javafx.stage.Stage;
 public class NewsApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ManageProfile.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
         Scene scene = new Scene(root, 980,700);
         // Load the application icon
         Image icon = new Image("/NEWSICON.png");
         stage.getIcons().add(icon);
-        stage.setTitle("Welcome to News Application");
+        stage.setTitle("Welcome to Mark's News");
         stage.setScene(scene);
         stage.show();
     }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserPortal">
+   <children>
+      <BorderPane prefHeight="400.0" prefWidth="600.0">
+         <top>
+            <Pane prefHeight="42.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Text layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark News - Welcome to News Portal" wrappingWidth="438.3203125">
+                     <font>
+                        <Font name="Times New Roman Bold" size="24.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+         </top>
+         <left>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="31.0" prefWidth="104.0" text="Dashboard">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#OnClickView" text="View Articles" />
+                  <Button mnemonicParsing="false" onAction="#onClickRate" text="Rate Articles" />
+                  <Button mnemonicParsing="false" onAction="#onClickManage" text="Manage Profile" />
+                  <Button mnemonicParsing="false" onAction="#onClickLogout" text="Logout" />
+                  <Button mnemonicParsing="false" onAction="#onClickExit" text="Exit" />
+               </children>
+            </VBox>
+         </left>
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
