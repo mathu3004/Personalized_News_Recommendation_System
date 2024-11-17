@@ -35,6 +35,14 @@ public class ManageProfile {
     public CheckBox checkTravel;
     @FXML
     public DatePicker dOB;
+    @FXML
+    public CheckBox checkEntertainment;
+    @FXML
+    public CheckBox checkPolitics;
+    @FXML
+    public CheckBox checkBusiness;
+    @FXML
+    public TextField username;
 
     @FXML
     public void onClickCheck(ActionEvent event) {

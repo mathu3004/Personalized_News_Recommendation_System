@@ -8,15 +8,18 @@
    <children>
       <Pane layoutY="1.0" prefHeight="126.0" prefWidth="603.0">
          <children>
-            <Text layoutX="290.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login  " />
+            <Text layoutX="267.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login  ">
+               <font>
+                  <Font name="Times New Roman" size="24.0" />
+               </font></Text>
          </children>
       </Pane>
-      <Text layoutX="73.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Email:" />
+      <Text layoutX="73.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:" />
       <Text layoutX="73.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
-      <TextField fx:id="email" layoutX="153.0" layoutY="143.0" />
+      <TextField fx:id="email" layoutX="153.0" layoutY="143.0" promptText="joe123@gmail.com" />
       <PasswordField fx:id="password" layoutX="154.0" layoutY="188.0" />
-      <TextField fx:id="viewPassword" layoutX="178.0" layoutY="188.0" />
-      <Button layoutX="363.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
-      <Button layoutX="250.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Submit" />
+      <TextField fx:id="viewPassword" layoutX="154.0" layoutY="188.0" promptText="Joe123@" />
+      <Button layoutX="320.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
+      <Button layoutX="267.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Submit" />
    </children>
 </AnchorPane>

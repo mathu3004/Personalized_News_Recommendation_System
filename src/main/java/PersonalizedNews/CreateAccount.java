@@ -40,6 +40,14 @@ public class CreateAccount {
     public CheckBox checkHealth;
     @FXML
     public CheckBox checkTravel;
+    @FXML
+    public TextField username;
+    @FXML
+    public CheckBox checkBusiness;
+    @FXML
+    public CheckBox checkPolitics;
+    @FXML
+    public CheckBox checkEntertainment;
     private ToggleGroup genderGroup;
 
     // Initialize method to set preferences
@@ -63,7 +71,7 @@ public class CreateAccount {
     @FXML
     public void onSubmit(ActionEvent event) {
         if (!validateFirstName() || !validateLastName() || !validateEmail() || !validatePassword() ||
-                !validateCheckboxSelection() || !validateDateOfBirth() || !validateGenderSelection()) {
+                !validateCheckboxSelection() || !validateDateOfBirth() || !validateGenderSelection() || !validateUsername()) {
             return; // Exit if any validation fails
         }
         // Additional account creation logic goes here
@@ -113,10 +121,27 @@ public class CreateAccount {
 
     // Method to validate password and confirm password
     private boolean validatePassword() {
-        if (password.getText().equals(confirmPassword.getText())) {
+        String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        if (password.getText().matches(passwordPattern)) {
+            if (password.getText().equals(confirmPassword.getText())) {
+                return true;
+            } else {
+                showAlert("Passwords do not match.", Alert.AlertType.ERROR);
+                return false;
+            }
+        } else {
+            showAlert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.", Alert.AlertType.ERROR);
+            return false;
+        }
+    }
+
+    // Method to validate username
+    private boolean validateUsername() {
+        String usernamePattern = "^[a-zA-Z0-9]+$";
+        if (username.getText().matches(usernamePattern)) {
             return true;
         } else {
-            showAlert("Passwords do not match.", Alert.AlertType.ERROR);
+            showAlert("Username must contain only alphanumeric characters (letters and numbers).", Alert.AlertType.ERROR);
             return false;
         }
     }
@@ -167,7 +192,11 @@ public class CreateAccount {
         checkTech.setSelected(false);
         checkSports.setSelected(false);
         checkHealth.setSelected(false);
-        checkTravel.setSelected(false);}
+        checkTravel.setSelected(false);
+        checkEntertainment.setSelected(false);
+        checkBusiness.setSelected(false);
+        checkPolitics.setSelected(false);
+    }
 
     public void onViewPassword(ActionEvent event) {
         if(password.isVisible()) {
