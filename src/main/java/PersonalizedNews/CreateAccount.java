@@ -53,7 +53,6 @@ public class CreateAccount {
     // Initialize method to set preferences
     @FXML
     public void initialize() {
-        Preferences.getItems().addAll("AI", "Technology", "Sports", "Health", "Travel");
         viewPassword.textProperty().bindBidirectional(password.textProperty());
         viewConfirm.textProperty().bindBidirectional(confirmPassword.textProperty());
 
@@ -148,7 +147,8 @@ public class CreateAccount {
 
     // Method to validate that at least one checkbox is selected
     private boolean validateCheckboxSelection() {
-        if (checkAI.isSelected() || checkTech.isSelected() || checkSports.isSelected() || checkHealth.isSelected() || checkTravel.isSelected()) {
+        if (checkAI.isSelected() || checkTech.isSelected() || checkSports.isSelected() || checkHealth.isSelected() || checkTravel.isSelected()
+                || checkBusiness.isSelected() || checkPolitics.isSelected() || checkEntertainment.isSelected()) {
             return true;
         } else {
             showAlert("Please select at least one preference.", Alert.AlertType.ERROR);
@@ -185,7 +185,6 @@ public class CreateAccount {
         confirmPassword.clear();
         viewPassword.clear();
         viewConfirm.clear();
-        Preferences.getSelectionModel().clearSelection();
         dOB.setValue(null);
         genderGroup.selectToggle(null);
         checkAI.setSelected(false);

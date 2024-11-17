@@ -19,5 +19,6 @@ public class UserPortal {
     }
 
     public void onClickExit(ActionEvent event) {
+
     }
 }

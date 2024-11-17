@@ -17,5 +17,6 @@ public class AdministratorPortal {
     }
 
     public void onClickExit(ActionEvent event) {
+
     }
 }

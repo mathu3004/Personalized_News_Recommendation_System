@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.WelcomePage">
+   <children>
+      <Pane layoutX="2.0" prefHeight="120.0" prefWidth="600.0">
+         <children>
+            <Text layoutX="99.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Mark's News ">
+               <font>
+                  <Font name="Times New Roman Bold" size="36.0" />
+               </font>
+            </Text>
+            <Text layoutX="144.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Have a Great Day!!!">
+               <font>
+                  <Font name="Times New Roman Bold" size="36.0" />
+               </font>
+            </Text>
+         </children></Pane>
+      <Pane layoutX="-2.0" layoutY="339.0" prefHeight="104.0" prefWidth="606.0">
+         <children>
+            <Text layoutX="137.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Today a Reader, Tommorow a Leader" wrappingWidth="331.9999771118164">
+               <font>
+                  <Font name="Times New Roman Bold" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Button layoutX="46.0" layoutY="194.0" mnemonicParsing="false" onAction="#onClickUser" text="Mark's User">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Button>
+      <Button layoutX="386.0" layoutY="194.0" mnemonicParsing="false" onAction="#onClickAdministrator" text="Administrator">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="LoveIcon" fitHeight="104.0" fitWidth="131.0" layoutX="236.0" layoutY="170.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>
