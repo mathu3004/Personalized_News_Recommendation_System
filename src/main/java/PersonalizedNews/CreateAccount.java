@@ -2,9 +2,25 @@ package PersonalizedNews;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoClient;
+//import com.mongodb.client.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateAccount {
 
@@ -65,6 +81,7 @@ public class CreateAccount {
         genderGroup = new ToggleGroup();
         radioMale.setToggleGroup(genderGroup);
         radioFemale.setToggleGroup(genderGroup);
+
     }
 
     @FXML
@@ -73,10 +90,67 @@ public class CreateAccount {
                 !validateCheckboxSelection() || !validateDateOfBirth() || !validateGenderSelection() || !validateUsername()) {
             return; // Exit if any validation fails
         }
-        // Additional account creation logic goes here
-        showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
-        clearFields(); // Clear fields after successful submission}
+        if (!validateMaxThreeCategories()) {
+            showAlert("You can select a maximum of 3 preferences.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        try {
+            // Connect to MongoDB
+            MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017");
+            MongoDatabase database = mongoClient.getDatabase("News");
+            MongoCollection<org.bson.Document> collection = database.getCollection("UserAccounts");
+
+            // Prepare user data
+            Document user = new Document("firstName", firstName.getText())
+                    .append("lastName", lastName.getText())
+                    .append("email", email.getText())
+                    .append("username", username.getText())
+                    .append("password", password.getText()) // Encrypt passwords in production!
+                    .append("dateOfBirth", dOB.getValue().toString())
+                    .append("gender", genderGroup.getSelectedToggle() == radioMale ? "Male" : "Female")
+                    .append("preferences", getSelectedPreferences());
+
+            // Insert into MongoDB
+            collection.insertOne(user);
+
+            showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
+            clearFields(); // Reset the form
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Failed to save data to the database.", Alert.AlertType.ERROR);
+        }
     }
+
+    // Helper method to get selected preferences
+    private List<String> getSelectedPreferences() {
+        List<String> preferences = new ArrayList<>();
+        if (checkAI.isSelected()) preferences.add("AI");
+        if (checkTech.isSelected()) preferences.add("Tech");
+        if (checkSports.isSelected()) preferences.add("Sports");
+        if (checkHealth.isSelected()) preferences.add("Health");
+        if (checkTravel.isSelected()) preferences.add("Travel");
+        if (checkBusiness.isSelected()) preferences.add("Business");
+        if (checkPolitics.isSelected()) preferences.add("Politics");
+        if (checkEntertainment.isSelected()) preferences.add("Entertainment");
+        return preferences;
+    }
+
+    // Validation for max three categories
+    private boolean validateMaxThreeCategories() {
+        int count = 0;
+        if (checkAI.isSelected()) count++;
+        if (checkTech.isSelected()) count++;
+        if (checkSports.isSelected()) count++;
+        if (checkHealth.isSelected()) count++;
+        if (checkTravel.isSelected()) count++;
+        if (checkBusiness.isSelected()) count++;
+        if (checkPolitics.isSelected()) count++;
+        if (checkEntertainment.isSelected()) count++;
+
+        return count <= 3;
+    }
+
     // Method to validate first name
     private boolean validateFirstName() {
         if (firstName.getText().matches("[a-zA-Z]+")) {
@@ -218,6 +292,20 @@ public class CreateAccount {
             confirmPassword.setVisible(true);
             viewConfirm.setVisible(false);
             viewConfirm.setManaged(false);
+        }
+    }
+
+    public void onClickLogin(ActionEvent event) {
+        try {
+            // Navigate to the signup page
+            Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Signup Page");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

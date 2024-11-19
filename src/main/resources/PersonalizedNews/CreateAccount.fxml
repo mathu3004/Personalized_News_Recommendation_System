@@ -27,7 +27,7 @@
             <Text layoutX="42.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences:" />
             <Text layoutX="42.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" />
             <TextField fx:id="email" layoutX="361.0" layoutY="136.0" promptText="joe123@gmail.com" />
-            <Button layoutX="276.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSubmit" text="Submit" />
+            <Button layoutX="276.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSubmit" text="Signup" />
             <PasswordField fx:id="password" layoutX="117.0" layoutY="175.0" promptText="Joe123@" />
             <PasswordField fx:id="confirmPassword" layoutX="153.0" layoutY="215.0" promptText="Joe123@" />
             <TextField fx:id="viewPassword" layoutX="117.0" layoutY="175.0" visible="false" />
@@ -49,6 +49,7 @@
             <CheckBox fx:id="checkBusiness" layoutX="250.0" layoutY="295.0" mnemonicParsing="false" text="Business" />
             <CheckBox fx:id="checkPolitics" layoutX="323.0" layoutY="260.0" mnemonicParsing="false" text="Politics" />
             <CheckBox fx:id="checkEntertainment" layoutX="327.0" layoutY="295.0" mnemonicParsing="false" text="Entertainment" />
+            <Button layoutX="404.0" layoutY="337.0" mnemonicParsing="false" onAction="#onClickLogin" text="Login" />
          </children></AnchorPane>
    </children>
 </AnchorPane>

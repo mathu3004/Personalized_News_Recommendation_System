@@ -20,6 +20,8 @@
       <PasswordField fx:id="password" layoutX="154.0" layoutY="188.0" />
       <TextField fx:id="viewPassword" layoutX="154.0" layoutY="188.0" promptText="Joe123@" />
       <Button layoutX="320.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
-      <Button layoutX="267.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Submit" />
+      <Button layoutX="267.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Login" />
+      <Button layoutX="362.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickBackMain" text="Back to main" />
+      <Button layoutX="65.0" layoutY="260.0" mnemonicParsing="false" onAction="#onCLickSignup" text="Signup" />
    </children>
 </AnchorPane>
