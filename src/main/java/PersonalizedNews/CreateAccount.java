@@ -9,10 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
-//import com.mongodb.client.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -34,8 +32,6 @@ public class CreateAccount {
     public TextField password;
     @FXML
     public TextField confirmPassword;
-    @FXML
-    public ChoiceBox<String> Preferences;
     @FXML
     public TextField viewPassword;
     @FXML
@@ -81,7 +77,6 @@ public class CreateAccount {
         genderGroup = new ToggleGroup();
         radioMale.setToggleGroup(genderGroup);
         radioFemale.setToggleGroup(genderGroup);
-
     }
 
     @FXML
@@ -101,6 +96,20 @@ public class CreateAccount {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<org.bson.Document> collection = database.getCollection("UserAccounts");
 
+            // Check for duplicate email
+            Document existingEmail = collection.find(new Document("email", email.getText())).first();
+            if (existingEmail != null) {
+                showAlert("This email is already registered. Please use a different email.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // Check for duplicate username
+            Document existingUsername = collection.find(new Document("username", username.getText())).first();
+            if (existingUsername != null) {
+                showAlert("This username is already taken. Please choose a different username.", Alert.AlertType.ERROR);
+                return;
+            }
+
             // Prepare user data
             Document user = new Document("firstName", firstName.getText())
                     .append("lastName", lastName.getText())
@@ -117,7 +126,6 @@ public class CreateAccount {
             showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
             clearFields(); // Reset the form
         } catch (Exception e) {
-            e.printStackTrace();
             showAlert("Failed to save data to the database.", Alert.AlertType.ERROR);
         }
     }
@@ -191,7 +199,6 @@ public class CreateAccount {
         }
     }
 
-
     // Method to validate password and confirm password
     private boolean validatePassword() {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
@@ -259,6 +266,7 @@ public class CreateAccount {
         confirmPassword.clear();
         viewPassword.clear();
         viewConfirm.clear();
+        username.clear();
         dOB.setValue(null);
         genderGroup.selectToggle(null);
         checkAI.setSelected(false);
@@ -271,6 +279,7 @@ public class CreateAccount {
         checkPolitics.setSelected(false);
     }
 
+    @FXML
     public void onViewPassword(ActionEvent event) {
         if(password.isVisible()) {
             password.setVisible(false);
@@ -283,6 +292,7 @@ public class CreateAccount {
         }
     }
 
+    @FXML
     public void onViewConfirm(ActionEvent event) {
         if(confirmPassword.isVisible()) {
             confirmPassword.setVisible(false);
@@ -295,6 +305,7 @@ public class CreateAccount {
         }
     }
 
+    @FXML
     public void onClickLogin(ActionEvent event) {
         try {
             // Navigate to the signup page

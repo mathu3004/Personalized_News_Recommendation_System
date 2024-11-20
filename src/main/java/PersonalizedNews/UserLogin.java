@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,8 +25,17 @@ public class UserLogin {
     public PasswordField password;
     @FXML
     public TextField viewPassword;
+    @FXML
+    public TextField username;
 
     private boolean isPasswordVisible = false;
+
+    @FXML
+    public void initialize() {
+        // Ensure viewPassword is invisible by default
+        viewPassword.setVisible(false);
+    }
+
 
     @FXML
     public void onClickView(ActionEvent event) {
@@ -54,18 +64,44 @@ public class UserLogin {
 
             // Get user input
             String enteredEmail = email.getText().trim();
-            String enteredPassword = viewPassword.getText().trim(); // Ensure password is encrypted in production
+            String enteredUsername = username.getText().trim();
+            String enteredPassword = password.getText().trim(); // Ensure password is encrypted in production
+
+            // Validate inputs
+            if (enteredEmail.isEmpty() && enteredUsername.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter at least an email or username!");
+                return;
+            }
+
+            if (enteredPassword.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Password cannot be empty!");
+                return;
+            }
 
             // Query the database for the user
-            Document query = new Document("email", enteredEmail).append("password", enteredPassword);
+            Document query = new Document();
+            if (!enteredEmail.isEmpty()) {
+                query.append("email", enteredEmail);
+            }
+            if (!enteredUsername.isEmpty()) {
+                query.append("username", enteredUsername);
+            }
+            query.append("password", enteredPassword);
             Document user = collection.find(query).first();
 
             if (user != null) {
                 // Login successful
-                System.out.println("Login successful!");
+                showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
+
+
+                //Clear input fields
+                email.clear();
+                username.clear();
+                viewPassword.clear();
+                password.clear();
 
                 // Navigate to the dashboard or next page
-                Parent root = FXMLLoader.load(getClass().getResource("ViewArticles.fxml")); // Replace with your next scene
+                Parent root = FXMLLoader.load(getClass().getResource("ManageProfile.fxml")); // Replace with your next scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -73,14 +109,16 @@ public class UserLogin {
                 stage.show();
             } else {
                 // Invalid credentials
-                System.out.println("Invalid email or password!");
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid email, username, or password!");
             }
         } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
         }
 
     }
 
+    @FXML
     public void onClickBackMain(ActionEvent event) {
         try {
             // Return to the main welcome page
@@ -95,6 +133,7 @@ public class UserLogin {
         }
     }
 
+    @FXML
     public void onCLickSignup(ActionEvent event) {
         try {
             // Navigate to the signup page
@@ -107,5 +146,13 @@ public class UserLogin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

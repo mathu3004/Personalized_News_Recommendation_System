@@ -21,15 +21,15 @@
             <TextField fx:id="firstName" layoutX="117.0" layoutY="55.0" promptText="Joe" />
             <Text layoutX="42.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:" />
             <TextField fx:id="lastName" layoutX="117.0" layoutY="95.0" promptText="Mass" />
-            <Text layoutX="307.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:" />
+            <Text layoutX="42.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:" />
             <Text layoutX="42.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
             <Text layoutX="42.0" layoutY="232.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password:" />
             <Text layoutX="42.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences:" />
             <Text layoutX="42.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <TextField fx:id="email" layoutX="361.0" layoutY="136.0" promptText="joe123@gmail.com" />
+            <TextField fx:id="email" layoutX="117.0" layoutY="135.0" promptText="joe123@gmail.com" />
             <Button layoutX="276.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSubmit" text="Signup" />
-            <PasswordField fx:id="password" layoutX="117.0" layoutY="175.0" promptText="Joe123@" />
-            <PasswordField fx:id="confirmPassword" layoutX="153.0" layoutY="215.0" promptText="Joe123@" />
+            <PasswordField fx:id="password" layoutX="117.0" layoutY="175.0" promptText="Joes123@" />
+            <PasswordField fx:id="confirmPassword" layoutX="153.0" layoutY="215.0" promptText="Joes123@" />
             <TextField fx:id="viewPassword" layoutX="117.0" layoutY="175.0" visible="false" />
             <TextField fx:id="viewConfirm" layoutX="153.0" layoutY="215.0" visible="false" />
             <Button layoutX="282.0" layoutY="175.0" mnemonicParsing="false" onAction="#onViewPassword" text="View" />
@@ -44,8 +44,8 @@
             <CheckBox fx:id="checkHealth" layoutX="255.0" layoutY="260.0" mnemonicParsing="false" text="Health" />
             <CheckBox fx:id="checkSports" layoutX="117.0" layoutY="295.0" mnemonicParsing="false" text="Sports" />
             <CheckBox fx:id="checkTravel" layoutX="185.0" layoutY="295.0" mnemonicParsing="false" text="Travel" />
-            <Text layoutX="42.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
-            <TextField fx:id="username" layoutX="117.0" layoutY="135.0" promptText="joe123" />
+            <Text layoutX="307.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
+            <TextField fx:id="username" layoutX="375.0" layoutY="135.0" promptText="Joe123" />
             <CheckBox fx:id="checkBusiness" layoutX="250.0" layoutY="295.0" mnemonicParsing="false" text="Business" />
             <CheckBox fx:id="checkPolitics" layoutX="323.0" layoutY="260.0" mnemonicParsing="false" text="Politics" />
             <CheckBox fx:id="checkEntertainment" layoutX="327.0" layoutY="295.0" mnemonicParsing="false" text="Entertainment" />
