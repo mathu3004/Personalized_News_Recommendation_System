@@ -11,23 +11,20 @@
             <Font name="Times New Roman Bold" size="36.0" />
          </font>
       </Text>
-      <Text layoutX="62.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" />
+      <Text layoutX="62.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Article ID:" />
       <Text layoutX="62.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
       <Text layoutX="62.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Published Date:" />
-      <Text layoutX="62.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Category:" />
-      <TextField fx:id="articleName" layoutX="103.0" layoutY="79.0" />
-      <TextField fx:id="articleAuthor" layoutX="104.0" layoutY="126.0" />
+      <TextField fx:id="articleName" layoutX="361.0" layoutY="79.0" />
+      <TextField fx:id="articleAuthor" layoutX="128.0" layoutY="125.0" />
       <DatePicker fx:id="publishedDate" layoutX="147.0" layoutY="179.0" />
-      <CheckBox fx:id="checkAI" layoutX="130.0" layoutY="245.0" mnemonicParsing="false" text="AI" />
-      <CheckBox fx:id="checkTech" layoutX="188.0" layoutY="245.0" mnemonicParsing="false" text="Technology" />
-      <CheckBox fx:id="checkHealth" layoutX="286.0" layoutY="245.0" mnemonicParsing="false" text="Health" />
-      <CheckBox fx:id="checkSports" layoutX="362.0" layoutY="245.0" mnemonicParsing="false" text="Sports" />
-      <CheckBox fx:id="checkBusiness" layoutX="127.0" layoutY="276.0" mnemonicParsing="false" text="Business" />
-      <CheckBox fx:id="checkEntertainment" layoutX="216.0" layoutY="276.0" mnemonicParsing="false" text="Entertainment" />
-      <CheckBox fx:id="checkTravel" layoutX="326.0" layoutY="276.0" mnemonicParsing="false" text="Travel" />
-      <CheckBox fx:id="checkPolitics" layoutX="391.0" layoutY="276.0" mnemonicParsing="false" text="Politics" />
-      <Button layoutX="260.0" layoutY="346.0" mnemonicParsing="false" onAction="#onClickAdd" text="Add" />
-      <Text layoutX="311.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Article ID: " />
-      <TextField fx:id="articleID" layoutX="377.0" layoutY="80.0" />
+      <Button layoutX="260.0" layoutY="346.0" mnemonicParsing="false" onAction="#onClickAddArticles" text="Add" />
+      <Text layoutX="311.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
+      <TextField fx:id="articleID" layoutX="128.0" layoutY="80.0" />
+      <Text layoutX="311.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
+      <TextArea fx:id="articleDescription" layoutX="386.0" layoutY="119.0" prefHeight="49.0" prefWidth="200.0" />
+      <Text layoutX="62.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="URL:" />
+      <Text layoutX="287.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content:" />
+      <TextField fx:id="articleURL" layoutX="101.0" layoutY="232.0" />
+      <TextArea fx:id="articleContent" layoutX="352.0" layoutY="217.0" prefHeight="106.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

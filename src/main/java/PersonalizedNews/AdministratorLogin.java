@@ -100,7 +100,7 @@ public class AdministratorLogin {
                 PasswordText.clear();
 
                 // Navigate to the admin dashboard or next page
-                Parent root = FXMLLoader.load(getClass().getResource("AdministratorPortal.fxml")); // Replace with your admin dashboard scene
+                Parent root = FXMLLoader.load(getClass().getResource("AddArticles.fxml")); // Replace with your admin dashboard scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
