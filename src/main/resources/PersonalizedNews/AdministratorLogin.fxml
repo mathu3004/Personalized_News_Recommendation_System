@@ -17,5 +17,6 @@
       <Button layoutX="252.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickLogin" text="Login" />
       <Button layoutX="390.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickBackMain" text="Back to main" />
       <Button layoutX="300.0" layoutY="148.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
+      <Button layoutX="72.0" layoutY="188.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
    </children>
 </AnchorPane>

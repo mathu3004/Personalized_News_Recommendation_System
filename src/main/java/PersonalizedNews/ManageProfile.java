@@ -282,5 +282,4 @@ public class ManageProfile {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }

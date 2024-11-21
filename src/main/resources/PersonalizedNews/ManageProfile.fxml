@@ -40,7 +40,7 @@
       <CheckBox fx:id="checkTravel" layoutX="207.0" layoutY="330.0" mnemonicParsing="false" text="Travel" />
       <DatePicker fx:id="dOB" layoutX="400.0" layoutY="137.0" />
       <Button layoutX="263.0" layoutY="379.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Submit" />
-      <Button layoutX="529.0" layoutY="379.0" mnemonicParsing="false" onAction="#onClickCancel" text="Cancel" />
+      <Button layoutX="529.0" layoutY="379.0" mnemonicParsing="false" onAction="#onClickCancel" text="Reset" />
       <Button layoutX="318.0" layoutY="217.0" mnemonicParsing="false" onAction="#onViewPassword" text="View" />
       <Button layoutX="362.0" layoutY="257.0" mnemonicParsing="false" onAction="#onViewConfirm" text="View" />
       <CheckBox fx:id="checkEntertainment" layoutX="273.0" layoutY="330.0" mnemonicParsing="false" text="Entertainment" />

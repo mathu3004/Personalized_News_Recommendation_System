@@ -319,4 +319,8 @@ public class CreateAccount {
             e.printStackTrace();
         }
     }
+
+    public void onClickReset(ActionEvent event) {
+        clearFields();
+    }
 }

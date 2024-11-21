@@ -50,6 +50,7 @@
             <CheckBox fx:id="checkPolitics" layoutX="323.0" layoutY="260.0" mnemonicParsing="false" text="Politics" />
             <CheckBox fx:id="checkEntertainment" layoutX="327.0" layoutY="295.0" mnemonicParsing="false" text="Entertainment" />
             <Button layoutX="404.0" layoutY="337.0" mnemonicParsing="false" onAction="#onClickLogin" text="Login" />
+            <Button layoutX="114.0" layoutY="337.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
          </children></AnchorPane>
    </children>
 </AnchorPane>

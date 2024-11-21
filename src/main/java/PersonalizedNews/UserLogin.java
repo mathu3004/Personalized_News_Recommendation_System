@@ -93,12 +93,8 @@ public class UserLogin {
                 // Login successful
                 showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
 
-
                 //Clear input fields
-                email.clear();
-                username.clear();
-                viewPassword.clear();
-                password.clear();
+                clearFields();
 
                 // Navigate to the dashboard or next page
                 Parent root = FXMLLoader.load(getClass().getResource("ManageProfile.fxml")); // Replace with your next scene
@@ -115,7 +111,6 @@ public class UserLogin {
             showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     @FXML
@@ -148,11 +143,22 @@ public class UserLogin {
         }
     }
 
+    private void clearFields() {
+        email.clear();
+        username.clear();
+        viewPassword.clear();
+        password.clear();
+    }
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void onClickReset(ActionEvent event) {
+        clearFields();
     }
 }

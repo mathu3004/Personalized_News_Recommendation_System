@@ -123,4 +123,8 @@ public class AddArticles {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public void onClickReset(ActionEvent event) {
+        clearFields();
+    }
 }

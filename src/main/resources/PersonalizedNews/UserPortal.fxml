@@ -19,18 +19,17 @@
             </Pane>
          </top>
          <left>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="193.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="31.0" prefWidth="104.0" text="Dashboard">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#OnClickView" text="View Articles" />
-                  <Button mnemonicParsing="false" onAction="#onClickRate" text="Rate Articles" />
-                  <Button mnemonicParsing="false" onAction="#onClickManage" text="Manage Profile" />
-                  <Button mnemonicParsing="false" onAction="#onClickLogout" text="Logout" />
-                  <Button mnemonicParsing="false" onAction="#onClickExit" text="Exit" />
+                  <Button mnemonicParsing="false" onAction="#OnClickView" prefHeight="26.0" prefWidth="105.0" text="View Articles" />
+                  <Button mnemonicParsing="false" onAction="#onClickRate" prefHeight="26.0" prefWidth="109.0" text="Rate Articles" />
+                  <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="26.0" prefWidth="105.0" text="Manage Profile" />
+                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="26.0" prefWidth="106.0" text="Logout" />
                </children>
             </VBox>
          </left>

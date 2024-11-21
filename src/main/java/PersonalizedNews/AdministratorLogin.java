@@ -94,13 +94,10 @@ public class AdministratorLogin {
                 showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to the Admin Dashboard!");
 
                 // Clear input fields
-                email.clear();
-                adminName.clear();
-                Password.clear();
-                PasswordText.clear();
+                clearFields();
 
                 // Navigate to the admin dashboard or next page
-                Parent root = FXMLLoader.load(getClass().getResource("AddArticles.fxml")); // Replace with your admin dashboard scene
+                Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml")); // Replace with your admin dashboard scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -136,5 +133,17 @@ public class AdministratorLogin {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void clearFields() {
+        // Clear input fields
+        email.clear();
+        adminName.clear();
+        Password.clear();
+        PasswordText.clear();
+    }
+
+    public void onClickReset(ActionEvent event) {
+        clearFields();
     }
 }

@@ -25,5 +25,6 @@
       <Button layoutX="65.0" layoutY="260.0" mnemonicParsing="false" onAction="#onCLickSignup" text="Signup" />
       <Text layoutX="71.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
       <TextField fx:id="username" layoutX="154.0" layoutY="143.0" promptText="Joe123" />
+      <Button layoutX="168.0" layoutY="260.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
    </children>
 </AnchorPane>
