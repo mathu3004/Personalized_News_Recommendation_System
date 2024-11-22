@@ -6,7 +6,8 @@ module com.example.personalized_news_recommendation_system {
     requires java.desktop;
     requires org.mongodb.bson;
     requires org.mongodb.driver.core;
-    requires org.apache.opennlp.tools; // Add this line
+    requires org.apache.opennlp.tools;
+    requires org.apache.commons.text; // Add this line
 
     opens PersonalizedNews to javafx.graphics, javafx.fxml;
 
