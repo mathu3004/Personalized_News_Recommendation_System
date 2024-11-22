@@ -10,17 +10,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class WelcomePage {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
 
     public void onClickUser(ActionEvent event) {
         try {
             // Load User Login Page
-            root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UserLogin.fxml"));
+            Parent root = loader.load();
+
+            // Get the Stage from the current scene and set new scene
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("User Login");
             stage.show();
         } catch (IOException e) {
@@ -31,10 +30,12 @@ public class WelcomePage {
     public void onClickAdministrator(ActionEvent event) {
         try {
             // Load Administrator Login Page
-            root = FXMLLoader.load(getClass().getResource("AdministratorLogin.fxml"));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdministratorLogin.fxml"));
+            Parent root = loader.load();
+
+            // Get the Stage from the current scene and set new scene
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("Administrator Login");
             stage.show();
         } catch (IOException e) {

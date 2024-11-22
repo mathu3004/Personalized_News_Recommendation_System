@@ -6,11 +6,18 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.bson.Document;
+
+import java.io.IOException;
 
 public class AddArticles {
     @FXML
@@ -127,4 +134,17 @@ public class AddArticles {
     public void onClickReset(ActionEvent event) {
         clearFields();
     }
+    public void onClickMain(ActionEvent event) {
+        try {
+            // Navigate to the signup page
+            Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 980, 700));
+            stage.setTitle("Admin Dashboard");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

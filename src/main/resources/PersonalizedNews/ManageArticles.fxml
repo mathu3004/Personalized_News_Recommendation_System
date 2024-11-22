@@ -7,11 +7,13 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ManageArticles">
    <children>
       <Button layoutX="99.0" layoutY="158.0" mnemonicParsing="false" onAction="#onClickToAdd" text="Add Articles" />
-      <Button layoutX="397.0" layoutY="158.0" mnemonicParsing="false" onAction="#onClickEditDelete" text="Edit &amp; Delete Articles" />
+      <Button layoutX="397.0" layoutY="158.0" mnemonicParsing="false" onAction="#onClickEditDelete" text="Edit / Delete Articles" />
       <Text layoutX="229.0" layoutY="64.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manage Articles">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
+      <Button layoutX="521.0" layoutY="342.0" mnemonicParsing="false" onAction="#onClickLogout" text="Logout" />
+      <Button layoutX="36.0" layoutY="342.0" mnemonicParsing="false" onAction="#onClickExit" text="Exit" />
    </children>
 </AnchorPane>

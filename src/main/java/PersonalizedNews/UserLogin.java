@@ -34,6 +34,7 @@ public class UserLogin {
     public void initialize() {
         // Ensure viewPassword is invisible by default
         viewPassword.setVisible(false);
+        viewPassword.setPromptText(password.getPromptText());
     }
 
 
@@ -97,11 +98,10 @@ public class UserLogin {
                 clearFields();
 
                 // Navigate to the dashboard or next page
-                Parent root = FXMLLoader.load(getClass().getResource("ManageProfile.fxml")); // Replace with your next scene
+                Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml")); // Replace with your next scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.setTitle("Dashboard");
+                stage.setScene(new Scene(root, 980, 700));
+                stage.setTitle("User Portal");
                 stage.show();
             } else {
                 // Invalid credentials
@@ -119,8 +119,7 @@ public class UserLogin {
             // Return to the main welcome page
             Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("Welcome Page");
             stage.show();
         } catch (IOException e) {
@@ -134,8 +133,7 @@ public class UserLogin {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("Signup Page");
             stage.show();
         } catch (IOException e) {

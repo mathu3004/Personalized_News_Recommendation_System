@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="424.0" prefWidth="627.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.EditArticles">
+<AnchorPane prefHeight="424.0" prefWidth="627.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.EditDeleteArticles">
    <children>
       <Text layoutX="269.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Articles" />
       <Text layoutX="46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Article ID:" />
@@ -26,5 +26,6 @@
       <Button layoutX="285.0" layoutY="384.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Update" />
       <Button layoutX="471.0" layoutY="384.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
       <Button layoutX="107.0" layoutY="372.0" mnemonicParsing="false" onAction="#onClickDelete" text="Delete" />
+      <Button layoutX="21.0" layoutY="347.0" mnemonicParsing="false" onAction="#onClickMain" text="Back" />
    </children>
 </AnchorPane>
