@@ -27,7 +27,7 @@
                      </font>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#onClickView" prefHeight="26.0" prefWidth="105.0" text="View Articles" />
-                  <Button mnemonicParsing="false" onAction="#onClickRate" prefHeight="26.0" prefWidth="109.0" text="Rate Articles" />
+                  <Button mnemonicParsing="false" onAction="#onClickRead" prefHeight="26.0" prefWidth="109.0" text="Read Articles" />
                   <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="26.0" prefWidth="105.0" text="Manage Profile" />
                   <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="26.0" prefWidth="106.0" text="Logout" />
                   <Button mnemonicParsing="false" onAction="#onClickExit" prefHeight="26.0" prefWidth="106.0" text="Exit" />

@@ -22,6 +22,6 @@
             <Font size="15.0" />
          </font>
       </Text>
-      <Button layoutX="315.0" layoutY="363.0" mnemonicParsing="false" onAction="#onClickBack" text="Back" />
+      <Button layoutX="305.0" layoutY="373.0" mnemonicParsing="false" onAction="#onClickBack" text="Back" />
    </children>
 </AnchorPane>

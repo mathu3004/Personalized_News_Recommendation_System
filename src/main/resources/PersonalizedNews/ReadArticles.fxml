@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="PersonalizedNews.ReadArticles"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="628.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ReadArticles">
+   <children>
+      <Text layoutX="243.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Read Articles">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Text>
+      <Label fx:id="readTitle" layoutX="40.0" layoutY="66.0" prefHeight="33.0" prefWidth="520.0" />
+      <Label fx:id="viewAuthor" layoutX="197.0" layoutY="111.0" prefHeight="27.0" prefWidth="206.0" />
+      <Label fx:id="viewContent" layoutX="55.0" layoutY="158.0" prefHeight="269.0" prefWidth="490.0" />
+      <Label fx:id="viewPublishedDate" layoutX="429.0" layoutY="472.0" prefHeight="18.0" prefWidth="114.0" />
+      <Button layoutX="55.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button layoutX="478.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Dislike" />
+      <Button layoutX="290.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+   </children>
 </AnchorPane>

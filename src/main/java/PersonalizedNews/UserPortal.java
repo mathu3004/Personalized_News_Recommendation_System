@@ -1,6 +1,5 @@
 package PersonalizedNews;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -44,7 +43,6 @@ public class UserPortal implements Initializable {
             // Load the initial view (UserHome) when the portal opens
             loadFXML("UserHome.fxml", "Welcome to your personalized User Portal!");
         } catch (IOException ex) {
-            // Print stack trace for debugging if the initial scene cannot be loaded
             ex.printStackTrace();
         }
     }
@@ -56,12 +54,35 @@ public class UserPortal implements Initializable {
 
     @FXML
     public void onClickView() throws IOException {
-        loadFXML("ViewArticles.fxml", "View the articles you are interested in.");
+        try {
+            // Load the ViewArticles FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewArticles.fxml"));
+            Parent fxml = loader.load();
+
+            // Retrieve the controller and initialize the username
+            ViewArticles controller = loader.getController();
+            String username = SessionManager.getInstance().getUsername();
+            if (username != null) {
+                controller.initializeUsername(); // Set the username and load articles
+            } else {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("No Username Found");
+                alert.setHeaderText(null);
+                alert.setContentText("No username found in session. Please log in again.");
+                alert.showAndWait();
+                return;
+            }
+            // Display the ViewArticles page
+            ContentArea.getChildren().clear();
+            ContentArea.getChildren().add(fxml);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    public void onClickRate() throws IOException {
-        loadFXML("ViewArticles.fxml", "Rate the articles you have read.");
+    public void onClickRead() throws IOException {
+        loadFXML("ReadArticles.fxml", "Rate the articles you have read.");
     }
 
     @FXML

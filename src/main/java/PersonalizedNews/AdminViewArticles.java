@@ -1,5 +1,12 @@
 package PersonalizedNews;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,35 +15,83 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.bson.Document;
 
 import java.io.IOException;
 
 public class AdminViewArticles {
+
     @FXML
-    public TableView AdminViewArticlesTable;
+    public TableView<Article> AdminViewArticlesTable;
     @FXML
-    public TableColumn viewArticleID;
+    public TableColumn<Article, Integer> viewArticleID;
     @FXML
-    public TableColumn viewTitle;
+    public TableColumn<Article, String> viewTitle;
     @FXML
-    public TableColumn viewAuthor;
+    public TableColumn<Article, String> viewAuthor;
     @FXML
-    public TableColumn viewDescription;
+    public TableColumn<Article, String> viewDescription;
     @FXML
-    public TableColumn viewPublishedDate;
+    public TableColumn<Article, String> viewPublishedDate;
     @FXML
-    public TableColumn viewContent;
+    public TableColumn<Article, String> viewContent;
     @FXML
-    public TableColumn viewCategory;
+    public TableColumn<Article, String> viewCategory;
+
+    private final ObservableList<Article> articles = FXCollections.observableArrayList();
+
+    @FXML
+    public void initialize() {
+        // Set cell value factories to bind table columns to Article properties
+        viewArticleID.setCellValueFactory(new PropertyValueFactory<>("articleId"));
+        viewTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        viewAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        viewDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        viewPublishedDate.setCellValueFactory(new PropertyValueFactory<>("publishedAt"));
+        viewContent.setCellValueFactory(new PropertyValueFactory<>("content"));
+        viewCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
+
+        // Load articles into the table
+        loadArticlesFromDB();
+    }
+
+    private void loadArticlesFromDB() {
+        String mongoUri = "mongodb://127.0.0.1:27017";
+
+        try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
+            MongoDatabase database = mongoClient.getDatabase("News");
+            MongoCollection<Document> categorizedCollection = database.getCollection("CategorizedArticles");
+
+            // Fetch all categorized articles
+            FindIterable<Document> categorizedArticles = categorizedCollection.find();
+
+            for (Document doc : categorizedArticles) {
+                Article article = new Article(
+                        doc.getInteger("articleId"),
+                        doc.getString("title"),
+                        doc.getString("author"),
+                        doc.getString("description"),
+                        doc.getString("publishedAt"),
+                        doc.getString("content"),
+                        doc.getString("category")
+                );
+                articles.add(article);
+            }
+
+            AdminViewArticlesTable.setItems(articles);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void onClickBack(ActionEvent event) {
         try {
-            // Navigate to the signup page
+            // Navigate back to the Manage Articles page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("Manage Articles Page");
             stage.show();
         } catch (IOException e) {

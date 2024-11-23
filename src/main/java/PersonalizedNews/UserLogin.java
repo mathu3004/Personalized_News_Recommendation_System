@@ -20,8 +20,6 @@ import java.io.IOException;
 
 public class UserLogin {
     @FXML
-    public TextField email;
-    @FXML
     public PasswordField password;
     @FXML
     public TextField viewPassword;
@@ -36,7 +34,6 @@ public class UserLogin {
         viewPassword.setVisible(false);
         viewPassword.setPromptText(password.getPromptText());
     }
-
 
     @FXML
     public void onClickView(ActionEvent event) {
@@ -64,13 +61,12 @@ public class UserLogin {
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
             // Get user input
-            String enteredEmail = email.getText().trim();
             String enteredUsername = username.getText().trim();
             String enteredPassword = password.getText().trim(); // Ensure password is encrypted in production
 
             // Validate inputs
-            if (enteredEmail.isEmpty() && enteredUsername.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter at least an email or username!");
+            if (enteredUsername.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter at least a username!");
                 return;
             }
 
@@ -81,9 +77,6 @@ public class UserLogin {
 
             // Query the database for the user
             Document query = new Document();
-            if (!enteredEmail.isEmpty()) {
-                query.append("email", enteredEmail);
-            }
             if (!enteredUsername.isEmpty()) {
                 query.append("username", enteredUsername);
             }
@@ -93,6 +86,8 @@ public class UserLogin {
             if (user != null) {
                 // Login successful
                 showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
+                ReadArticles.initializeUser(enteredUsername);
+                SessionManager.getInstance().setUsername(enteredUsername);
 
                 //Clear input fields
                 clearFields();
@@ -105,7 +100,7 @@ public class UserLogin {
                 stage.show();
             } else {
                 // Invalid credentials
-                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid email, username, or password!");
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username, or password!");
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
@@ -142,7 +137,6 @@ public class UserLogin {
     }
 
     private void clearFields() {
-        email.clear();
         username.clear();
         viewPassword.clear();
         password.clear();

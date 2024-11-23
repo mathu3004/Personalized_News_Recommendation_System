@@ -80,8 +80,7 @@ public class ManageArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("AdminViewArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root, 980, 700));
             stage.setTitle("View Articles Page");
             stage.show();
         } catch (IOException e) {

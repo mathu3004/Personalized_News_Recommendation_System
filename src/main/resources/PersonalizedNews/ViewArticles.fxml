@@ -4,14 +4,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="540.0" prefWidth="937.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewArticles">
+<AnchorPane prefHeight="540.0" prefWidth="832.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewArticles">
    <children>
-      <Text layoutX="285.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
+      <Text layoutX="235.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
          <font>
             <Font name="Times New Roman Bold" size="64.0" />
          </font>
       </Text>
-      <TableView fx:id="articlesTable" layoutX="153.0" layoutY="98.0" prefHeight="343.0" prefWidth="631.0">
+      <TableView fx:id="articlesTable" layoutX="153.0" layoutY="98.0" prefHeight="343.0" prefWidth="532.0">
         <columns>
           <TableColumn fx:id="columnTitle" prefWidth="71.0" text="Title" />
             <TableColumn fx:id="columnAuthor" prefWidth="78.79997253417969" text="Author" />
@@ -21,7 +21,7 @@
             <TableColumn fx:id="columnSelect" prefWidth="75.0" text="Select" />
         </columns>
       </TableView>
-      <Button layoutX="266.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
-      <Button layoutX="669.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button layoutX="200.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
+      <Button layoutX="603.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
    </children>
 </AnchorPane>

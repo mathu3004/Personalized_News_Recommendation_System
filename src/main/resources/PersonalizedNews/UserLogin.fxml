@@ -4,27 +4,25 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserLogin">
+<AnchorPane prefHeight="249.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserLogin">
    <children>
-      <Pane layoutY="1.0" prefHeight="79.0" prefWidth="603.0">
+      <Pane prefHeight="43.0" prefWidth="603.0">
          <children>
-            <Text layoutX="267.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login  ">
+            <Text layoutX="267.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login  ">
                <font>
                   <Font name="Times New Roman" size="24.0" />
                </font></Text>
          </children>
       </Pane>
-      <Text layoutX="71.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:" />
-      <Text layoutX="71.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
-      <TextField fx:id="email" layoutX="154.0" layoutY="103.0" promptText="joe123@gmail.com" />
-      <PasswordField fx:id="password" layoutX="154.0" layoutY="183.0" />
-      <TextField fx:id="viewPassword" layoutX="154.0" layoutY="183.0" promptText="Joes123@" />
-      <Button layoutX="320.0" layoutY="183.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
-      <Button layoutX="267.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Login" />
-      <Button layoutX="362.0" layoutY="253.0" mnemonicParsing="false" onAction="#onClickBackMain" text="Back to main" />
-      <Button layoutX="65.0" layoutY="260.0" mnemonicParsing="false" onAction="#onCLickSignup" text="Signup" />
-      <Text layoutX="71.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
-      <TextField fx:id="username" layoutX="154.0" layoutY="143.0" promptText="Joe123" />
-      <Button layoutX="168.0" layoutY="260.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
+      <Text layoutX="70.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
+      <PasswordField fx:id="password" layoutX="154.0" layoutY="117.0" />
+      <TextField fx:id="viewPassword" layoutX="154.0" layoutY="117.0" promptText="Joes123@" />
+      <Button layoutX="320.0" layoutY="117.0" mnemonicParsing="false" onAction="#onClickView" text="View" />
+      <Button layoutX="256.0" layoutY="187.0" mnemonicParsing="false" onAction="#onClickSubmit" text="Login" />
+      <Button layoutX="354.0" layoutY="187.0" mnemonicParsing="false" onAction="#onClickBackMain" text="Back to main" />
+      <Button layoutX="64.0" layoutY="187.0" mnemonicParsing="false" onAction="#onCLickSignup" text="Signup" />
+      <Text layoutX="69.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
+      <TextField fx:id="username" layoutX="154.0" layoutY="72.0" promptText="Joe123" />
+      <Button layoutX="154.0" layoutY="187.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
    </children>
 </AnchorPane>
