@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class AddArticles {
     @FXML
@@ -36,10 +38,9 @@ public class AddArticles {
     public TextArea articleDescription;
 
     @FXML
-    public TextField articleURL;
-
-    @FXML
     public TextArea articleContent;
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy", Locale.ENGLISH);
 
     @FXML
     public void onClickAddArticles(ActionEvent event) {
@@ -70,21 +71,16 @@ public class AddArticles {
                 return;
             }
 
-            // Check if the URL is unique
-            String enteredArticleURL = articleURL.getText().trim();
-            Document urlQuery = new Document("url", enteredArticleURL);
-            if (collection.find(urlQuery).first() != null) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "The URL must be unique!");
-                return;
-            }
+            // Format published date to M/d/yyyy
+            String formattedDate = publishedDate.getValue().format(DATE_FORMATTER);
+
 
             // Add the article to the database
             Document newArticle = new Document("articleId", enteredArticleID)
                     .append("title", enteredArticleName)
                     .append("author", enteredAuthor)
-                    .append("publishedAt", publishedDate.getValue().toString())
+                    .append("publishedAt", formattedDate)
                     .append("description", articleDescription.getText().trim())
-                    .append("url", articleURL.getText().trim())
                     .append("content", articleContent.getText().trim());
 
             collection.insertOne(newArticle);
@@ -105,7 +101,6 @@ public class AddArticles {
                 articleAuthor.getText().trim().isEmpty() ||
                 publishedDate.getValue() == null ||
                 articleDescription.getText().trim().isEmpty() ||
-                articleURL.getText().trim().isEmpty() ||
                 articleContent.getText().trim().isEmpty()) {
             showAlert(Alert.AlertType.ERROR, "Validation Error", "All fields must be filled!");
             return false;
@@ -119,7 +114,6 @@ public class AddArticles {
         articleAuthor.clear();
         publishedDate.setValue(null);
         articleDescription.clear();
-        articleURL.clear();
         articleContent.clear();
     }
 

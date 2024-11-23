@@ -15,5 +15,6 @@
       </Text>
       <Button layoutX="521.0" layoutY="342.0" mnemonicParsing="false" onAction="#onClickLogout" text="Logout" />
       <Button layoutX="36.0" layoutY="342.0" mnemonicParsing="false" onAction="#onClickExit" text="Exit" />
+      <Button layoutX="261.0" layoutY="158.0" mnemonicParsing="false" onAction="#onClickView" text="View Articles" />
    </children>
 </AnchorPane>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.AdminViewArticles">
+   <children>
+      <TableView fx:id="AdminViewArticlesTable" layoutX="7.0" layoutY="52.0" prefHeight="311.0" prefWidth="637.0">
+        <columns>
+          <TableColumn fx:id="viewArticleID" prefWidth="75.0" text="ArticleID" />
+          <TableColumn fx:id="viewTitle" prefWidth="75.0" text="Title" />
+            <TableColumn fx:id="viewAuthor" prefWidth="75.0" text="Author" />
+            <TableColumn fx:id="viewDescription" prefWidth="75.0" text="Description" />
+            <TableColumn fx:id="viewPublishedDate" prefWidth="105.20001220703125" text="Published Date" />
+            <TableColumn fx:id="viewContent" prefWidth="118.0" text="Content" />
+            <TableColumn fx:id="viewCategory" prefWidth="75.0" text="Category" />
+        </columns>
+      </TableView>
+      <Text layoutX="283.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Button layoutX="315.0" layoutY="363.0" mnemonicParsing="false" onAction="#onClickBack" text="Back" />
+   </children>
+</AnchorPane>

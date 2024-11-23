@@ -18,8 +18,11 @@ import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 public class EditDeleteArticles {
 
@@ -34,9 +37,9 @@ public class EditDeleteArticles {
     @FXML
     public DatePicker publishedDate;
     @FXML
-    public TextField URL;
-    @FXML
     public TextArea content;
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy", Locale.ENGLISH);
 
     @FXML
     public void onClickCheck(ActionEvent event) {
@@ -59,12 +62,11 @@ public class EditDeleteArticles {
                 author.setText(article.getString("author"));
                 description.setText(article.getString("description"));
                 content.setText(article.getString("content"));
-                URL.setText(article.getString("url"));
 
-                // Convert Date to LocalDate for DatePicker
-                Date publishedAtDate = article.getDate("publishedAt");
-                if (publishedAtDate != null) {
-                    publishedDate.setValue(publishedAtDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                // Parse publishedAt to LocalDate
+                String publishedAtStr = article.getString("publishedAt");
+                if (publishedAtStr != null && !publishedAtStr.isEmpty()) {
+                    publishedDate.setValue(DATE_FORMATTER.parse(publishedAtStr, LocalDate::from));
                 }
                 showAlert(Alert.AlertType.INFORMATION, "Load Success", "Article details loaded successfully!");
             } else {
@@ -92,7 +94,6 @@ public class EditDeleteArticles {
             int enteredArticleID = Integer.parseInt(articleID.getText().trim());
             String enteredTitle = title.getText().trim();
             String enteredAuthor = author.getText().trim();
-            String enteredURL = URL.getText().trim();
 
             // Check if title and author combination is unique
             Document titleAuthorQuery = new Document("title", enteredTitle)
@@ -103,22 +104,13 @@ public class EditDeleteArticles {
                 return;
             }
 
-            // Check if the URL is unique
-            Document urlQuery = new Document("url", enteredURL)
-                    .append("articleId", new Document("$ne", enteredArticleID)); // Exclude the current article
-            if (collection.find(urlQuery).first() != null) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "The URL must be unique!");
-                return;
-            }
 
             // Update the article in the database
             Document updatedArticle = new Document("title", enteredTitle)
                     .append("author", enteredAuthor)
                     .append("description", description.getText().trim())
                     .append("content", content.getText().trim())
-                    .append("url", enteredURL)
-                    .append("publishedAt", Date.from(publishedDate.getValue()
-                            .atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                    .append("publishedAt", publishedDate.getValue().format(DATE_FORMATTER));
 
             Document query = new Document("articleId", enteredArticleID);
             collection.updateOne(query, new Document("$set", updatedArticle));
@@ -147,7 +139,6 @@ public class EditDeleteArticles {
                 author.getText().trim().isEmpty() ||
                 description.getText().trim().isEmpty() ||
                 content.getText().trim().isEmpty() ||
-                URL.getText().trim().isEmpty() ||
                 publishedDate.getValue() == null) {
             showAlert(Alert.AlertType.ERROR, "Validation Error", "All fields must be filled!");
             return false;
@@ -161,7 +152,6 @@ public class EditDeleteArticles {
         author.clear();
         description.clear();
         content.clear();
-        URL.clear();
         publishedDate.setValue(null);
     }
 

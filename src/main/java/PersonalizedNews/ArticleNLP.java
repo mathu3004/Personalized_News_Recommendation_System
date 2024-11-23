@@ -4,6 +4,7 @@ import com.mongodb.client.*;
 import org.apache.commons.text.similarity.CosineSimilarity;
 import org.bson.Document;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ArticleNLP {
@@ -40,28 +41,49 @@ public class ArticleNLP {
             FindIterable<Document> uncategorizedArticles = articlesCollection.find(new Document("category", null));
 
             for (Document article : uncategorizedArticles) {
-                String content = article.getString("content"); // Assume articles have a "content" field
-                String title = article.getString("title"); // Title of the article
+                String content = article.getString("content");
+                String title = article.getString("title");
+                String author = article.getString("author");
+                String description = article.getString("description");
+                Integer articleId = article.getInteger("articleId"); // Retrieve the integer articleId
+
+                // Handle the publishedAt field safely
+                Object publishedAtObj = article.get("publishedAt");
+                String publishedAt = null;
+                if (publishedAtObj instanceof Date) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+                    publishedAt = dateFormat.format((Date) publishedAtObj);
+                } else if (publishedAtObj instanceof String) {
+                    publishedAt = (String) publishedAtObj;
+                }
+
                 if (content != null && !content.isEmpty()) {
                     // Categorize the article using NLP
                     String category = categorizeArticleUsingNLP(content);
 
                     // Create a new document for the CategorizedArticles collection
-                    Document categorizedArticle = new Document("title", title)
+                    Document categorizedArticle = new Document()
+                            .append("articleId", articleId) // Add the integer articleId
+                            .append("title", title)
+                            .append("author", author)
+                            .append("description", description)
+                            .append("publishedAt", publishedAt) // Add the processed date
                             .append("content", content)
                             .append("category", category);
 
                     // Insert the categorized article into CategorizedArticles
-                    categorizedCollection.insertOne(categorizedArticle);
-
-                    System.out.println("Categorized article: " + title + " -> " + category);
+                    try {
+                        categorizedCollection.insertOne(categorizedArticle);
+                        System.out.println("Categorized article: " + title + " -> " + category);
+                    } catch (Exception e) {
+                        System.err.println("Error inserting article: " + title);
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Skipped uncategorizable article: " + title);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+        }}
     // Method to categorize an article using TF-IDF and cosine similarity
     private static String categorizeArticleUsingNLP(String articleText) {
         CosineSimilarity cosineSimilarity = new CosineSimilarity();

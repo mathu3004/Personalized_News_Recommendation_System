@@ -22,9 +22,7 @@
       <TextField fx:id="articleID" layoutX="128.0" layoutY="80.0" />
       <Text layoutX="311.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
       <TextArea fx:id="articleDescription" layoutX="386.0" layoutY="119.0" prefHeight="49.0" prefWidth="200.0" />
-      <Text layoutX="62.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="URL:" />
       <Text layoutX="287.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content:" />
-      <TextField fx:id="articleURL" layoutX="101.0" layoutY="232.0" />
       <TextArea fx:id="articleContent" layoutX="352.0" layoutY="217.0" prefHeight="106.0" prefWidth="200.0" />
       <Button layoutX="419.0" layoutY="346.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
       <Button layoutX="56.0" layoutY="334.0" mnemonicParsing="false" onAction="#onClickMain" text="Back" />

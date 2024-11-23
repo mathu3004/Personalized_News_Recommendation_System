@@ -39,14 +39,29 @@ public class ArticleCategorizer {
             FindIterable<Document> uncategorizedArticles = articlesCollection.find(new Document("category", null));
 
             for (Document article : uncategorizedArticles) {
-                String content = article.getString("content"); // Assume articles have a "content" field
-                String title = article.getString("title"); // Title of the article
+                String content = article.getString("content");
+                String title = article.getString("title");
+                String author = article.getString("author");
+                String description = article.getString("description");
+                Integer articleId = article.getInteger("articleId");
+
+                // Handle the publishedAt field
+                Object publishedAtObj = article.get("publishedAt");
+                String publishedAt = null;
+                if (publishedAtObj instanceof String) {
+                    publishedAt = (String) publishedAtObj;
+                }
+
                 if (content != null && !content.isEmpty()) {
                     // Categorize the article
                     String category = categorizeArticle(content);
 
                     // Create a new document for the CategorizedArticles collection
-                    Document categorizedArticle = new Document("title", title)
+                    Document categorizedArticle = new Document("articleId", articleId)
+                            .append("title", title)
+                            .append("author", author)
+                            .append("description", description)
+                            .append("publishedAt", publishedAt)
                             .append("content", content)
                             .append("category", category);
 
