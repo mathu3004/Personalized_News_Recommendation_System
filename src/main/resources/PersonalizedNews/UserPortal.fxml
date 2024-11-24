@@ -1,46 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserPortal">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserPortal">
    <children>
       <BorderPane prefHeight="400.0" prefWidth="600.0">
          <top>
-            <Pane prefHeight="42.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <Pane prefHeight="42.0" prefWidth="600.0" style="-fx-background-color: #594D43;" BorderPane.alignment="CENTER">
                <children>
-                  <Text layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark News - Welcome to News Portal" wrappingWidth="438.3203125">
+                  <Text fill="WHITE" layoutX="10.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mark News - Welcome to News Portal" wrappingWidth="522.3203735351562">
                      <font>
-                        <Font name="Times New Roman Bold" size="24.0" />
+                        <Font name="Times New Roman Bold" size="30.0" />
                      </font>
                   </Text>
                </children>
             </Pane>
          </top>
-         <left>
-            <VBox prefHeight="193.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="28.0" prefWidth="100.0" text="Dashboard">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickView" prefHeight="26.0" prefWidth="105.0" text="View Articles" />
-                  <Button mnemonicParsing="false" onAction="#onClickRead" prefHeight="26.0" prefWidth="109.0" text="Read Articles" />
-                  <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="26.0" prefWidth="105.0" text="Manage Profile" />
-                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="26.0" prefWidth="106.0" text="Logout" />
-                  <Button mnemonicParsing="false" onAction="#onClickExit" prefHeight="26.0" prefWidth="106.0" text="Exit" />
-               </children>
-            </VBox>
-         </left>
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <StackPane fx:id="ContentArea" prefHeight="357.0" prefWidth="501.0" />
+                  <StackPane fx:id="ContentArea" prefHeight="357.0" prefWidth="501.0" style="-fx-background-color: #8d8072;" />
                </children>
             </AnchorPane>
          </center>
+         <left>
+            <VBox prefHeight="174.0" prefWidth="119.0" style="-fx-background-color: #A4998E;" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="28.0" prefWidth="121.0" text="Dashboard">
+                     <font>
+                        <Font name="Times New Roman" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onClickView" prefHeight="28.0" prefWidth="122.0" text="View Articles">
+                     <font>
+                        <Font name="Times New Roman" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="28.0" prefWidth="122.0" text="Manage Profile">
+                     <font>
+                        <Font name="Times New Roman" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="28.0" prefWidth="122.0" text="Logout">
+                     <font>
+                        <Font name="Times New Roman" size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onClickExit" prefHeight="28.0" prefWidth="122.0" text="Exit">
+                     <font>
+                        <Font name="Times New Roman" size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </left>
       </BorderPane>
    </children>
 </AnchorPane>

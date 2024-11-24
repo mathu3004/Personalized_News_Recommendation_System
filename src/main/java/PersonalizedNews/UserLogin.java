@@ -96,6 +96,7 @@ public class UserLogin {
                 Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml")); // Replace with your next scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 980, 700));
+                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
                 stage.setTitle("User Portal");
                 stage.show();
             } else {
@@ -114,8 +115,8 @@ public class UserLogin {
             // Return to the main welcome page
             Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
-            stage.setTitle("Welcome Page");
+            stage.setScene(new Scene(root, 600, 450));
+            stage.setTitle("Welcome to Mark's News");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -128,8 +129,9 @@ public class UserLogin {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
-            stage.setTitle("Signup Page");
+            stage.setScene(new Scene(root, 651, 400));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("User Signup");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

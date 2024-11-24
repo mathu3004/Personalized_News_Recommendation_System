@@ -199,7 +199,7 @@ public class EditDeleteArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
+            stage.setScene(new Scene(root, 574, 400));
             stage.setTitle("Admin Dashboard");
             stage.show();
         } catch (IOException e) {

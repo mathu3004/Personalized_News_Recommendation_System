@@ -91,8 +91,8 @@ public class AdminViewArticles {
             // Navigate back to the Manage Articles page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
-            stage.setTitle("Manage Articles Page");
+            stage.setScene(new Scene(root, 574, 400));
+            stage.setTitle("Admin Dashboard");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

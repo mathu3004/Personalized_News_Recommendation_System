@@ -2,17 +2,22 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
    <children>
-      <Button layoutX="88.0" layoutY="94.0" mnemonicParsing="false" text="AI" />
-      <Button layoutX="165.0" layoutY="94.0" mnemonicParsing="false" text="Technology" />
-      <Button layoutX="300.0" layoutY="94.0" mnemonicParsing="false" text="Business" />
-      <Button layoutX="433.0" layoutY="94.0" mnemonicParsing="false" text="Travel" />
-      <Button layoutX="76.0" layoutY="175.0" mnemonicParsing="false" text="Sports" />
-      <Button layoutX="178.0" layoutY="175.0" mnemonicParsing="false" text="Entertainment" />
-      <Button layoutX="310.0" layoutY="175.0" mnemonicParsing="false" text="Health" />
-      <Button layoutX="433.0" layoutY="175.0" mnemonicParsing="false" text="Political" />
+      <Button layoutX="88.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewAI" text="AI" />
+      <Button layoutX="165.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewTech" text="Technology" />
+      <Button layoutX="300.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewBusiness" text="Business" />
+      <Button layoutX="433.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewTravel" text="Travel" />
+      <Button layoutX="76.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewSports" text="Sports" />
+      <Button layoutX="178.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewEntertainment" text="Entertainment" />
+      <Button layoutX="310.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewHealth" text="Health" />
+      <Button layoutX="433.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewPolitical" text="Political" />
+      <Text layoutX="228.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories">
+         <font>
+            <Font name="Times New Roman Bold" size="36.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

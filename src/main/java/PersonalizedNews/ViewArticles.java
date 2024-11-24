@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ViewArticles {
     @FXML
@@ -73,6 +75,7 @@ public class ViewArticles {
         List<Integer> read = new ArrayList<>();
         List<Integer> skipped = new ArrayList<>();
         List<String> preferences = new ArrayList<>();
+        List<String> prioritizedCategories = new ArrayList<>();
 
         // Check if user exists in RatedArticles
         Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -83,29 +86,56 @@ public class ViewArticles {
             read = userDoc.getList("read", Integer.class);
 
             // Recommend articles based on liked categories
+            Map<String, Integer> categoryWeights = new HashMap<>();
             for (int articleId : liked) {
                 Document likedArticle = articles.find(new Document("articleId", articleId)).first();
                 if (likedArticle != null) {
                     String category = likedArticle.getString("category");
-                    List<Document> similarArticles = articles.find(new Document("category", category)).into(new ArrayList<>());
-                    for (Document article : similarArticles) {
-                        int id = article.getInteger("articleId");
-                        if (!liked.contains(id) && !skipped.contains(id) && !containsArticle(recommendedArticles, id)) {
-                            recommendedArticles.add(article);
-                        }
+                    categoryWeights.put(category, categoryWeights.getOrDefault(category, 0) + 2); // Higher weight for likes
+                }
+            }
+            for (int articleId : read) {
+                Document readArticle = articles.find(new Document("articleId", articleId)).first();
+                if (readArticle != null) {
+                    String category = readArticle.getString("category");
+                    categoryWeights.put(category, categoryWeights.getOrDefault(category, 0) + 1); // Lower weight for reads
+                }
+            }
+            for (int articleId : skipped) {
+                Document skippedArticle = articles.find(new Document("articleId", articleId)).first();
+                if (skippedArticle != null) {
+                    String category = skippedArticle.getString("category");
+                    categoryWeights.put(category, categoryWeights.getOrDefault(category, 0) - 2); // Negative weight for skips
+                }
+            }
+
+            // Sort categories by weight (descending order)
+            prioritizedCategories = categoryWeights.entrySet().stream()
+                    .sorted((entry1, entry2) -> Integer.compare(entry2.getValue(), entry1.getValue()))
+                    .map(Map.Entry::getKey)
+                    .toList();
+
+            // Recommend articles from prioritized categories
+            for (String category : prioritizedCategories) {
+                List<Document> categoryArticles = articles.find(new Document("category", category)).into(new ArrayList<>());
+                for (Document article : categoryArticles) {
+                    int articleId = article.getInteger("articleId");
+                    if (!liked.contains(articleId) && !read.contains(articleId) && !skipped.contains(articleId) &&
+                            !containsArticle(recommendedArticles, articleId)) {
+                        recommendedArticles.add(article);
                     }
                 }
             }
         } else {
-            // Fallback to preferences for non-interactive users
+            // Fallback to preferences
             Document userAccount = userAccounts.find(new Document("username", username)).first();
             if (userAccount != null) {
                 preferences = userAccount.getList("preferences", String.class);
                 for (String preference : preferences) {
-                    List<Document> preferenceArticles = categorizedArticles.find(new Document("category", preference)).into(new ArrayList<>());
+                    List<Document> preferenceArticles = articles.find(new Document("category", preference)).into(new ArrayList<>());
                     for (Document article : preferenceArticles) {
-                        int id = article.getInteger("articleId");
-                        if (!containsArticle(recommendedArticles, id)) {
+                        int articleId = article.getInteger("articleId");
+                        if (!containsArticle(recommendedArticles, articleId)) {
                             recommendedArticles.add(article);
                         }
                     }

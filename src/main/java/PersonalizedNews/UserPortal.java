@@ -81,11 +81,6 @@ public class UserPortal implements Initializable {
     }
 
     @FXML
-    public void onClickRead() throws IOException {
-        loadFXML("ReadArticles.fxml", "Rate the articles you have read.");
-    }
-
-    @FXML
     public void onClickManage() throws IOException {
         loadFXML("ManageProfile.fxml", "Manage your saved articles.");
     }

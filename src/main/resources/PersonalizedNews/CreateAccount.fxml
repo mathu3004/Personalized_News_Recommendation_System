@@ -4,53 +4,110 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.CreateAccount">
+<AnchorPane prefHeight="397.0" prefWidth="651.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.CreateAccount">
    <children>
-      <AnchorPane prefHeight="416.0" prefWidth="616.0">
+      <AnchorPane prefHeight="400.0" prefWidth="651.0" style="-fx-background-color: #8d8072;">
          <children>
-            <Pane layoutX="-1.0" prefHeight="42.0" prefWidth="616.0">
+            <Pane layoutX="-1.0" prefHeight="42.0" prefWidth="650.0">
                <children>
-                  <Text layoutX="199.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create a New Account">
+                  <Text layoutX="205.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create Account">
                      <font>
-                        <Font name="Times New Roman" size="24.0" />
+                        <Font name="Times New Roman Bold" size="36.0" />
                      </font>
                   </Text>
                </children>
             </Pane>
-            <Text layoutX="42.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:" />
-            <TextField fx:id="firstName" layoutX="117.0" layoutY="55.0" promptText="Joe" />
-            <Text layoutX="42.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:" />
-            <TextField fx:id="lastName" layoutX="117.0" layoutY="95.0" promptText="Mass" />
-            <Text layoutX="42.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:" />
-            <Text layoutX="42.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
-            <Text layoutX="42.0" layoutY="232.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password:" />
-            <Text layoutX="42.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences:" />
-            <Text layoutX="42.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-            <TextField fx:id="email" layoutX="117.0" layoutY="135.0" promptText="joe123@gmail.com" />
-            <Button layoutX="276.0" layoutY="337.0" mnemonicParsing="false" onAction="#onSubmit" text="Signup" />
-            <PasswordField fx:id="password" layoutX="117.0" layoutY="175.0" promptText="Joes123@" />
-            <PasswordField fx:id="confirmPassword" layoutX="153.0" layoutY="215.0" promptText="Joes123@" />
-            <TextField fx:id="viewPassword" layoutX="117.0" layoutY="175.0" visible="false" />
-            <TextField fx:id="viewConfirm" layoutX="153.0" layoutY="215.0" visible="false" />
-            <Button layoutX="282.0" layoutY="175.0" mnemonicParsing="false" onAction="#onViewPassword" text="View" />
-            <Button layoutX="321.0" layoutY="215.0" mnemonicParsing="false" onAction="#onViewConfirm" text="View" />
-            <Text layoutX="307.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Birth:" />
-            <DatePicker fx:id="dOB" layoutX="388.0" layoutY="54.0" />
-            <Text layoutX="307.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:" />
-            <RadioButton fx:id="radioMale" layoutX="364.0" layoutY="99.0" mnemonicParsing="false" text="Male" />
-            <RadioButton fx:id="radioFemale" layoutX="430.0" layoutY="99.0" mnemonicParsing="false" text="Female" />
-            <CheckBox fx:id="checkAI" layoutX="117.0" layoutY="260.0" mnemonicParsing="false" text="AI" />
-            <CheckBox fx:id="checkTech" layoutX="160.0" layoutY="260.0" mnemonicParsing="false" text="Technology" />
-            <CheckBox fx:id="checkHealth" layoutX="255.0" layoutY="260.0" mnemonicParsing="false" text="Health" />
-            <CheckBox fx:id="checkSports" layoutX="117.0" layoutY="295.0" mnemonicParsing="false" text="Sports" />
-            <CheckBox fx:id="checkTravel" layoutX="185.0" layoutY="295.0" mnemonicParsing="false" text="Travel" />
-            <Text layoutX="307.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
-            <TextField fx:id="username" layoutX="375.0" layoutY="135.0" promptText="Joe123" />
-            <CheckBox fx:id="checkBusiness" layoutX="250.0" layoutY="295.0" mnemonicParsing="false" text="Business" />
-            <CheckBox fx:id="checkPolitics" layoutX="323.0" layoutY="260.0" mnemonicParsing="false" text="Politics" />
-            <CheckBox fx:id="checkEntertainment" layoutX="327.0" layoutY="295.0" mnemonicParsing="false" text="Entertainment" />
-            <Button layoutX="404.0" layoutY="337.0" mnemonicParsing="false" onAction="#onClickLogin" text="Login" />
-            <Button layoutX="114.0" layoutY="337.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
+            <Text layoutX="42.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="First Name:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <TextField fx:id="firstName" layoutX="137.0" layoutY="62.0" promptText="Joe" />
+            <Text layoutX="42.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <TextField fx:id="lastName" layoutX="137.0" layoutY="104.0" promptText="Mass" />
+            <Text layoutX="42.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <Text layoutX="42.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <Text layoutX="42.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Confirm Password:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <Text layoutX="42.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <TextField fx:id="email" layoutX="137.0" layoutY="143.0" promptText="joe123@gmail.com" />
+            <Button layoutX="291.0" layoutY="350.0" mnemonicParsing="false" onAction="#onSubmit" text="Signup" />
+            <PasswordField fx:id="password" layoutX="137.0" layoutY="182.0" promptText="Joes123@" />
+            <PasswordField fx:id="confirmPassword" layoutX="188.0" layoutY="222.0" promptText="Joes123@" />
+            <TextField fx:id="viewPassword" layoutX="138.0" layoutY="183.0" visible="false" />
+            <TextField fx:id="viewConfirm" layoutX="188.0" layoutY="222.0" visible="false" />
+            <Button layoutX="306.0" layoutY="183.0" mnemonicParsing="false" onAction="#onViewPassword" text="View" />
+            <Button layoutX="356.0" layoutY="222.0" mnemonicParsing="false" onAction="#onViewConfirm" text="View" />
+            <Text layoutX="329.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Birth:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <DatePicker fx:id="dOB" layoutX="444.0" layoutY="62.0" />
+            <Text layoutX="329.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gender:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <RadioButton fx:id="radioMale" layoutX="402.0" layoutY="108.0" mnemonicParsing="false" text="Male">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></RadioButton>
+            <RadioButton fx:id="radioFemale" layoutX="467.0" layoutY="108.0" mnemonicParsing="false" text="Female">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></RadioButton>
+            <CheckBox fx:id="checkAI" layoutX="140.0" layoutY="267.0" mnemonicParsing="false" text="AI">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkTech" layoutX="188.0" layoutY="266.0" mnemonicParsing="false" text="Technology">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkHealth" layoutX="287.0" layoutY="267.0" mnemonicParsing="false" text="Health">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkSports" layoutX="140.0" layoutY="300.0" mnemonicParsing="false" text="Sports">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkTravel" layoutX="213.0" layoutY="300.0" mnemonicParsing="false" text="Travel">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <Text layoutX="329.0" layoutY="161.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
+               <font>
+                  <Font name="Times New Roman Bold" size="16.0" />
+               </font></Text>
+            <TextField fx:id="username" layoutX="423.0" layoutY="143.0" promptText="Joe123" />
+            <CheckBox fx:id="checkBusiness" layoutX="284.0" layoutY="300.0" mnemonicParsing="false" text="Business">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkPolitics" layoutX="359.0" layoutY="267.0" mnemonicParsing="false" text="Politics">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="checkEntertainment" layoutX="366.0" layoutY="300.0" mnemonicParsing="false" text="Entertainment">
+               <font>
+                  <Font name="Times New Roman Bold" size="13.0" />
+               </font></CheckBox>
+            <Button layoutX="497.0" layoutY="350.0" mnemonicParsing="false" onAction="#onClickLogin" text="Back to Login" />
+            <Button layoutX="86.0" layoutY="350.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
+            <Separator layoutX="-8.0" layoutY="42.0" prefHeight="0.0" prefWidth="658.0" />
          </children></AnchorPane>
    </children>
 </AnchorPane>

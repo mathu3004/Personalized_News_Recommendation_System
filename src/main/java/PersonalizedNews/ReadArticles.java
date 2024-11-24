@@ -28,10 +28,6 @@ public class ReadArticles {
         this.username = username;
     }
 
-    public void setArticleID(String articleID) {
-        this.articleID = articleID;
-    }
-
     public void loadArticleDetails(int articleId) {
         MongoDatabase database = DatabaseConnector.getDatabase();
         MongoCollection<Document> articles = database.getCollection("Articles");
@@ -66,23 +62,35 @@ public class ReadArticles {
         }
 
         // Remove the articleId from other arrays before adding it to the target array
-        String[] actions = {"liked", "skipped"};
-        for (String otherAction : actions) {
-            if (!otherAction.equals(action)) {
+        if (action.equals("liked") || action.equals("skipped")) {
+            // Remove the articleId from the opposite action's array
+            String oppositeAction = action.equals("liked") ? "skipped" : "liked";
+            ratedArticles.updateOne(
+                    new Document("username", username),
+                    Updates.pull(oppositeAction, Integer.parseInt(articleID))
+            );
+            // Add the articleId to the target action's array
+            ratedArticles.updateOne(
+                    new Document("username", username),
+                    Updates.addToSet(action, Integer.parseInt(articleID))
+            );
+        } else if (action.equals("saved")) {
+            // Toggle the articleId in the "saved" array
+            boolean isSaved = userDoc.getList("saved", Integer.class).contains(Integer.parseInt(articleID));
+            if (isSaved) {
                 ratedArticles.updateOne(
                         new Document("username", username),
-                        Updates.pull(otherAction, Integer.parseInt(articleID)) // Remove from other arrays
+                        Updates.pull("saved", Integer.parseInt(articleID))
+                );
+            } else {
+                ratedArticles.updateOne(
+                        new Document("username", username),
+                        Updates.addToSet("saved", Integer.parseInt(articleID))
                 );
             }
         }
 
-        // Add the articleId to the target array using addToSet (prevents duplicates in the array)
-        ratedArticles.updateOne(
-                new Document("username", username),
-                Updates.addToSet(action, Integer.parseInt(articleID))
-        );
-
-        // Ensure the articleId is added to the 'read' array as well (prevents duplicates)
+        // Ensure the articleId is added to the 'read' array
         ratedArticles.updateOne(
                 new Document("username", username),
                 Updates.addToSet("read", Integer.parseInt(articleID))

@@ -1,29 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="424.0" prefWidth="627.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.EditDeleteArticles">
+<AnchorPane prefHeight="478.0" prefWidth="666.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.EditDeleteArticles">
    <children>
-      <Text layoutX="269.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Articles" />
-      <Text layoutX="46.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Article ID:" />
-      <TextField fx:id="articleID" layoutX="107.0" layoutY="54.0" />
-      <Separator layoutX="25.0" layoutY="96.0" prefHeight="16.0" prefWidth="505.0" />
-      <Button layoutX="354.0" layoutY="54.0" mnemonicParsing="false" onAction="#onClickCheck" text="Check" />
-      <Text layoutX="46.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:" />
-      <TextField fx:id="title" layoutX="80.0" layoutY="131.0" />
-      <Text layoutX="332.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:" />
-      <TextField fx:id="author" layoutX="379.0" layoutY="131.0" />
-      <Text layoutX="47.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" />
-      <Text layoutX="341.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Published Date:" />
-      <TextArea fx:id="description" layoutX="121.0" layoutY="175.0" prefHeight="66.0" prefWidth="192.0" />
-      <Text layoutX="320.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content:" />
-      <DatePicker fx:id="publishedDate" layoutX="432.0" layoutY="189.0" />
-      <TextArea fx:id="content" layoutX="371.0" layoutY="241.0" prefHeight="135.0" prefWidth="200.0" />
-      <Button layoutX="285.0" layoutY="384.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Update" />
-      <Button layoutX="471.0" layoutY="384.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
-      <Button layoutX="107.0" layoutY="372.0" mnemonicParsing="false" onAction="#onClickDelete" text="Delete" />
-      <Button layoutX="21.0" layoutY="347.0" mnemonicParsing="false" onAction="#onClickMain" text="Back" />
+      <Text layoutX="242.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Articles">
+         <font>
+            <Font name="Times New Roman Bold" size="36.0" />
+         </font></Text>
+      <Text layoutX="43.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Article ID:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <TextField fx:id="articleID" layoutX="132.0" layoutY="67.0" />
+      <Separator layoutX="29.0" layoutY="102.0" prefHeight="16.0" prefWidth="614.0" />
+      <Button layoutX="308.0" layoutY="67.0" mnemonicParsing="false" onAction="#onClickCheck" text="Check" />
+      <Text layoutX="43.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <TextField fx:id="title" layoutX="93.0" layoutY="131.0" />
+      <Text layoutX="312.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <TextField fx:id="author" layoutX="382.0" layoutY="131.0" />
+      <Text layoutX="43.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <Text layoutX="332.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Published Date:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <TextArea fx:id="description" layoutX="135.0" layoutY="175.0" prefHeight="66.0" prefWidth="175.0" />
+      <Text layoutX="43.0" layoutY="304.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Content:">
+         <font>
+            <Font name="Times New Roman Bold" size="16.0" />
+         </font></Text>
+      <DatePicker fx:id="publishedDate" layoutX="455.0" layoutY="189.0" />
+      <TextArea fx:id="content" layoutX="117.0" layoutY="262.0" prefHeight="135.0" prefWidth="516.0" />
+      <Button layoutX="413.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickUpdate" text="Update" />
+      <Button layoutX="587.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickReset" text="Reset" />
+      <Button layoutX="261.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickDelete" text="Delete" />
+      <Button layoutX="29.0" layoutY="430.0" mnemonicParsing="false" onAction="#onClickMain" text="Back to Admin Portal" />
    </children>
 </AnchorPane>

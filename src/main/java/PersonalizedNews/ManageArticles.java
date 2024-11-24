@@ -18,9 +18,9 @@ public class ManageArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("AddArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Add Articles Page");
+            stage.setScene(new Scene(root, 633, 413));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("Add Articles");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -32,9 +32,9 @@ public class ManageArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("EditDeleteArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Edit/Delete Articles Page");
+            stage.setScene(new Scene(root, 666, 478));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("Edit/Delete Articles");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,8 +46,9 @@ public class ManageArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("AdministratorLogin.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
-            stage.setTitle("Admin Login Page");
+            stage.setScene(new Scene(root, 434, 298));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("Admin Login");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -80,8 +81,9 @@ public class ManageArticles {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("AdminViewArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 980, 700));
-            stage.setTitle("View Articles Page");
+            stage.setScene(new Scene(root, 875, 454));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("View Articles");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

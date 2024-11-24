@@ -1,0 +1,13 @@
+.button {
+    -fx-font-size: 15;
+    -fx-background-color:  black;
+    -fx-text-fill: white;
+    -fx-font-family: "Times New Roman";
+    -fx-font-style: oblique;
+}
+
+.button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+

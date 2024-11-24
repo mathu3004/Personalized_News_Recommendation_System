@@ -124,6 +124,7 @@ public class CreateAccount {
             collection.insertOne(user);
 
             showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
+            onClickLogin(event);
             clearFields(); // Reset the form
         } catch (Exception e) {
             showAlert("Failed to save data to the database.", Alert.AlertType.ERROR);
@@ -311,9 +312,9 @@ public class CreateAccount {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Signup Page");
+            stage.setScene(new Scene(root, 440, 280));
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setTitle("User Login");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

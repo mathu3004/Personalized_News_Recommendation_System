@@ -73,7 +73,7 @@ public class ManageProfile {
     }
 
     @FXML
-    public void onClickCheck(ActionEvent event) {
+    public void onClickCheck() {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -95,7 +95,7 @@ public class ManageProfile {
             Document query = new Document();
             if (!enteredEmail.isEmpty()) query.append("email", enteredEmail);
             if (!enteredUsername.isEmpty()) query.append("username", enteredUsername);
-            query.append("password", enteredCurrentPassword); // Add password to the query
+            query.append("password", enteredCurrentPassword);
 
             Document user = collection.find(query).first();
 
@@ -112,10 +112,10 @@ public class ManageProfile {
                 setPreferences(user.getList("preferences", String.class));
                 // Load password into hidden field
                 String loadedPassword = user.getString("password");
-                newPassword.setText(loadedPassword);          // Set in PasswordField
-                confirmNewPassword.setText(loadedPassword);   // Set in Confirm PasswordField
-                viewNewPassword.setText(loadedPassword);      // Set in TextField (hidden by default)
-                viewNewConfirmPassword.setText(loadedPassword); // Set in Confirm TextField (hidden by default)
+                newPassword.setText(loadedPassword);
+                confirmNewPassword.setText(loadedPassword);
+                viewNewPassword.setText(loadedPassword);
+                viewNewConfirmPassword.setText(loadedPassword);
 
                 showAlert(Alert.AlertType.INFORMATION, "Load Success", "User details loaded successfully!");
             } else {
@@ -127,7 +127,7 @@ public class ManageProfile {
     }
 
     @FXML
-    public void onClickUpdate(ActionEvent event) {
+    public void onClickUpdate() {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -135,7 +135,6 @@ public class ManageProfile {
             // Validate inputs
             if (!validateInputs()) return;
 
-            // Build the update document
             Document update = new Document("$set", new Document()
                     .append("firstName", fName.getText().trim())
                     .append("lastName", lName.getText().trim())
@@ -144,7 +143,6 @@ public class ManageProfile {
                     .append("preferences", getSelectedPreferences())
                     .append("password", newPassword.getText().trim()));
 
-            // Update in the database
             Document query = new Document("email", email.getText().trim());
             collection.updateOne(query, update);
 
@@ -155,7 +153,7 @@ public class ManageProfile {
     }
 
     @FXML
-    public void onClickCancel(ActionEvent event) {
+    public void onClickCancel() {
         // Clear all fields
         email.clear();
         username.clear();
@@ -174,19 +172,19 @@ public class ManageProfile {
     }
 
     @FXML
-    public void onViewPassword(ActionEvent event) {
+    public void onViewPassword() {
         togglePasswordField(newPassword, viewNewPassword, isPasswordVisible);
         isPasswordVisible = !isPasswordVisible;
     }
 
     @FXML
-    public void onViewConfirm(ActionEvent event) {
+    public void onViewConfirm() {
         togglePasswordField(confirmNewPassword, viewNewConfirmPassword, isConfirmPasswordVisible);
         isConfirmPasswordVisible = !isConfirmPasswordVisible;
     }
 
     @FXML
-    public void onClickViewCurrentPassword(ActionEvent event) {
+    public void onClickViewCurrentPassword() {
         togglePasswordField(currentPasswordField, currentPasswordText, isCurrentPasswordVisible);
         isCurrentPasswordVisible = !isCurrentPasswordVisible;
     }

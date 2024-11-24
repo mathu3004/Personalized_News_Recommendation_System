@@ -11,7 +11,8 @@ public class NewsApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
-        Scene scene = new Scene(root, 980,700);
+        Scene scene = new Scene(root, 600,450);
+
         // Load the application icon
         Image icon = new Image("/NEWSICON.png");
         stage.getIcons().add(icon);
