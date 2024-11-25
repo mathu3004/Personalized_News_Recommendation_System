@@ -4,24 +4,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="540.0" prefWidth="832.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewArticles">
+<AnchorPane prefHeight="496.0" prefWidth="713.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewArticles">
    <children>
-      <Text layoutX="235.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
+      <Text layoutX="253.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
          <font>
-            <Font name="Times New Roman Bold" size="64.0" />
+            <Font name="Times New Roman Bold" size="36.0" />
          </font>
       </Text>
-      <TableView fx:id="articlesTable" layoutX="153.0" layoutY="98.0" prefHeight="343.0" prefWidth="532.0">
+      <TableView fx:id="articlesTable" layoutX="41.0" layoutY="68.0" prefHeight="343.0" prefWidth="630.0">
         <columns>
-          <TableColumn fx:id="columnTitle" prefWidth="71.0" text="Title" />
-            <TableColumn fx:id="columnAuthor" prefWidth="78.79997253417969" text="Author" />
-            <TableColumn fx:id="columnDescription" prefWidth="104.39994812011719" text="Description" />
-            <TableColumn fx:id="columnPublishedDate" prefWidth="117.5999755859375" text="Published Date" />
-            <TableColumn fx:id="columnCategory" prefWidth="75.0" text="Category" />
-            <TableColumn fx:id="columnSelect" prefWidth="75.0" text="Select" />
+          <TableColumn fx:id="columnTitle" prefWidth="70.19998931884766" text="Title" />
+            <TableColumn fx:id="columnAuthor" prefWidth="83.39999389648438" text="Author" />
+            <TableColumn fx:id="columnDescription" prefWidth="245.4000244140625" text="Description" />
+            <TableColumn fx:id="columnPublishedDate" prefWidth="103.59994506835938" text="Published Date" />
+            <TableColumn fx:id="columnCategory" prefWidth="66.4000244140625" text="Category" />
+            <TableColumn fx:id="columnSelect" prefWidth="53.0" text="Select" />
         </columns>
       </TableView>
-      <Button layoutX="200.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
-      <Button layoutX="603.0" layoutY="472.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button layoutX="96.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
+      <Button layoutX="574.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button layoutX="233.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button layoutX="451.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
    </children>
 </AnchorPane>

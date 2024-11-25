@@ -4,19 +4,33 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="628.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ReadArticles">
+<AnchorPane prefHeight="628.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ReadArticles">
    <children>
-      <Text layoutX="243.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Read Articles">
+      <Text layoutX="196.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Read Articles">
          <font>
-            <Font size="20.0" />
+            <Font name="Times New Roman Bold" size="36.0" />
          </font>
       </Text>
-      <Label fx:id="readTitle" layoutX="40.0" layoutY="66.0" prefHeight="33.0" prefWidth="520.0" />
-      <Label fx:id="viewAuthor" layoutX="197.0" layoutY="111.0" prefHeight="27.0" prefWidth="206.0" />
-      <Label fx:id="viewContent" layoutX="55.0" layoutY="158.0" prefHeight="269.0" prefWidth="490.0" />
-      <Label fx:id="viewPublishedDate" layoutX="429.0" layoutY="472.0" prefHeight="18.0" prefWidth="114.0" />
-      <Button layoutX="55.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
-      <Button layoutX="478.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Dislike" />
-      <Button layoutX="290.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Label fx:id="readTitle" layoutX="40.0" layoutY="65.0" prefHeight="33.0" prefWidth="520.0" textAlignment="CENTER">
+         <font>
+            <Font name="Times New Roman Bold" size="20.0" />
+         </font></Label>
+      <Label fx:id="viewAuthor" layoutX="197.0" layoutY="110.0" prefHeight="27.0" prefWidth="206.0" textAlignment="CENTER">
+         <font>
+            <Font name="Times New Roman Bold" size="18.0" />
+         </font></Label>
+      <Label fx:id="viewContent" layoutX="55.0" layoutY="153.0" prefHeight="286.0" prefWidth="490.0">
+         <font>
+            <Font name="Times New Roman Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="viewPublishedDate" layoutX="403.0" layoutY="465.0" prefHeight="26.0" prefWidth="114.0">
+         <font>
+            <Font name="Times New Roman Bold" size="15.0" />
+         </font></Label>
+      <Button layoutX="37.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button layoutX="508.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Dislike" />
+      <Button layoutX="280.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button layoutX="114.0" layoutY="578.0" mnemonicParsing="false" onAction="#onClickBackViewArticles" text="Back to Dashboard" />
+      <Separator layoutY="49.0" prefHeight="0.0" prefWidth="600.0" />
    </children>
 </AnchorPane>

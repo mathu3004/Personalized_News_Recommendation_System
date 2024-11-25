@@ -1,7 +1,7 @@
 package PersonalizedNews;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,49 +11,53 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class ViewArticles {
-    @FXML
-    private TableColumn<Article, String> columnCategory;
+public class ViewCategorizedArticles {
 
     @FXML
-    private TableColumn<Article, String> columnAuthor;
-
+    public TableView<Article> viewCategorizedTable;
     @FXML
-    private TableColumn<Article, String> columnPublishedDate;
-
+    public TableColumn<Article, String> viewTitle;
     @FXML
-    private TableColumn<Article, String> columnTitle;
-
+    public TableColumn<Article, String> viewAuthor;
     @FXML
-    private TableColumn<Article, String> columnDescription;
-
+    public TableColumn<Article, String> viewDescription;
     @FXML
-    private TableColumn<Article, RadioButton> columnSelect;
-
+    public TableColumn<Article, String> viewDate;
     @FXML
-    private TableView<Article> articlesTable;
+    public TableColumn<Article, String> viewCategory;
+    @FXML
+    public TableColumn<Article, RadioButton> viewSelect;
 
     private String username;
 
+    private ObservableList<Article> articles = FXCollections.observableArrayList();
+
+    private static final String CONNECTION_STRING = "mongodb://localhost:27017"; // Update with your connection string
+    private static final String DATABASE_NAME = "News"; // Update with your database name
+    private static final String COLLECTION_NAME = "CategorizedArticles"; // Update with your collection name
+
     @FXML
     public void initialize() {
-        columnCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
-        columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
-        columnPublishedDate.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
-        columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
-        columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        columnSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        // Bind TableView columns to Article properties
+        viewTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
+        viewAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        viewDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        viewDate.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
+        viewCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
+        viewSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        initializeUsername();
+        loadArticlesFromDatabase(null);
     }
 
     public void initializeUsername() {
@@ -63,32 +67,41 @@ public class ViewArticles {
             return;
         }
         System.out.println("Logged in as: " + username);
-        loadRecommendedArticles();
+        // Initially load all articles
+
     }
 
-    public void loadRecommendedArticles() {
-        MongoDatabase database = DatabaseConnector.getDatabase();
-        MongoCollection<Document> categorizedArticles = database.getCollection("CategorizedArticles");
-        List<Document> recommendedArticles = categorizedArticles.find().into(new ArrayList<>());
+    public void loadArticlesFromDatabase(String category) {
+        articles.clear();
 
-        // Populate TableView
-        ObservableList<Article> observableArticles = FXCollections.observableArrayList();
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
 
-        for (Document article : recommendedArticles) {
-            Article articleObj = new Article(
-                    article.getInteger("articleId"),
-                    article.getString("category"),
-                    article.getString("author"),
-                    article.getString("publishedAt"),
-                    article.getString("title"),
-                    article.getString("description"),
-                    new RadioButton()
-            );
-            observableArticles.add(articleObj);
+            FindIterable<Document> documents;
+            if (category == null) {
+                // Fetch all articles
+                documents = collection.find();
+            } else {
+                // Fetch articles by category
+                documents = collection.find(Filters.eq("category", category));
+            }
+
+            for (Document doc : documents) {
+                articles.add(new Article(
+                        doc.getInteger("articleId"),
+                        doc.getString("category"),
+                        doc.getString("author"),
+                        doc.getString("publishedAt"),
+                        doc.getString("title"),
+                        doc.getString("description"),
+                        new RadioButton()
+                ));
+            }
         }
 
-        articlesTable.setItems(observableArticles);
-        articlesTable.refresh();
+        // Update TableView
+        viewCategorizedTable.setItems(articles);
     }
 
     private void saveActionToDB(String action, int articleId) {
@@ -158,6 +171,7 @@ public class ViewArticles {
     public void onClickRead(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
+            // Add the article to the "read" list in RatedArticles
             saveActionToDB("read", selectedArticle.getArticleId());
             showAlert("Success", "Read the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
             try {
@@ -183,6 +197,7 @@ public class ViewArticles {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
     }
+
 
     @FXML
     public void onClickLike(ActionEvent event) {
@@ -218,10 +233,22 @@ public class ViewArticles {
     }
 
     private Article getSelectedArticle() {
-        return articlesTable.getItems().stream()
+        return viewCategorizedTable.getItems().stream()
                 .filter(article -> article.getSelect().isSelected())
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void onClickBackDashboard(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 855, 525));
+            stage.setTitle("User Dashboard");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
@@ -231,5 +258,7 @@ public class ViewArticles {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
 
 }

@@ -62,43 +62,32 @@ public class UserLogin {
 
             // Get user input
             String enteredUsername = username.getText().trim();
-            String enteredPassword = password.getText().trim(); // Ensure password is encrypted in production
+            String enteredPassword = isPasswordVisible ? viewPassword.getText().trim() : password.getText().trim(); // Ensure password is encrypted in production
 
             // Validate inputs
-            if (enteredUsername.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter at least a username!");
-                return;
-            }
-
-            if (enteredPassword.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Password cannot be empty!");
-                return;
+            if (enteredUsername.isEmpty() || enteredPassword.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Username and password cannot be empty!");
+                return; // Stop further processing
             }
 
             // Query the database for the user
-            Document query = new Document();
-            if (!enteredUsername.isEmpty()) {
-                query.append("username", enteredUsername);
-            }
-            query.append("password", enteredPassword);
+            Document query = new Document("username", enteredUsername).append("password", enteredPassword);
             Document user = collection.find(query).first();
 
             if (user != null) {
                 // Login successful
-                showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
                 ReadArticles.initializeUser(enteredUsername);
                 SessionManager.getInstance().setUsername(enteredUsername);
 
-                //Clear input fields
-                clearFields();
-
                 // Navigate to the dashboard or next page
                 Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml")); // Replace with your next scene
+                showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root, 980, 700));
-                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-                stage.setTitle("User Portal");
-                stage.show();
+                stage.setScene(new Scene(root, 855, 525));
+                //root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                stage.setTitle("User Dashboard");
+                //Clear input fields
+                clearFields();
             } else {
                 // Invalid credentials
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username, or password!");

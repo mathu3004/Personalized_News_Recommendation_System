@@ -4,20 +4,45 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
+<AnchorPane prefHeight="293.0" prefWidth="691.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
    <children>
-      <Button layoutX="88.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewAI" text="AI" />
-      <Button layoutX="165.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewTech" text="Technology" />
-      <Button layoutX="300.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewBusiness" text="Business" />
-      <Button layoutX="433.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewTravel" text="Travel" />
-      <Button layoutX="76.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewSports" text="Sports" />
-      <Button layoutX="178.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewEntertainment" text="Entertainment" />
-      <Button layoutX="310.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewHealth" text="Health" />
-      <Button layoutX="433.0" layoutY="175.0" mnemonicParsing="false" onAction="#onClickViewPolitical" text="Political" />
-      <Text layoutX="228.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories">
+      <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewAI" style="-fx-background-color: black;" text="AI" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="148.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTech" style="-fx-background-color: black;" text="Technology" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="348.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewBusiness" style="-fx-background-color: black;" text="Business" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="514.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTravel" style="-fx-background-color: black;" text="Travel" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="45.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewSports" style="-fx-background-color: black;" text="Sports" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="181.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewEntertainment" style="-fx-background-color: black;" text="Entertainment" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="408.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewHealth" style="-fx-background-color: black;" text="Health" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Button layoutX="543.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewPolitical" style="-fx-background-color: black;" text="Political" textFill="WHITE">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font></Button>
+      <Text layoutX="266.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categories">
          <font>
             <Font name="Times New Roman Bold" size="36.0" />
          </font>
       </Text>
+      <Separator layoutX="-6.0" layoutY="57.0" prefHeight="7.0" prefWidth="710.0" />
    </children>
 </AnchorPane>

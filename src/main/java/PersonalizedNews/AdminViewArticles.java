@@ -49,7 +49,7 @@ public class AdminViewArticles {
         viewTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         viewAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
         viewDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        viewPublishedDate.setCellValueFactory(new PropertyValueFactory<>("publishedAt"));
+        viewPublishedDate.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
         viewContent.setCellValueFactory(new PropertyValueFactory<>("content"));
         viewCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
 
@@ -73,9 +73,9 @@ public class AdminViewArticles {
                         doc.getString("title"),
                         doc.getString("author"),
                         doc.getString("description"),
-                        doc.getString("publishedAt"),
-                        doc.getString("content"),
-                        doc.getString("category")
+                        doc.getString("publishedDate"),
+                        doc.getString("category"),
+                        doc.getString("content")
                 );
                 articles.add(article);
             }

@@ -1,9 +1,11 @@
 package PersonalizedNews;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
@@ -20,12 +22,29 @@ public class UserPortal implements Initializable {
     public StackPane ContentArea;
 
     // Utility method to load an FXML file into ContentArea
-    private void loadFXML(String fxmlFileName, String alertMessage) throws IOException {
+    private void loadFXML(String fxmlFileName, String alertMessage, double width, double height, boolean applyCSS) throws IOException {
         Parent fxml = FXMLLoader.load(getClass().getResource(fxmlFileName));
+
         // Clear the current content
         ContentArea.getChildren().clear();
         // Set the loaded FXML as the new content
         ContentArea.getChildren().add(fxml);
+
+        // Ensure scene is initialized before modifying the stage
+        ContentArea.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                Stage stage = (Stage) newScene.getWindow();
+                if (stage != null) {
+                    stage.setWidth(width);
+                    stage.setHeight(height);
+                }
+            }
+        });
+
+        // Conditionally apply the CSS stylesheet
+        if (applyCSS) {
+            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+        }
 
         // Optional: Show an alert message after loading the FXML
         if (alertMessage != null && !alertMessage.isEmpty()) {
@@ -41,7 +60,7 @@ public class UserPortal implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             // Load the initial view (UserHome) when the portal opens
-            loadFXML("UserHome.fxml", "Welcome to your personalized User Portal!");
+            loadFXML("UserHome.fxml", null, 855, 455, false);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -49,7 +68,7 @@ public class UserPortal implements Initializable {
 
     @FXML
     public void onClickDashboard() throws IOException {
-        loadFXML("UserHome.fxml", "Welcome to the Dashboard.");
+        loadFXML("UserHome.fxml", "Welcome to the Dashboard.", 855, 455, false);
     }
 
     @FXML
@@ -62,6 +81,7 @@ public class UserPortal implements Initializable {
             // Retrieve the controller and initialize the username
             ViewArticles controller = loader.getController();
             String username = SessionManager.getInstance().getUsername();
+            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
             if (username != null) {
                 controller.initializeUsername(); // Set the username and load articles
             } else {
@@ -82,7 +102,7 @@ public class UserPortal implements Initializable {
 
     @FXML
     public void onClickManage() throws IOException {
-        loadFXML("ManageProfile.fxml", "Manage your saved articles.");
+        loadFXML("ManageProfile.fxml", "Manage your saved articles.", 550, 679, true);
     }
 
     @FXML
@@ -91,8 +111,9 @@ public class UserPortal implements Initializable {
             // Navigate back to the AdministratorLogin.fxml page
             Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
             Stage stage = (Stage) ContentArea.getScene().getWindow();
-            stage.getScene().setRoot(root);
-            stage.setTitle("Administrator Login");
+            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            stage.setScene(new Scene(root, 440, 280));
+            stage.setTitle("User Login");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,5 +140,4 @@ public class UserPortal implements Initializable {
             }
         });
     }
-
 }

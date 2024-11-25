@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="430.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewCategorizedArticles">
+   <children>
+      <Text layoutX="197.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
+         <font>
+            <Font name="Times New Roman Bold" size="36.0" />
+         </font>
+      </Text>
+      <TableView fx:id="viewCategorizedTable" layoutX="29.0" layoutY="60.0" prefHeight="315.0" prefWidth="542.0">
+        <columns>
+          <TableColumn fx:id="viewTitle" prefWidth="75.0" text="Title" />
+          <TableColumn fx:id="viewAuthor" prefWidth="75.0" text="Author" />
+            <TableColumn fx:id="viewDescription" prefWidth="159.199951171875" text="Description" />
+            <TableColumn fx:id="viewDate" prefWidth="100.79998779296875" text="Published Date" />
+            <TableColumn fx:id="viewCategory" prefWidth="66.4000244140625" text="Category" />
+            <TableColumn fx:id="viewSelect" prefWidth="56.79998779296875" text="Select" />
+        </columns>
+      </TableView>
+      <Button layoutX="208.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
+      <Button layoutX="532.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button layoutX="29.0" layoutY="390.0" mnemonicParsing="false" onAction="#onClickBackDashboard" prefHeight="26.0" prefWidth="120.0" text="Back to Portal" />
+      <Button layoutX="323.0" layoutY="390.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button layoutX="430.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+   </children>
+</AnchorPane>

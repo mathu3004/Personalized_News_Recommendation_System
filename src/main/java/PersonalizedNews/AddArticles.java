@@ -140,5 +140,4 @@ public class AddArticles {
             e.printStackTrace();
         }
     }
-
 }

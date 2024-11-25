@@ -5,9 +5,16 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 import org.bson.Document;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +38,6 @@ public class ReadArticles {
     public void loadArticleDetails(int articleId) {
         MongoDatabase database = DatabaseConnector.getDatabase();
         MongoCollection<Document> articles = database.getCollection("Articles");
-
         Document article = articles.find(new Document("articleId", articleId)).first();
 
         if (article != null) {
@@ -41,7 +47,7 @@ public class ReadArticles {
             viewContent.setText(article.getString("content"));
             this.articleID = String.valueOf(articleId);
         } else {
-            System.out.println("Article not found!");
+            showAlert("Error", "Article not found!", Alert.AlertType.ERROR);
         }
     }
 
@@ -100,19 +106,27 @@ public class ReadArticles {
     @FXML
     public void onClickLike(ActionEvent event) {
         saveActionToDB("liked");
-        System.out.println("Article liked!");
+        showAlert("Success", "Liked the article with ID " + articleID, Alert.AlertType.INFORMATION);
     }
 
     @FXML
     public void onClickSkip(ActionEvent event) {
         saveActionToDB("skipped");
-        System.out.println("Article skipped!");
+        showAlert("Success", "Skipped the article with ID " + articleID, Alert.AlertType.INFORMATION);
     }
 
     @FXML
     public void onClickSave(ActionEvent event) {
         saveActionToDB("saved");
-        System.out.println("Article saved!");
+        showAlert("Success", "Saved the article with ID " + articleID, Alert.AlertType.INFORMATION);
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public static void initializeUser(String username) {
@@ -126,6 +140,19 @@ public class ReadArticles {
             System.out.println("User Preferences: " + preferences);
         } else {
             System.out.println("User not found!");
+        }
+    }
+
+    public void onClickBackViewArticles(ActionEvent event) {
+        try {
+            // Navigate back to the Manage Articles page
+            Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 855, 525));
+            stage.setTitle("User Dashboard");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

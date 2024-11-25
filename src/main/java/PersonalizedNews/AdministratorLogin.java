@@ -65,12 +65,6 @@ public class AdministratorLogin {
             String enteredAdminName = adminName.getText().trim();
             String enteredPassword = isPasswordVisible ? PasswordText.getText().trim() : Password.getText().trim();
 
-            // Validate inputs
-            if (enteredEmail.isEmpty() && enteredAdminName.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter at least an email or admin name!");
-                return;
-            }
-
             if (enteredPassword.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Input Error", "Password cannot be empty!");
                 return;
@@ -81,8 +75,11 @@ public class AdministratorLogin {
             if (!enteredEmail.isEmpty()) {
                 query.append("email", enteredEmail);
             }
-            if (!enteredAdminName.isEmpty()) {
-                query.append("adminName", enteredAdminName);
+            else if (!enteredAdminName.isEmpty()) {
+                query.append("username", enteredAdminName);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter either an email or an admin name!");
+                return;
             }
             query.append("password", enteredPassword);
 
