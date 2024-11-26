@@ -27,9 +27,9 @@
          <font>
             <Font name="Times New Roman Bold" size="15.0" />
          </font></Label>
-      <Button layoutX="37.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
-      <Button layoutX="508.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Dislike" />
-      <Button layoutX="280.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button fx:id="likeButton" layoutX="37.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button fx:id="skipButton" layoutX="508.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button fx:id="saveButton" layoutX="280.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
       <Button layoutX="114.0" layoutY="578.0" mnemonicParsing="false" onAction="#onClickBackViewArticles" text="Back to Dashboard" />
       <Separator layoutY="49.0" prefHeight="0.0" prefWidth="600.0" />
    </children>

@@ -10,6 +10,12 @@ import javafx.stage.Stage;
 public class NewsApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+        // Initialize FetchArticles in a separate thread to avoid UI blocking
+        new Thread(() -> {
+            System.out.println("Initializing FetchArticles...");
+            FetchArticlesCategory.initialize();
+        }).start();
+
         Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
         Scene scene = new Scene(root, 600,450);
 

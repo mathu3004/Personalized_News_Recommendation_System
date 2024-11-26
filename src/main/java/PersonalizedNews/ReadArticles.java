@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.bson.Document;
@@ -27,9 +28,15 @@ public class ReadArticles {
     public Label viewPublishedDate;
     @FXML
     public Label viewContent;
+    @FXML
+    public Button likeButton;
+    @FXML
+    public Button skipButton;
+    @FXML
+    public Button saveButton;
 
     private String username;
-    private String articleID;
+    private int articleID;
 
     public void setUsername(String username) {
         this.username = username;
@@ -45,9 +52,27 @@ public class ReadArticles {
             viewAuthor.setText(article.getString("author"));
             viewPublishedDate.setText(article.getString("publishedAt"));
             viewContent.setText(article.getString("content"));
-            this.articleID = String.valueOf(articleId);
+            this.articleID = Integer.parseInt(String.valueOf(articleId));
+            updateButtonStates();
         } else {
             showAlert("Error", "Article not found!", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void updateButtonStates() {
+        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+        Document userDoc = ratedArticles.find(new Document("username", username)).first();
+
+        if (userDoc != null) {
+            List<Integer> liked = userDoc.getList("liked", Integer.class);
+            List<Integer> skipped = userDoc.getList("skipped", Integer.class);
+            List<Integer> saved = userDoc.getList("saved", Integer.class);
+
+            likeButton.setText(liked != null && liked.contains(Integer.parseInt(String.valueOf(articleID))) ? "Unlike" : "Like");
+            skipButton.setText(skipped != null && skipped.contains(Integer.parseInt(String.valueOf(articleID))) ? "Unskip" : "Skip");
+            saveButton.setText(saved != null && saved.contains(Integer.parseInt(String.valueOf(articleID))) ? "Unsave" : "Save");
         }
     }
 
@@ -58,7 +83,6 @@ public class ReadArticles {
         Document userDoc = ratedArticles.find(new Document("username", username)).first();
 
         if (userDoc == null) {
-            // Initialize a new document for the user if it doesn't exist
             userDoc = new Document("username", username)
                     .append("liked", new ArrayList<>())
                     .append("skipped", new ArrayList<>())
@@ -67,58 +91,63 @@ public class ReadArticles {
             ratedArticles.insertOne(userDoc);
         }
 
-        // Remove the articleId from other arrays before adding it to the target array
+        int articleId = Integer.parseInt(String.valueOf(articleID));
         if (action.equals("liked") || action.equals("skipped")) {
-            // Remove the articleId from the opposite action's array
             String oppositeAction = action.equals("liked") ? "skipped" : "liked";
             ratedArticles.updateOne(
                     new Document("username", username),
-                    Updates.pull(oppositeAction, Integer.parseInt(articleID))
+                    Updates.pull(oppositeAction, articleId)
             );
-            // Add the articleId to the target action's array
-            ratedArticles.updateOne(
-                    new Document("username", username),
-                    Updates.addToSet(action, Integer.parseInt(articleID))
-            );
-        } else if (action.equals("saved")) {
-            // Toggle the articleId in the "saved" array
-            boolean isSaved = userDoc.getList("saved", Integer.class).contains(Integer.parseInt(articleID));
-            if (isSaved) {
+
+            if (userDoc.getList(action, Integer.class).contains(articleId)) {
                 ratedArticles.updateOne(
                         new Document("username", username),
-                        Updates.pull("saved", Integer.parseInt(articleID))
+                        Updates.pull(action, articleId)
                 );
             } else {
                 ratedArticles.updateOne(
                         new Document("username", username),
-                        Updates.addToSet("saved", Integer.parseInt(articleID))
+                        Updates.addToSet(action, articleId)
+                );
+            }
+        } else if (action.equals("saved")) {
+            if (userDoc.getList("saved", Integer.class).contains(articleId)) {
+                ratedArticles.updateOne(
+                        new Document("username", username),
+                        Updates.pull("saved", articleId)
+                );
+            } else {
+                ratedArticles.updateOne(
+                        new Document("username", username),
+                        Updates.addToSet("saved", articleId)
                 );
             }
         }
 
-        // Ensure the articleId is added to the 'read' array
         ratedArticles.updateOne(
                 new Document("username", username),
-                Updates.addToSet("read", Integer.parseInt(articleID))
+                Updates.addToSet("read", articleId)
         );
+
+        updateButtonStates();
     }
 
     @FXML
     public void onClickLike(ActionEvent event) {
         saveActionToDB("liked");
-        showAlert("Success", "Liked the article with ID " + articleID, Alert.AlertType.INFORMATION);
+        showAlert("Success", likeButton.getText().equals("Unlike") ? "Liked the article." : "Unliked the article.", Alert.AlertType.INFORMATION);
     }
 
     @FXML
     public void onClickSkip(ActionEvent event) {
         saveActionToDB("skipped");
-        showAlert("Success", "Skipped the article with ID " + articleID, Alert.AlertType.INFORMATION);
+        showAlert("Success", skipButton.getText().equals("Unskip") ? "Skipped the article." : "Unskipped the article.", Alert.AlertType.INFORMATION);
     }
 
     @FXML
     public void onClickSave(ActionEvent event) {
         saveActionToDB("saved");
-        showAlert("Success", "Saved the article with ID " + articleID, Alert.AlertType.INFORMATION);
+        showAlert("Success", saveButton.getText().equals("Unsave") ? "Saved the article." : "Unsaved the article.", Alert.AlertType.INFORMATION);
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {

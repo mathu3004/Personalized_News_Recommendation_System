@@ -86,6 +86,11 @@ public class AddArticles {
             collection.insertOne(newArticle);
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article added successfully!");
+            // Initialize FetchArticles in a separate thread to avoid UI blocking
+            new Thread(() -> {
+                System.out.println("Initializing FetchArticles...");
+                FetchArticlesCategory.initialize();
+            }).start();
 
             // Clear all fields after successful addition
             clearFields();

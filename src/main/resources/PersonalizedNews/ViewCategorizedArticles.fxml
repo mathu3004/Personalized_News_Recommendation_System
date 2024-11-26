@@ -22,9 +22,9 @@
         </columns>
       </TableView>
       <Button layoutX="208.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
-      <Button layoutX="532.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button fx:id="skipButton" layoutX="532.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
       <Button layoutX="29.0" layoutY="390.0" mnemonicParsing="false" onAction="#onClickBackDashboard" prefHeight="26.0" prefWidth="120.0" text="Back to Portal" />
-      <Button layoutX="323.0" layoutY="390.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
-      <Button layoutX="430.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button fx:id="saveButton" layoutX="323.0" layoutY="390.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button fx:id="likeButton" layoutX="430.0" layoutY="391.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
    </children>
 </AnchorPane>

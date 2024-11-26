@@ -117,6 +117,12 @@ public class EditDeleteArticles {
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article updated successfully!");
 
+            // Initialize FetchArticles in a separate thread to avoid UI blocking
+            new Thread(() -> {
+                System.out.println("Initializing FetchArticles...");
+                FetchArticlesCategory.initialize();
+            }).start();
+
             // Clear all fields after successful update
             clearFields();
         } catch (NumberFormatException e) {
@@ -182,6 +188,11 @@ public class EditDeleteArticles {
             if (article != null) {
                 collection.deleteOne(query);
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Article deleted successfully!");
+                // Initialize FetchArticles in a separate thread to avoid UI blocking
+                new Thread(() -> {
+                    System.out.println("Initializing FetchArticles...");
+                    FetchArticlesCategory.initialize();
+                }).start();
                 clearFields();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Not Found", "No article found with the given Article ID!");

@@ -1,6 +1,7 @@
 package PersonalizedNews;
 
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 
 public class Article {
     private RadioButton select;
@@ -12,7 +13,7 @@ public class Article {
     private String category;
     private String content;
 
-
+    //private static final ToggleGroup toggleGroup = new ToggleGroup();
     public Article(int articleId, String title, String author, String description, String publishedDate, String content, String category) {
         this.articleId = articleId;
         this.title = title;
@@ -63,4 +64,5 @@ public class Article {
     public RadioButton getSelect() {
         return select;
     }
+
 }

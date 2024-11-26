@@ -22,8 +22,8 @@
         </columns>
       </TableView>
       <Button layoutX="96.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickRead" text="Read" />
-      <Button layoutX="574.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
-      <Button layoutX="233.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
-      <Button layoutX="451.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button fx:id="skipButton" layoutX="574.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button fx:id="saveButton" layoutX="233.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button fx:id="likeButton" layoutX="451.0" layoutY="435.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
    </children>
 </AnchorPane>

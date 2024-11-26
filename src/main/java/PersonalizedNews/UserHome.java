@@ -57,6 +57,6 @@ public class UserHome {
     }
 
     public void onClickViewPolitical(ActionEvent event) {
-        openCategoryView("Political", event);
+        openCategoryView("Politics", event);
     }
 }
