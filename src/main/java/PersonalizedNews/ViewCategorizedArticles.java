@@ -11,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.bson.Document;
@@ -38,6 +35,12 @@ public class ViewCategorizedArticles {
     public TableColumn<Article, String> viewCategory;
     @FXML
     public TableColumn<Article, RadioButton> viewSelect;
+    @FXML
+    public Button skipButton;
+    @FXML
+    public Button saveButton;
+    @FXML
+    public Button likeButton;
 
     private String username;
 
@@ -71,8 +74,11 @@ public class ViewCategorizedArticles {
 
     }
 
+    @FXML
     public void loadArticlesFromDatabase(String category) {
         articles.clear();
+
+        ToggleGroup toggleGroup = new ToggleGroup(); // Create a new ToggleGroup
 
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
@@ -80,14 +86,14 @@ public class ViewCategorizedArticles {
 
             FindIterable<Document> documents;
             if (category == null) {
-                // Fetch all articles
                 documents = collection.find();
             } else {
-                // Fetch articles by category
                 documents = collection.find(Filters.eq("category", category));
             }
 
             for (Document doc : documents) {
+                RadioButton radioButton = new RadioButton();
+                radioButton.setToggleGroup(toggleGroup); // Add RadioButton to the ToggleGroup
                 articles.add(new Article(
                         doc.getInteger("articleId"),
                         doc.getString("category"),
@@ -95,14 +101,14 @@ public class ViewCategorizedArticles {
                         doc.getString("publishedAt"),
                         doc.getString("title"),
                         doc.getString("description"),
-                        new RadioButton()
+                        radioButton
                 ));
             }
         }
 
-        // Update TableView
         viewCategorizedTable.setItems(articles);
     }
+
 
     private void saveActionToDB(String action, int articleId) {
         MongoDatabase database = DatabaseConnector.getDatabase();
@@ -258,7 +264,4 @@ public class ViewCategorizedArticles {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-
 }

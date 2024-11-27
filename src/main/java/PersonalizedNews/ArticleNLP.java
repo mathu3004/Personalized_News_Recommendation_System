@@ -83,7 +83,9 @@ public class ArticleNLP {
                     System.out.println("Skipped uncategorizable article: " + title);
                 }
             }
-        }}
+        }
+    }
+
     // Method to categorize an article using TF-IDF and cosine similarity
     private static String categorizeArticleUsingNLP(String articleText) {
         CosineSimilarity cosineSimilarity = new CosineSimilarity();

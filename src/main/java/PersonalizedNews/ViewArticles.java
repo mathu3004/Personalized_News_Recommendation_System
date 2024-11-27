@@ -108,9 +108,12 @@ public class ViewArticles {
     }
 
     private void displayArticles(List<Document> articles) {
+        ToggleGroup toggleGroup = new ToggleGroup(); // Create a new ToggleGroup
         ObservableList<Article> observableArticles = FXCollections.observableArrayList();
 
         for (Document article : articles) {
+            RadioButton radioButton = new RadioButton();
+            radioButton.setToggleGroup(toggleGroup);
             Article articleObj = new Article(
                     article.getInteger("articleId"),
                     article.getString("category"),
@@ -118,7 +121,7 @@ public class ViewArticles {
                     article.getString("publishedAt"),
                     article.getString("title"),
                     article.getString("description"),
-                    new RadioButton()
+                    radioButton
             );
             observableArticles.add(articleObj);
         }
@@ -296,7 +299,7 @@ public class ViewArticles {
                 vector.put(word, vector.getOrDefault(word, 0) + 1);
             }
             return vector;
-        }
+    }
 
     private void saveActionToDB(String action, int articleId) {
         MongoDatabase database = DatabaseConnector.getDatabase();
@@ -438,5 +441,4 @@ public class ViewArticles {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 }
