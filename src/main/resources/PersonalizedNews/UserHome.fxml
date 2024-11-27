@@ -4,37 +4,37 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="293.0" prefWidth="691.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
+<AnchorPane prefHeight="386.0" prefWidth="704.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
    <children>
-      <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewAI" style="-fx-background-color: black;" text="AI" textFill="WHITE">
+      <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewAI" text="AI">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="148.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTech" style="-fx-background-color: black;" text="Technology" textFill="WHITE">
+      <Button layoutX="148.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTech" text="Technology">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="348.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewBusiness" style="-fx-background-color: black;" text="Business" textFill="WHITE">
+      <Button layoutX="348.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewBusiness" text="Business">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="514.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTravel" style="-fx-background-color: black;" text="Travel" textFill="WHITE">
+      <Button layoutX="514.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewTravel" text="Travel">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="45.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewSports" style="-fx-background-color: black;" text="Sports" textFill="WHITE">
+      <Button layoutX="45.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewSports" text="Sports">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="181.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewEntertainment" style="-fx-background-color: black;" text="Entertainment" textFill="WHITE">
+      <Button layoutX="181.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewEntertainment" text="Entertainment">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="408.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewHealth" style="-fx-background-color: black;" text="Health" textFill="WHITE">
+      <Button layoutX="408.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewHealth" text="Health">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
-      <Button layoutX="543.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewPolitical" style="-fx-background-color: black;" text="Political" textFill="WHITE">
+      <Button layoutX="543.0" layoutY="207.0" mnemonicParsing="false" onAction="#onClickViewPolitical" text="Political">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font></Button>
@@ -44,5 +44,15 @@
          </font>
       </Text>
       <Separator layoutX="-6.0" layoutY="57.0" prefHeight="7.0" prefWidth="710.0" />
+      <Button layoutX="87.0" layoutY="298.0" mnemonicParsing="false" onAction="#onClickViewLiked" text="Liked Articles">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font>
+      </Button>
+      <Button layoutX="421.0" layoutY="298.0" mnemonicParsing="false" onAction="#onClickViewSaved" text="Saved Articles">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

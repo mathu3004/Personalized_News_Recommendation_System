@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="628.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ReadArticles">
+<AnchorPane prefHeight="453.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ReadArticles">
    <children>
       <Text layoutX="196.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Read Articles">
          <font>
@@ -19,18 +19,18 @@
          <font>
             <Font name="Times New Roman Bold" size="18.0" />
          </font></Label>
-      <Label fx:id="viewContent" layoutX="55.0" layoutY="153.0" prefHeight="286.0" prefWidth="490.0">
+      <Label fx:id="viewContent" layoutX="55.0" layoutY="153.0" prefHeight="135.0" prefWidth="490.0">
          <font>
             <Font name="Times New Roman Bold" size="15.0" />
          </font></Label>
-      <Label fx:id="viewPublishedDate" layoutX="403.0" layoutY="465.0" prefHeight="26.0" prefWidth="114.0">
+      <Label fx:id="viewPublishedDate" layoutX="403.0" layoutY="314.0" prefHeight="26.0" prefWidth="114.0">
          <font>
             <Font name="Times New Roman Bold" size="15.0" />
          </font></Label>
-      <Button fx:id="likeButton" layoutX="37.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
-      <Button fx:id="skipButton" layoutX="508.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
-      <Button fx:id="saveButton" layoutX="280.0" layoutY="521.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
-      <Button layoutX="114.0" layoutY="578.0" mnemonicParsing="false" onAction="#onClickBackViewArticles" text="Back to Dashboard" />
+      <Button fx:id="likeButton" layoutX="55.0" layoutY="365.0" mnemonicParsing="false" onAction="#onClickLike" text="Like" />
+      <Button fx:id="skipButton" layoutX="498.0" layoutY="365.0" mnemonicParsing="false" onAction="#onClickSkip" text="Skip" />
+      <Button fx:id="saveButton" layoutX="280.0" layoutY="365.0" mnemonicParsing="false" onAction="#onClickSave" text="Save" />
+      <Button layoutX="119.0" layoutY="413.0" mnemonicParsing="false" onAction="#onClickBackViewArticles" text="Back to Dashboard" />
       <Separator layoutY="49.0" prefHeight="0.0" prefWidth="600.0" />
    </children>
 </AnchorPane>

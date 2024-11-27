@@ -238,7 +238,7 @@ public class ManageProfile {
         for (String preference : preferences) {
             switch (preference) {
                 case "AI" -> checkAI.setSelected(true);
-                case "Tech" -> checkTech.setSelected(true);
+                case "Technology" -> checkTech.setSelected(true);
                 case "Health" -> checkHealth.setSelected(true);
                 case "Sports" -> checkSports.setSelected(true);
                 case "Travel" -> checkTravel.setSelected(true);
@@ -263,7 +263,7 @@ public class ManageProfile {
     private List<String> getSelectedPreferences() {
         List<String> preferences = new ArrayList<>();
         if (checkAI.isSelected()) preferences.add("AI");
-        if (checkTech.isSelected()) preferences.add("Tech");
+        if (checkTech.isSelected()) preferences.add("Technology");
         if (checkHealth.isSelected()) preferences.add("Health");
         if (checkSports.isSelected()) preferences.add("Sports");
         if (checkTravel.isSelected()) preferences.add("Travel");

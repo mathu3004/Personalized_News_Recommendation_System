@@ -29,6 +29,12 @@ import static PersonalizedNews.FetchArticlesCategory.preprocessText;
 
 public class ViewArticles {
     @FXML
+    public Button saveButton;
+    @FXML
+    public Button skipButton;
+    @FXML
+    public Button likeButton;
+    @FXML
     private TableColumn<Article, String> columnCategory;
 
     @FXML
@@ -61,6 +67,16 @@ public class ViewArticles {
         columnTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
         columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         columnSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
+        // Listener to select radio button when a row is clicked
+        articlesTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Article selectedArticle = (Article) newValue;
+                if (selectedArticle.getSelect() != null) {
+                    selectedArticle.getSelect().setSelected(true); // Select the radio button
+                }
+                resetButtonStates(selectedArticle); // Reset buttons based on the selected article
+            }
+        });
     }
 
     public void initializeUsername() {
@@ -76,35 +92,8 @@ public class ViewArticles {
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
-            if (userDoc == null) {
-                promptForPreferences();
-            }
             loadRecommendedArticles();
         });
-    }
-
-    private void promptForPreferences() {
-        List<String> categories = Arrays.asList("Sports", "Travel", "Health", "Entertainment", "Politics", "Business", "AI", "Technology");
-        List<String> selectedPreferences = new ArrayList<>();
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(categories.get(0), categories);
-        dialog.setTitle("Preference Selection");
-        dialog.setHeaderText("Select Your Preferences");
-        dialog.setContentText("Choose a category you like (add more later):");
-
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(selectedPreferences::add);
-
-        if (!selectedPreferences.isEmpty()) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
-            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
-
-            ratedArticles.insertOne(new Document("username", username)
-                    .append("preferences", selectedPreferences)
-                    .append("liked", new ArrayList<>())
-                    .append("skipped", new ArrayList<>())
-                    .append("read", new ArrayList<>()));
-        }
     }
 
     private void displayArticles(List<Document> articles) {
@@ -130,20 +119,55 @@ public class ViewArticles {
         articlesTable.refresh();
     }
 
+    private void resetButtonStates(Article selectedArticle) {
+        if (selectedArticle == null) return;
+
+        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+        // Fetch user document
+        Document userDoc = ratedArticles.find(new Document("username", username)).first();
+
+        if (userDoc != null) {
+            List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
+            List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
+
+            // Reset or update button text for Like/Unlike
+            if (likedArticles != null && likedArticles.contains(selectedArticle.getArticleId())) {
+                likeButton.setText("Unlike");
+            } else {
+                likeButton.setText("Like");
+            }
+
+            // Reset or update button text for Save/Unsave
+            if (savedArticles != null && savedArticles.contains(selectedArticle.getArticleId())) {
+                saveButton.setText("Unsave");
+            } else {
+                saveButton.setText("Save");
+            }
+        } else {
+            // Default state if no user document is found
+            likeButton.setText("Like");
+            saveButton.setText("Save");
+        }
+    }
+
     public void loadRecommendedArticles() {
         MongoDatabase database = DatabaseConnector.getDatabase();
         MongoCollection<Document> categorizedArticles = database.getCollection("CategorizedArticles");
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+        MongoCollection<Document> userAccounts = database.getCollection("UserAccounts");
 
-        // Fetch user interaction data
         executorService.submit(() -> {
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
 
             if (userDoc == null || (userDoc.getList("liked", Integer.class).isEmpty() &&
                     userDoc.getList("read", Integer.class).isEmpty() &&
                     userDoc.getList("skipped", Integer.class).isEmpty())) {
-                recommendBasedOnPreferences(categorizedArticles);
+                // No interactions; use preferences from UserAccounts
+                recommendUsingStoredPreferences(userAccounts, categorizedArticles);
             } else {
+                // Use interaction-based recommendations
                 recommendBasedOnInteractions(categorizedArticles, userDoc);
             }
         });
@@ -156,115 +180,135 @@ public class ViewArticles {
         List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
         List<Integer> readArticles = userDoc.getList("read", Integer.class);
 
-        // Count skipped and liked articles by category
+        // Count skipped categories and exclude those skipped more than 3 times
         Map<String, Long> skippedCategoryCounts = skippedArticles.stream()
                 .map(articleId -> getArticleCategory(categorizedArticles, articleId))
                 .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(category -> category, Collectors.counting()));
 
-        Map<String, Long> likedCategoryCounts = likedArticles.stream()
-                .map(articleId -> getArticleCategory(categorizedArticles, articleId))
-                .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(category -> category, Collectors.counting()));
-
-        // Exclude categories skipped more than three times
         Set<String> excludedCategories = skippedCategoryCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() > 3)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
-        // Fetch available articles excluding skipped and read-only articles
+        System.out.println("Excluded categories: " + excludedCategories);
+
+        // Fetch available articles excluding liked, skipped, read-only, and excluded categories
         List<Document> availableArticles = categorizedArticles.find(new Document("articleId",
-                new Document("$nin", Stream.concat(
-                        Stream.concat(skippedArticles.stream(), readArticles.stream().filter(id -> !savedArticles.contains(id))),
-                        likedArticles.stream()
-                ).collect(Collectors.toList()))
-        )).into(new ArrayList<>());
+                        new Document("$nin", Stream.concat(
+                                Stream.concat(skippedArticles.stream(), readArticles.stream()),
+                                likedArticles.stream()
+                        ).collect(Collectors.toList()))
+                )).into(new ArrayList<>())
+                .stream()
+                .filter(article -> !excludedCategories.contains(article.getString("category"))) // Exclude skipped categories
+                .collect(Collectors.toList());
 
-        // Include one random saved article
-        List<Document> savedArticleList = categorizedArticles.find(new Document("articleId",
-                new Document("$in", savedArticles)
-        )).into(new ArrayList<>());
-        Collections.shuffle(savedArticleList);
-        List<Document> prioritizedSavedArticles = savedArticleList.stream().limit(1).collect(Collectors.toList());
+        System.out.println("Available articles: " + availableArticles.size());
 
-        // Apply content-based filtering to rank liked articles
+        // Include saved articles excluding those already liked, read or skipped
+        List<Document> savedArticleList = categorizedArticles.find(
+                        new Document("articleId",
+                                new Document("$in", savedArticles)
+                        )
+                ).into(new ArrayList<>())
+                .stream()
+                .filter(article -> !likedArticles.contains(article.getInteger("articleId"))) // Exclude liked articles
+                .filter(article -> !skippedArticles.contains(article.getInteger("articleId"))) // Exclude skipped articles
+                .filter(article -> !readArticles.contains(article.getInteger("articleId"))) // Exclude read articles
+                .collect(Collectors.toList());
+
+        System.out.println("Saved articles selected: " + savedArticleList.size());
+
+        // Recommend articles from liked categories using content-based filtering
         List<Document> rankedLikedArticles = recommendArticlesUsingContent(availableArticles.stream()
-                .filter(article -> likedCategoryCounts.containsKey(article.getString("category")) &&
-                        !excludedCategories.contains(article.getString("category")))
+                .filter(article -> !excludedCategories.contains(article.getString("category")))
                 .collect(Collectors.toList()), likedArticles, categorizedArticles);
 
-        // Distribute recommendations across liked categories proportionally
-        Map<String, List<Document>> articlesByCategory = rankedLikedArticles.stream()
-                .collect(Collectors.groupingBy(article -> article.getString("category")));
+        System.out.println("Ranked liked articles: " + rankedLikedArticles.size());
 
-        List<Document> sortedRecommendations = new ArrayList<>();
-        likedCategoryCounts.entrySet().stream()
-                .sorted((a, b) -> Long.compare(b.getValue(), a.getValue())) // Descending order by count
-                .forEach(entry -> {
-                    String category = entry.getKey();
-                    if (articlesByCategory.containsKey(category)) {
-                        sortedRecommendations.addAll(articlesByCategory.get(category));
-                    }
-                });
-
-        // Combine saved and liked articles (limit to 10)
+        // Combine prioritized saved articles with ranked liked articles
         List<Document> combinedRecommendations = Stream.concat(
-                prioritizedSavedArticles.stream(),
-                sortedRecommendations.stream()
-        ).limit(10).collect(Collectors.toList());
+                        savedArticleList.stream(), // Include filtered saved articles
+                        rankedLikedArticles.stream()
+                ).distinct() // Ensure no duplicate articles
+                .limit(20)
+                .collect(Collectors.toList());
 
-        // Fallback to ensure 10 recommendations
-        if (combinedRecommendations.size() < 10) {
+        // Fallback to ensure 20 recommendations
+        if (combinedRecommendations.size() < 20) {
             List<Document> fallbackArticles = availableArticles.stream()
-                    .filter(article -> !excludedCategories.contains(article.getString("category")))
-                    .limit(10 - combinedRecommendations.size())
+                    .filter(article -> !combinedRecommendations.contains(article)) // Avoid duplicates
+                    .limit(20 - combinedRecommendations.size())
                     .collect(Collectors.toList());
             combinedRecommendations.addAll(fallbackArticles);
         }
 
-        // Display final recommendations
+        System.out.println("Final recommendations: " + combinedRecommendations.size());
         displayArticles(combinedRecommendations);
     }
 
-    private void recommendBasedOnPreferences(MongoCollection<Document> categorizedArticles) {
-        MongoCollection<Document> ratedArticles = DatabaseConnector.getDatabase().getCollection("RatedArticles");
-        Document userDoc = ratedArticles.find(new Document("username", username)).first();
-        List<String> preferredCategories = userDoc.getList("preferences", String.class);
+
+    private void recommendUsingStoredPreferences(MongoCollection<Document> userAccounts, MongoCollection<Document> categorizedArticles) {
+        // Fetch user preferences from UserAccounts
+        Document userAccount = userAccounts.find(new Document("username", username)).first();
+        if (userAccount == null || !userAccount.containsKey("preferences")) {
+            System.out.println("Error: No preferences found for user in UserAccounts!");
+            displayArticles(Collections.emptyList()); // Show no recommendations
+            return;
+        }
+
+        List<String> preferences = userAccount.getList("preferences", String.class);
+        if (preferences.isEmpty()) {
+            System.out.println("Preferences list is empty for user: " + username);
+            displayArticles(Collections.emptyList());
+            return;
+        }
+
+        System.out.println("User preferences retrieved: " + preferences);
 
         // Fetch articles matching preferred categories
-        List<Document> preferredArticles = categorizedArticles.find(
-                new Document("category", new Document("$in", preferredCategories))
+        List<Document> articlesByPreference = categorizedArticles.find(
+                new Document("category", new Document("$in", preferences))
         ).into(new ArrayList<>());
 
-        // Apply content-based filtering
-        List<Document> rankedArticles = recommendArticlesUsingContent(preferredArticles, new ArrayList<>(), categorizedArticles);
+        System.out.println("Found " + articlesByPreference.size() + " articles for preferred categories.");
 
-        // Distribute recommendations evenly across preferences
-        Map<String, List<Document>> articlesByCategory = rankedArticles.stream()
+        // Group articles by category
+        Map<String, List<Document>> articlesByCategory = articlesByPreference.stream()
                 .collect(Collectors.groupingBy(article -> article.getString("category")));
 
+        // Distribute articles equally among categories
         List<Document> balancedRecommendations = new ArrayList<>();
-        int limitPerCategory = Math.max(1, 20 / preferredCategories.size());
+        int limitPerCategory = Math.max(1, 20 / preferences.size()); // Equal distribution
 
-        for (String category : preferredCategories) {
+        for (String category : preferences) {
             if (articlesByCategory.containsKey(category)) {
-                balancedRecommendations.addAll(articlesByCategory.get(category).stream()
-                        .limit(limitPerCategory)
-                        .collect(Collectors.toList()));
+                balancedRecommendations.addAll(
+                        articlesByCategory.get(category).stream()
+                                .limit(limitPerCategory)
+                                .collect(Collectors.toList())
+                );
             }
         }
 
-        // Ensure exactly 20 recommendations
-        balancedRecommendations = balancedRecommendations.stream().limit(20).collect(Collectors.toList());
+        // Fallback: Ensure exactly 20 recommendations if less than 20 articles are found
+        if (balancedRecommendations.size() < 20) {
+            List<Document> fallbackArticles = articlesByPreference.stream()
+                    .filter(article -> !balancedRecommendations.contains(article))
+                    .limit(20 - balancedRecommendations.size())
+                    .collect(Collectors.toList());
+            balancedRecommendations.addAll(fallbackArticles);
+        }
 
+        System.out.println("Balanced recommendations prepared with " + balancedRecommendations.size() + " articles.");
         displayArticles(balancedRecommendations);
     }
 
     private String getArticleCategory(MongoCollection<Document> collection, int articleId) {
-            Document article = collection.find(new Document("articleId", articleId)).first();
-            return article != null ? article.getString("category") : "Uncategorized";
-        }
+        Document article = collection.find(new Document("articleId", articleId)).first();
+        return article != null ? article.getString("category") : "Uncategorized";
+    }
 
     private List<Document> recommendArticlesUsingContent(List<Document> availableArticles, List<Integer> likedArticles, MongoCollection<Document> collection) {
         CosineSimilarity cosineSimilarity = new CosineSimilarity();
@@ -293,12 +337,12 @@ public class ViewArticles {
 
 
     private Map<CharSequence, Integer> vectorizeContent(String content) {
-            Map<CharSequence, Integer> vector = new HashMap<>();
-            String[] words = preprocessText(content).split("\\s+");
-            for (String word : words) {
-                vector.put(word, vector.getOrDefault(word, 0) + 1);
-            }
-            return vector;
+        Map<CharSequence, Integer> vector = new HashMap<>();
+        String[] words = preprocessText(content).split("\\s+");
+        for (String word : words) {
+            vector.put(word, vector.getOrDefault(word, 0) + 1);
+        }
+        return vector;
     }
 
     private void saveActionToDB(String action, int articleId) {
@@ -382,7 +426,7 @@ public class ViewArticles {
 
                 // Set the scene and show the ReadArticles view
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root, 600, 628));
+                stage.setScene(new Scene(root, 600, 453));
                 root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
                 stage.setTitle("Read Article");
                 stage.show();
@@ -398,19 +442,59 @@ public class ViewArticles {
     public void onClickLike(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("liked", selectedArticle.getArticleId());
-            showAlert("Success", "Liked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc != null) {
+                List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
+
+                if (likedArticles != null && likedArticles.contains(selectedArticle.getArticleId())) {
+                    // Unlike the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.pull("liked", selectedArticle.getArticleId())
+                    );
+                    likeButton.setText("Like");
+                    showAlert("Success", "Unliked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                } else {
+                    // Like the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.addToSet("liked", selectedArticle.getArticleId())
+                    );
+                    likeButton.setText("Unlike");
+                    showAlert("Success", "Liked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                }
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
     }
 
+
     @FXML
     public void onClickSkip(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("skipped", selectedArticle.getArticleId());
-            showAlert("Success", "Skipped the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            // Show confirmation dialog
+            Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmDialog.setTitle("Confirmation");
+            confirmDialog.setHeaderText(null);
+            confirmDialog.setContentText("Are you sure you want to skip this article?");
+
+            Optional<ButtonType> result = confirmDialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // Save the skip action to the database
+                saveActionToDB("skipped", selectedArticle.getArticleId());
+
+                // Remove the skipped article from the TableView
+                articlesTable.getItems().remove(selectedArticle);
+                articlesTable.refresh();
+
+                // Show success message
+                showAlert("Success", "Skipped the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
@@ -420,12 +504,36 @@ public class ViewArticles {
     public void onClickSave(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("saved", selectedArticle.getArticleId());
-            showAlert("Success", "Saved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc != null) {
+                List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
+
+                if (savedArticles != null && savedArticles.contains(selectedArticle.getArticleId())) {
+                    // Unsave the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.pull("saved", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Save");
+                    showAlert("Success", "Unsaved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                } else {
+                    // Save the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.addToSet("saved", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Unsave");
+                    showAlert("Success", "Saved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                }
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
     }
+
 
     private Article getSelectedArticle() {
         return articlesTable.getItems().stream()

@@ -45,6 +45,7 @@ public class UserPortal implements Initializable {
         if (applyCSS) {
             fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
         }
+        fxml.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
 
         // Optional: Show an alert message after loading the FXML
         if (alertMessage != null && !alertMessage.isEmpty()) {

@@ -104,7 +104,6 @@ public class EditDeleteArticles {
                 return;
             }
 
-
             // Update the article in the database
             Document updatedArticle = new Document("title", enteredTitle)
                     .append("author", enteredAuthor)
@@ -211,6 +210,7 @@ public class EditDeleteArticles {
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 574, 400));
+            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
             stage.setTitle("Admin Dashboard");
             stage.show();
         } catch (IOException e) {

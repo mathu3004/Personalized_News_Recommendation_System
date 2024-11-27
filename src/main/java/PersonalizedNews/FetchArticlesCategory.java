@@ -5,20 +5,21 @@ import org.bson.Document;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class FetchArticlesCategory {
 
     private static final Map<String, List<String>> categoryKeywords = new HashMap<>();
 
     static {
-        categoryKeywords.put("Sports", Arrays.asList("football", "sports", "cricket", "tennis", "games", "match", "tournament"));
-        categoryKeywords.put("Travel", Arrays.asList("travel", "tour", "vacation", "destination", "explore", "journey"));
-        categoryKeywords.put("Health", Arrays.asList("health", "fitness", "medicine", "disease", "wellness", "exercise"));
-        categoryKeywords.put("Entertainment", Arrays.asList("movie", "music", "entertainment", "celebrity", "show", "concert", "film"));
-        categoryKeywords.put("Politics", Arrays.asList("election", "government", "politics", "policy", "politician", "vote", "parliament"));
-        categoryKeywords.put("Business", Arrays.asList("finance", "business", "economy", "market", "trade", "stock", "investment"));
-        categoryKeywords.put("AI", Arrays.asList("ai", "artificial intelligence", "machine learning", "neural network", "deep learning"));
-        categoryKeywords.put("Technology", Arrays.asList("software", "hardware", "internet", "computer", "technology", "gadgets"));
+        categoryKeywords.put("Sports", Arrays.asList("football", "sports", "cricket", "tennis", "games", "match", "tournament", "esports", "athlete", "championship", "league", "play", "goal"));
+        categoryKeywords.put("Travel", Arrays.asList("travel", "tour", "vacation", "destination", "explore", "journey", "adventure", "trip", "itinerary", "wanderlust", "sightseeing", "parks"));
+        categoryKeywords.put("Health", Arrays.asList("health", "fitness", "medicine", "disease", "wellness", "exercise", "mental health", "diet", "nutrition", "therapy", "clinic", "hospital", "dietary"));
+        categoryKeywords.put("Entertainment", Arrays.asList("movie", "music", "entertainment", "celebrity", "show", "concert", "film", "streaming", "tv", "series", "blockbuster", "animation", "movies", "screenwriting", "creativity", "documentaries"));
+        categoryKeywords.put("Politics", Arrays.asList("election", "government", "politics", "political", "policy", "politician", "vote", "parliament", "congress", "legislation", "diplomacy", "senate", "campaign", "citizens", "voter", "democracy", "conflicts"));
+        categoryKeywords.put("Business", Arrays.asList("finance", "business", "businesses", "economy", "market", "trade", "stock", "investment", "corporate", "startup", "profit", "revenue", "entrepreneurship", "e-commerce", "workplace", "consumers", "consumer", "trends", "competitiveness", "career", "marketing"));
+        categoryKeywords.put("AI", Arrays.asList("ai", "artificial intelligence", "machine learning", "neural network", "deep learning", "algorithm", "automation", "data science", "robotics", "nlp"));
+        categoryKeywords.put("Technology", Arrays.asList("software", "hardware", "internet", "cybersecurity", "computer", "technology", "gadgets", "technologies", "augmented", "reality", "vr", "quantum computing", "innovation", "cloud"));
     }
 
     public static void initialize() {
@@ -34,52 +35,92 @@ public class FetchArticlesCategory {
             categorizedCollection.deleteMany(new Document());
 
             // Fetch uncategorized articles
-            FindIterable<Document> uncategorizedArticles = articlesCollection.find(new Document("category", null));
+            List<Document> uncategorizedArticles = new ArrayList<>();
+            articlesCollection.find(new Document("category", null)).into(uncategorizedArticles);
 
-            for (Document article : uncategorizedArticles) {
-                String content = article.getString("content");
-                String title = article.getString("title");
-                String author = article.getString("author");
-                String description = article.getString("description");
-                Integer articleId = article.getInteger("articleId");
+            // Create a thread pool
+            int threadCount = 4; // Adjust the number of threads as needed
+            ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 
-                Object publishedAtObj = article.get("publishedAt");
-                String publishedAt = null;
-                if (publishedAtObj instanceof Date) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
-                    publishedAt = dateFormat.format((Date) publishedAtObj);
-                } else if (publishedAtObj instanceof String) {
-                    publishedAt = (String) publishedAtObj;
+            // Divide work among threads
+            List<Future<Void>> futures = new ArrayList<>();
+            int batchSize = uncategorizedArticles.size() / threadCount;
+
+            for (int i = 0; i < threadCount; i++) {
+                int start = i * batchSize;
+                int end = (i == threadCount - 1) ? uncategorizedArticles.size() : start + batchSize;
+
+                List<Document> batch = uncategorizedArticles.subList(start, end);
+
+                futures.add(executorService.submit(() -> {
+                    processBatch(batch, categorizedCollection);
+                    return null;
+                }));
+            }
+
+            // Wait for all threads to complete
+            for (Future<Void> future : futures) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
+            // Shutdown the thread pool
+            executorService.shutdown();
+        }
+    }
 
-                if (content != null && !content.isEmpty()) {
-                    String category = categorizeArticleByKeywords(content);
+    private static void processBatch(List<Document> batch, MongoCollection<Document> categorizedCollection) {
+        for (Document article : batch) {
+            String content = article.getString("content");
+            String title = article.getString("title");
+            String author = article.getString("author");
+            String description = article.getString("description");
+            Integer articleId = article.getInteger("articleId");
 
-                    Document categorizedArticle = new Document()
-                            .append("articleId", articleId)
-                            .append("title", title)
-                            .append("author", author)
-                            .append("description", description)
-                            .append("publishedAt", publishedAt)
-                            .append("content", content)
-                            .append("category", category);
+            Object publishedAtObj = article.get("publishedAt");
+            String publishedAt = null;
+            if (publishedAtObj instanceof Date) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+                publishedAt = dateFormat.format((Date) publishedAtObj);
+            } else if (publishedAtObj instanceof String) {
+                publishedAt = (String) publishedAtObj;
+            }
 
-                    try {
-                        categorizedCollection.insertOne(categorizedArticle);
-                        System.out.println("Categorized article: " + title + " -> " + category);
-                    } catch (Exception e) {
-                        System.err.println("Error inserting article: " + title);
-                        e.printStackTrace();
-                    }
-                } else {
-                    System.out.println("Skipped uncategorizable article: " + title);
+            if ((content != null && !content.isEmpty()) || (description != null && !description.isEmpty()) || (title != null && !title.isEmpty())) {
+                String category = categorizeArticleByKeywords(content, description, title);
+
+                Document categorizedArticle = new Document()
+                        .append("articleId", articleId)
+                        .append("title", title)
+                        .append("author", author)
+                        .append("description", description)
+                        .append("publishedAt", publishedAt)
+                        .append("content", content)
+                        .append("category", category);
+
+                try {
+                    categorizedCollection.insertOne(categorizedArticle);
+                    System.out.println("Categorized article: " + title + " -> " + category);
+                } catch (Exception e) {
+                    System.err.println("Error inserting article: " + title);
+                    e.printStackTrace();
                 }
+            } else {
+                System.out.println("Skipped uncategorizable article: " + title);
             }
         }
     }
 
-    private static String categorizeArticleByKeywords(String content) {
-        String processedText = preprocessText(content);
+    private static String categorizeArticleByKeywords(String content, String description, String title) {
+        // Combine content, description, and title into a single text block
+        String combinedText = (content == null ? "" : content) + " " +
+                (description == null ? "" : description) + " " +
+                (title == null ? "" : title);
+
+        // Preprocess the combined text
+        String processedText = preprocessText(combinedText);
         List<String> words = Arrays.asList(processedText.split("\\s+"));
         Map<String, Integer> categoryMatches = new HashMap<>();
 
@@ -109,6 +150,7 @@ public class FetchArticlesCategory {
 
         return bestCategory;
     }
+
 
 
     static String preprocessText(String text) {

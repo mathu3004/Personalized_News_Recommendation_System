@@ -18,6 +18,7 @@ import org.bson.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewCategorizedArticles {
 
@@ -61,6 +62,16 @@ public class ViewCategorizedArticles {
         viewSelect.setCellValueFactory(new PropertyValueFactory<>("select"));
         initializeUsername();
         loadArticlesFromDatabase(null);
+        // Listener to select radio button when a row is clicked
+        viewCategorizedTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Article selectedArticle = (Article) newValue;
+                if (selectedArticle.getSelect() != null) {
+                    selectedArticle.getSelect().setSelected(true); // Select the radio button
+                }
+                resetButtonStates(selectedArticle); // Reset buttons based on the selected article
+            }
+        });
     }
 
     public void initializeUsername() {
@@ -83,10 +94,26 @@ public class ViewCategorizedArticles {
         try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection(COLLECTION_NAME);
+            MongoCollection<Document> ratedCollection = database.getCollection("RatedArticles");
 
             FindIterable<Document> documents;
             if (category == null) {
                 documents = collection.find();
+            } else if (category.equals("Saved") || category.equals("Liked")) {
+                // Fetch user-specific saved or liked articles
+                Document userDoc = ratedCollection.find(Filters.eq("username", username)).first();
+                if (userDoc != null) {
+                    List<Integer> articleIds;
+                    if (category.equals("Saved")) {
+                        articleIds = userDoc.getList("saved", Integer.class);
+                    } else { // "Liked"
+                        articleIds = userDoc.getList("liked", Integer.class);
+                    }
+
+                    documents = collection.find(Filters.in("articleId", articleIds));
+                } else {
+                    documents = collection.find(Filters.eq("articleId", -1)); // Return no results if userDoc is null
+                }
             } else {
                 documents = collection.find(Filters.eq("category", category));
             }
@@ -109,6 +136,46 @@ public class ViewCategorizedArticles {
         viewCategorizedTable.setItems(articles);
     }
 
+    private void resetButtonStates(Article selectedArticle) {
+        if (selectedArticle == null) return;
+
+        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+        // Fetch user document
+        Document userDoc = ratedArticles.find(new Document("username", username)).first();
+
+        if (userDoc != null) {
+            List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
+            List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
+            List<Integer> skippedArticles = userDoc.getList("skipped", Integer.class);
+
+            // Reset or update button text for Like/Unlike
+            if (likedArticles != null && likedArticles.contains(selectedArticle.getArticleId())) {
+                likeButton.setText("Unlike");
+            } else {
+                likeButton.setText("Like");
+            }
+
+            // Reset or update button text for Save/Unsave
+            if (savedArticles != null && savedArticles.contains(selectedArticle.getArticleId())) {
+                saveButton.setText("Unsave");
+            } else {
+                saveButton.setText("Save");
+            }
+
+            if (skippedArticles != null && skippedArticles.contains(selectedArticle.getArticleId())) {
+                skipButton.setText("Unskip");
+            } else {
+                skipButton.setText("Skip");
+            }
+        } else {
+            // Default state if no user document is found
+            likeButton.setText("Like");
+            saveButton.setText("Save");
+            skipButton.setText("Skip");
+        }
+    }
 
     private void saveActionToDB(String action, int articleId) {
         MongoDatabase database = DatabaseConnector.getDatabase();
@@ -192,7 +259,7 @@ public class ViewCategorizedArticles {
 
                 // Set the scene and show the ReadArticles view
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(new Scene(root, 600, 628));
+                stage.setScene(new Scene(root, 600, 453));
                 root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
                 stage.setTitle("Read Article");
                 stage.show();
@@ -204,13 +271,35 @@ public class ViewCategorizedArticles {
         }
     }
 
-
     @FXML
     public void onClickLike(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("liked", selectedArticle.getArticleId());
-            showAlert("Success", "Liked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc != null) {
+                List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
+
+                if (likedArticles != null && likedArticles.contains(selectedArticle.getArticleId())) {
+                    // Unlike the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.pull("liked", selectedArticle.getArticleId())
+                    );
+                    likeButton.setText("Like");
+                    showAlert("Success", "Unliked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                } else {
+                    // Like the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.addToSet("liked", selectedArticle.getArticleId())
+                    );
+                    likeButton.setText("Unlike");
+                    showAlert("Success", "Liked the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                }
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
@@ -220,8 +309,31 @@ public class ViewCategorizedArticles {
     public void onClickSkip(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("skipped", selectedArticle.getArticleId());
-            showAlert("Success", "Skipped the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc != null) {
+                List<Integer> skippedArticles = userDoc.getList("skipped", Integer.class);
+
+                if (skippedArticles != null && skippedArticles.contains(selectedArticle.getArticleId())) {
+                    // Unskip the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.pull("skipped", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Skip");
+                    showAlert("Success", "Unskipped the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                } else {
+                    // Skip the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.addToSet("skipped", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Unskip");
+                    showAlert("Success", "Skipped the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                }
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
@@ -231,8 +343,31 @@ public class ViewCategorizedArticles {
     public void onClickSave(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            saveActionToDB("saved", selectedArticle.getArticleId());
-            showAlert("Success", "Saved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc != null) {
+                List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
+
+                if (savedArticles != null && savedArticles.contains(selectedArticle.getArticleId())) {
+                    // Unsave the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.pull("saved", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Save");
+                    showAlert("Success", "Unsaved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                } else {
+                    // Save the article
+                    ratedArticles.updateOne(
+                            new Document("username", username),
+                            Updates.addToSet("saved", selectedArticle.getArticleId())
+                    );
+                    saveButton.setText("Unsave");
+                    showAlert("Success", "Saved the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+                }
+            }
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
@@ -250,6 +385,7 @@ public class ViewCategorizedArticles {
             Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 855, 525));
+            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
             stage.setTitle("User Dashboard");
             stage.show();
         } catch (IOException e) {

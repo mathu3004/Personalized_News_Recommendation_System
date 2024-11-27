@@ -24,19 +24,14 @@ import java.util.Locale;
 public class AddArticles {
     @FXML
     public TextField articleName;
-
     @FXML
     public TextField articleAuthor;
-
     @FXML
     public DatePicker publishedDate;
-
     @FXML
     public TextField articleID;
-
     @FXML
     public TextArea articleDescription;
-
     @FXML
     public TextArea articleContent;
 
@@ -130,15 +125,18 @@ public class AddArticles {
         alert.showAndWait();
     }
 
+    @FXML
     public void onClickReset(ActionEvent event) {
         clearFields();
     }
+    @FXML
     public void onClickMain(ActionEvent event) {
         try {
             // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 574, 400));;
+            stage.setScene(new Scene(root, 574, 400));
+            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
             stage.setTitle("Admin Dashboard");
             stage.show();
         } catch (IOException e) {

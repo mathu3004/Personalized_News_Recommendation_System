@@ -135,7 +135,7 @@ public class CreateAccount {
     private List<String> getSelectedPreferences() {
         List<String> preferences = new ArrayList<>();
         if (checkAI.isSelected()) preferences.add("AI");
-        if (checkTech.isSelected()) preferences.add("Tech");
+        if (checkTech.isSelected()) preferences.add("Technology");
         if (checkSports.isSelected()) preferences.add("Sports");
         if (checkHealth.isSelected()) preferences.add("Health");
         if (checkTravel.isSelected()) preferences.add("Travel");

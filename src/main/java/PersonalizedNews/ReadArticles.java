@@ -178,6 +178,7 @@ public class ReadArticles {
             Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 855, 525));
+            root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
             stage.setTitle("User Dashboard");
             stage.show();
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package PersonalizedNews;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,35 +29,54 @@ public class UserHome {
         }
     }
 
+    @FXML
     public void onClickViewAI(ActionEvent event) {
         openCategoryView("AI", event);
     }
 
+    @FXML
     public void onClickViewTech(ActionEvent event) {
         openCategoryView("Technology", event);
     }
 
+    @FXML
     public void onClickViewBusiness(ActionEvent event) {
         openCategoryView("Business", event);
     }
 
+    @FXML
     public void onClickViewTravel(ActionEvent event) {
         openCategoryView("Travel", event);
     }
 
+    @FXML
     public void onClickViewSports(ActionEvent event) {
         openCategoryView("Sports", event);
     }
 
+    @FXML
     public void onClickViewEntertainment(ActionEvent event) {
         openCategoryView("Entertainment", event);
     }
 
+    @FXML
     public void onClickViewHealth(ActionEvent event) {
         openCategoryView("Health", event);
     }
 
+    @FXML
     public void onClickViewPolitical(ActionEvent event) {
         openCategoryView("Politics", event);
     }
+
+    @FXML
+    public void onClickViewSaved(ActionEvent event) {
+        openCategoryView("Saved", event);
+    }
+
+    @FXML
+    public void onClickViewLiked(ActionEvent event) {
+        openCategoryView("Liked", event);
+    }
+
 }

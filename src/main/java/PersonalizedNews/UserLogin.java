@@ -84,7 +84,7 @@ public class UserLogin {
                 showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 855, 525));
-                //root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
                 stage.setTitle("User Dashboard");
                 //Clear input fields
                 clearFields();
@@ -105,6 +105,7 @@ public class UserLogin {
             Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 600, 450));
+            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
             stage.setTitle("Welcome to Mark's News");
             stage.show();
         } catch (IOException e) {

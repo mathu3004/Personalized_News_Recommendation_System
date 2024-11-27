@@ -97,6 +97,7 @@ public class AdministratorLogin {
                 Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml")); // Replace with your admin dashboard scene
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 574, 400));
+                root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
                 stage.setTitle("Admin Dashboard");
                 stage.show();
             } else {
@@ -115,6 +116,7 @@ public class AdministratorLogin {
             Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 600, 450));
+            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
             stage.setTitle("Welcome to Mark's News");
             stage.show();
         } catch (IOException e) {

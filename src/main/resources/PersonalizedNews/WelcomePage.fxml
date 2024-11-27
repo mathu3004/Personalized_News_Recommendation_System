@@ -29,12 +29,12 @@
             </Text>
          </children>
       </Pane>
-      <Button id="welcomeUser" layoutX="20.0" layoutY="152.0" mnemonicParsing="false" onAction="#onClickUser" style="-fx-background-color: black; -fx-background-radius: 20%;" styleClass="welcomeLogin" text="Mark's User" textFill="WHITE">
+      <Button id="welcomeUser" layoutX="20.0" layoutY="152.0" mnemonicParsing="false" onAction="#onClickUser" style="-fx-background-radius: 20%;" styleClass="welcomeLogin" text="Mark's User">
          <font>
             <Font name="Times New Roman Bold" size="26.0" />
          </font>
       </Button>
-      <Button id="welcomeAdmin" layoutX="389.0" layoutY="250.0" mnemonicParsing="false" onAction="#onClickAdministrator" style="-fx-background-color: black; -fx-background-radius: 20%;" styleClass="welcomeLogin" text="Administrator" textFill="WHITE">
+      <Button id="welcomeAdmin" layoutX="389.0" layoutY="250.0" mnemonicParsing="false" onAction="#onClickAdministrator" style="-fx-background-radius: 20%;" styleClass="welcomeLogin" text="Administrator">
          <font>
             <Font name="Times New Roman Bold" size="26.0" />
          </font>

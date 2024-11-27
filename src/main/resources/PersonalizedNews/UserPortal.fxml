@@ -27,9 +27,9 @@
             </AnchorPane>
          </center>
          <left>
-            <VBox prefHeight="288.0" prefWidth="152.0" style="-fx-background-color: #A4998E;" BorderPane.alignment="CENTER">
+            <VBox prefHeight="483.0" prefWidth="159.0" style="-fx-background-color: #A4998E;" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="34.0" prefWidth="154.0" text="Dashboard">
+                  <Button mnemonicParsing="false" onAction="#onClickDashboard" prefHeight="34.0" prefWidth="176.0" text="Dashboard">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
@@ -37,7 +37,7 @@
                         <Insets top="40.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickView" prefHeight="34.0" prefWidth="158.0" text="View Articles">
+                  <Button mnemonicParsing="false" onAction="#onClickView" prefHeight="34.0" prefWidth="192.0" text=" Custom Articles">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
@@ -45,7 +45,7 @@
                         <Insets top="40.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="33.0" prefWidth="171.0" text="Manage Profile">
+                  <Button mnemonicParsing="false" onAction="#onClickManage" prefHeight="34.0" prefWidth="171.0" text="Manage Profile">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
@@ -53,7 +53,7 @@
                         <Insets top="40.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="33.0" prefWidth="162.0" text="Logout">
+                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="34.0" prefWidth="167.0" text="Logout">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
@@ -61,7 +61,7 @@
                         <Insets bottom="40.0" top="40.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickExit" prefHeight="33.0" prefWidth="157.0" text="Exit">
+                  <Button mnemonicParsing="false" onAction="#onClickExit" prefHeight="34.0" prefWidth="166.0" text="Exit">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
