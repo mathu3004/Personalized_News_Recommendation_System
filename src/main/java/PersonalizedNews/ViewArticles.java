@@ -1,8 +1,11 @@
 package PersonalizedNews;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -58,6 +61,9 @@ public class ViewArticles {
     private String username;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final String CONNECTION_STRING = "mongodb://127.0.0.1:27017";
+    private static final String DATABASE_NAME = "News";
+    private static MongoClient mongoClient = null;
 
     @FXML
     public void initialize() {
@@ -88,7 +94,7 @@ public class ViewArticles {
         System.out.println("Logged in as: " + username);
 
         executorService.submit(() -> {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -115,19 +121,23 @@ public class ViewArticles {
             observableArticles.add(articleObj);
         }
 
-        articlesTable.setItems(observableArticles);
-        articlesTable.refresh();
+        Platform.runLater(() -> {
+            articlesTable.setItems(observableArticles);
+            articlesTable.refresh();
+        });
     }
 
     private void resetButtonStates(Article selectedArticle) {
+        executorService.submit(() -> {
         if (selectedArticle == null) return;
 
-        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoDatabase database = getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch user document
         Document userDoc = ratedArticles.find(new Document("username", username)).first();
 
+        Platform.runLater(() -> {
         if (userDoc != null) {
             List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
             List<Integer> savedArticles = userDoc.getList("saved", Integer.class);
@@ -150,15 +160,18 @@ public class ViewArticles {
             likeButton.setText("Like");
             saveButton.setText("Save");
         }
+        });
+        });
     }
 
+
     public void loadRecommendedArticles() {
-        MongoDatabase database = DatabaseConnector.getDatabase();
+        executorService.submit(() -> {
+        MongoDatabase database = getDatabase();
         MongoCollection<Document> categorizedArticles = database.getCollection("CategorizedArticles");
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
         MongoCollection<Document> userAccounts = database.getCollection("UserAccounts");
 
-        executorService.submit(() -> {
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
 
             if (userDoc == null || (userDoc.getList("liked", Integer.class).isEmpty() &&
@@ -173,7 +186,15 @@ public class ViewArticles {
         });
     }
 
+    public static MongoDatabase getDatabase() {
+        if (mongoClient == null) {
+            mongoClient = MongoClients.create(CONNECTION_STRING);
+        }
+        return mongoClient.getDatabase(DATABASE_NAME);
+    }
+
     private void recommendBasedOnInteractions(MongoCollection<Document> categorizedArticles, Document userDoc) {
+        executorService.submit(() -> {
         // Fetch interaction data
         List<Integer> likedArticles = userDoc.getList("liked", Integer.class);
         List<Integer> skippedArticles = userDoc.getList("skipped", Integer.class);
@@ -246,11 +267,13 @@ public class ViewArticles {
 
         System.out.println("Final recommendations: " + combinedRecommendations.size());
         displayArticles(combinedRecommendations);
+        });
     }
 
 
     private void recommendUsingStoredPreferences(MongoCollection<Document> userAccounts, MongoCollection<Document> categorizedArticles) {
         // Fetch user preferences from UserAccounts
+        executorService.submit(() -> {
         Document userAccount = userAccounts.find(new Document("username", username)).first();
         if (userAccount == null || !userAccount.containsKey("preferences")) {
             System.out.println("Error: No preferences found for user in UserAccounts!");
@@ -303,6 +326,7 @@ public class ViewArticles {
 
         System.out.println("Balanced recommendations prepared with " + balancedRecommendations.size() + " articles.");
         displayArticles(balancedRecommendations);
+    });
     }
 
     private String getArticleCategory(MongoCollection<Document> collection, int articleId) {
@@ -335,7 +359,6 @@ public class ViewArticles {
                 .collect(Collectors.toList());
     }
 
-
     private Map<CharSequence, Integer> vectorizeContent(String content) {
         Map<CharSequence, Integer> vector = new HashMap<>();
         String[] words = preprocessText(content).split("\\s+");
@@ -346,7 +369,8 @@ public class ViewArticles {
     }
 
     private void saveActionToDB(String action, int articleId) {
-        MongoDatabase database = DatabaseConnector.getDatabase();
+        executorService.submit(() -> {
+        MongoDatabase database = getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch or initialize user document
@@ -405,7 +429,7 @@ public class ViewArticles {
                     );
                 }
                 break;
-        }
+        }});
     }
 
     @FXML
@@ -414,6 +438,7 @@ public class ViewArticles {
         if (selectedArticle != null) {
             saveActionToDB("read", selectedArticle.getArticleId());
             showAlert("Success", "Read the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
+            Platform.runLater(() -> {
             try {
                 // Load the ReadArticles view
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ReadArticles.fxml"));
@@ -433,6 +458,7 @@ public class ViewArticles {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            });
         } else {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
@@ -442,7 +468,7 @@ public class ViewArticles {
     public void onClickLike(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -471,7 +497,6 @@ public class ViewArticles {
             showAlert("Error", "No article selected!", Alert.AlertType.ERROR);
         }
     }
-
 
     @FXML
     public void onClickSkip(ActionEvent event) {
@@ -504,7 +529,7 @@ public class ViewArticles {
     public void onClickSave(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -534,7 +559,6 @@ public class ViewArticles {
         }
     }
 
-
     private Article getSelectedArticle() {
         return articlesTable.getItems().stream()
                 .filter(article -> article.getSelect().isSelected())
@@ -543,10 +567,16 @@ public class ViewArticles {
     }
 
     private void showAlert(String title, String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+
+    public void shutdown() {
+        executorService.shutdown();
     }
 }

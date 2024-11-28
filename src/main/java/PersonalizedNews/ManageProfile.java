@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class ManageProfile {
@@ -65,6 +68,8 @@ public class ManageProfile {
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
 
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
+
     @FXML
     public void initialize() {
         viewNewPassword.setVisible(false);
@@ -74,6 +79,10 @@ public class ManageProfile {
 
     @FXML
     public void onClickCheck() {
+        executorService.execute(this::loadUserDetails);
+    }
+
+    private void loadUserDetails() {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -100,24 +109,27 @@ public class ManageProfile {
             Document user = collection.find(query).first();
 
             if (user != null) {
-                // Populate fields with user data
-                fName.setText(user.getString("firstName"));
-                lName.setText(user.getString("lastName"));
-                if ("Female".equalsIgnoreCase(user.getString("gender"))) {
-                    radioFemale.setSelected(true);
-                } else if ("Male".equalsIgnoreCase(user.getString("gender"))) {
-                    radioMale.setSelected(true);
-                }
-                dOB.setValue(LocalDate.parse(user.getString("dateOfBirth")));
-                setPreferences(user.getList("preferences", String.class));
-                // Load password into hidden field
-                String loadedPassword = user.getString("password");
-                newPassword.setText(loadedPassword);
-                confirmNewPassword.setText(loadedPassword);
-                viewNewPassword.setText(loadedPassword);
-                viewNewConfirmPassword.setText(loadedPassword);
+                Platform.runLater(() -> {
+                    // Populate fields with user data
+                    fName.setText(user.getString("firstName"));
+                    lName.setText(user.getString("lastName"));
+                    if ("Female".equalsIgnoreCase(user.getString("gender"))) {
+                        radioFemale.setSelected(true);
+                    } else if ("Male".equalsIgnoreCase(user.getString("gender"))) {
+                        radioMale.setSelected(true);
+                    }
+                    dOB.setValue(LocalDate.parse(user.getString("dateOfBirth")));
+                    setPreferences(user.getList("preferences", String.class));
 
-                showAlert(Alert.AlertType.INFORMATION, "Load Success", "User details loaded successfully!");
+                    // Load password into hidden field
+                    String loadedPassword = user.getString("password");
+                    newPassword.setText(loadedPassword);
+                    confirmNewPassword.setText(loadedPassword);
+                    viewNewPassword.setText(loadedPassword);
+                    viewNewConfirmPassword.setText(loadedPassword);
+
+                    showAlert(Alert.AlertType.INFORMATION, "Load Success", "User details loaded successfully!");
+                });
             } else {
                 showAlert(Alert.AlertType.ERROR, "User Not Found", "No user found with the provided details!");
             }
@@ -128,6 +140,10 @@ public class ManageProfile {
 
     @FXML
     public void onClickUpdate() {
+        executorService.execute(this::updateProfile);
+    }
+
+    private void updateProfile() {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -154,21 +170,26 @@ public class ManageProfile {
 
     @FXML
     public void onClickCancel() {
-        // Clear all fields
-        email.clear();
-        username.clear();
-        fName.clear();
-        lName.clear();
-        currentPasswordField.clear();
-        currentPasswordText.clear();
-        newPassword.clear();
-        confirmNewPassword.clear();
-        viewNewPassword.clear();
-        viewNewConfirmPassword.clear();
-        radioFemale.setSelected(false);
-        radioMale.setSelected(false);
-        dOB.setValue(null);
-        clearPreferences();
+        executorService.execute(this::clearAllFields);
+    }
+
+    private void clearAllFields() {
+        Platform.runLater(() -> {
+            email.clear();
+            username.clear();
+            fName.clear();
+            lName.clear();
+            currentPasswordField.clear();
+            currentPasswordText.clear();
+            newPassword.clear();
+            confirmNewPassword.clear();
+            viewNewPassword.clear();
+            viewNewConfirmPassword.clear();
+            radioFemale.setSelected(false);
+            radioMale.setSelected(false);
+            dOB.setValue(null);
+            clearPreferences();
+        });
     }
 
     @FXML
@@ -274,10 +295,16 @@ public class ManageProfile {
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
+    }
+
+    public void shutdown() {
+        executorService.shutdown();
     }
 }

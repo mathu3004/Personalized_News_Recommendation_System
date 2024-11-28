@@ -20,6 +20,8 @@ import org.bson.Document;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AddArticles {
     @FXML
@@ -36,9 +38,14 @@ public class AddArticles {
     public TextArea articleContent;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy", Locale.ENGLISH);
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
 
     @FXML
     public void onClickAddArticles(ActionEvent event) {
+        executorService.execute(() -> addArticle(event)); // Execute the add article task in a separate thread
+    }
+
+    private void addArticle(ActionEvent event) {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
@@ -69,7 +76,6 @@ public class AddArticles {
             // Format published date to M/d/yyyy
             String formattedDate = publishedDate.getValue().format(DATE_FORMATTER);
 
-
             // Add the article to the database
             Document newArticle = new Document("articleId", enteredArticleID)
                     .append("title", enteredArticleName)
@@ -77,15 +83,12 @@ public class AddArticles {
                     .append("publishedAt", formattedDate)
                     .append("description", articleDescription.getText().trim())
                     .append("content", articleContent.getText().trim());
-
             collection.insertOne(newArticle);
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article added successfully!");
-            // Initialize FetchArticles in a separate thread to avoid UI blocking
-            new Thread(() -> {
-                System.out.println("Initializing FetchArticles...");
-                FetchArticlesCategory.initialize();
-            }).start();
+
+            // Fetch categories or related data asynchronously
+            executorService.execute(FetchArticlesCategory::initialize);
 
             // Clear all fields after successful addition
             clearFields();
@@ -109,38 +112,57 @@ public class AddArticles {
     }
 
     private void clearFields() {
-        articleID.clear();
-        articleName.clear();
-        articleAuthor.clear();
-        publishedDate.setValue(null);
-        articleDescription.clear();
-        articleContent.clear();
+        javafx.application.Platform.runLater(() -> {
+            articleID.clear();
+            articleName.clear();
+            articleAuthor.clear();
+            publishedDate.setValue(null);
+            articleDescription.clear();
+            articleContent.clear();
+        });
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
     @FXML
     public void onClickReset(ActionEvent event) {
         clearFields();
     }
+
     @FXML
     public void onClickMain(ActionEvent event) {
+        executorService.execute(() -> navigateToMain(event));
+    }
+
+    private void navigateToMain(ActionEvent event) {
         try {
-            // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 574, 400));
-            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
-            stage.setTitle("Admin Dashboard");
-            stage.show();
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setScene(new Scene(root, 574, 400));
+                    root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                    stage.setTitle("Admin Dashboard");
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Shutdown ExecutorService when the application exits
+    public void shutdown() {
+        executorService.shutdown();
     }
 }

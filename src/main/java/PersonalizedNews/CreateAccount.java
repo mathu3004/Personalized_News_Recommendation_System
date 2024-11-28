@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CreateAccount {
 
@@ -60,9 +62,10 @@ public class CreateAccount {
     public CheckBox checkPolitics;
     @FXML
     public CheckBox checkEntertainment;
-    private ToggleGroup genderGroup;
 
-    // Initialize method to set preferences
+    private ToggleGroup genderGroup;
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
+
     @FXML
     public void initialize() {
         viewPassword.textProperty().bindBidirectional(password.textProperty());
@@ -81,57 +84,62 @@ public class CreateAccount {
 
     @FXML
     public void onSubmit(ActionEvent event) {
-        if (!validateFirstName() || !validateLastName() || !validateEmail() || !validatePassword() ||
-                !validateCheckboxSelection() || !validateDateOfBirth() || !validateGenderSelection() || !validateUsername()) {
-            return; // Exit if any validation fails
-        }
-        if (!validateMaxThreeCategories()) {
-            showAlert("You can select a maximum of 3 preferences.", Alert.AlertType.ERROR);
-            return;
-        }
-
-        try {
-            // Connect to MongoDB
-            MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017");
-            MongoDatabase database = mongoClient.getDatabase("News");
-            MongoCollection<org.bson.Document> collection = database.getCollection("UserAccounts");
-
-            // Check for duplicate email
-            Document existingEmail = collection.find(new Document("email", email.getText())).first();
-            if (existingEmail != null) {
-                showAlert("This email is already registered. Please use a different email.", Alert.AlertType.ERROR);
+        executorService.execute(() -> {
+            if (!validateFirstName() || !validateLastName() || !validateEmail() || !validatePassword() ||
+                    !validateCheckboxSelection() || !validateDateOfBirth() || !validateGenderSelection() || !validateUsername()) {
+                return;
+            }
+            if (!validateMaxThreeCategories()) {
+                showAlert("You can select a maximum of 3 preferences.", Alert.AlertType.ERROR);
                 return;
             }
 
-            // Check for duplicate username
-            Document existingUsername = collection.find(new Document("username", username.getText())).first();
-            if (existingUsername != null) {
-                showAlert("This username is already taken. Please choose a different username.", Alert.AlertType.ERROR);
-                return;
+            try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+                MongoDatabase database = mongoClient.getDatabase("News");
+                MongoCollection<Document> collection = database.getCollection("UserAccounts");
+
+                // Check for duplicate email
+                Document existingEmail = collection.find(new Document("email", email.getText())).first();
+                if (existingEmail != null) {
+                    showAlert("This email is already registered. Please use a different email.", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                // Check for duplicate username
+                Document existingUsername = collection.find(new Document("username", username.getText())).first();
+                if (existingUsername != null) {
+                    showAlert("This username is already taken. Please choose a different username.", Alert.AlertType.ERROR);
+                    return;
+                }
+
+                // Prepare user data
+                Document user = new Document("firstName", firstName.getText())
+                        .append("lastName", lastName.getText())
+                        .append("email", email.getText())
+                        .append("username", username.getText())
+                        .append("password", password.getText()) // Encrypt passwords in production!
+                        .append("dateOfBirth", dOB.getValue().toString())
+                        .append("gender", genderGroup.getSelectedToggle() == radioMale ? "Male" : "Female")
+                        .append("preferences", getSelectedPreferences());
+
+                // Insert into MongoDB
+                collection.insertOne(user);
+
+                showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
+                javafx.application.Platform.runLater(() -> {
+                    try {
+                        onClickLogin(event);
+                        clearFields(); // Reset the form
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                showAlert("Failed to save data to the database.", Alert.AlertType.ERROR);
             }
-
-            // Prepare user data
-            Document user = new Document("firstName", firstName.getText())
-                    .append("lastName", lastName.getText())
-                    .append("email", email.getText())
-                    .append("username", username.getText())
-                    .append("password", password.getText()) // Encrypt passwords in production!
-                    .append("dateOfBirth", dOB.getValue().toString())
-                    .append("gender", genderGroup.getSelectedToggle() == radioMale ? "Male" : "Female")
-                    .append("preferences", getSelectedPreferences());
-
-            // Insert into MongoDB
-            collection.insertOne(user);
-
-            showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
-            onClickLogin(event);
-            clearFields(); // Reset the form
-        } catch (Exception e) {
-            showAlert("Failed to save data to the database.", Alert.AlertType.ERROR);
-        }
+        });
     }
 
-    // Helper method to get selected preferences
     private List<String> getSelectedPreferences() {
         List<String> preferences = new ArrayList<>();
         if (checkAI.isSelected()) preferences.add("AI");
@@ -145,7 +153,6 @@ public class CreateAccount {
         return preferences;
     }
 
-    // Validation for max three categories
     private boolean validateMaxThreeCategories() {
         int count = 0;
         if (checkAI.isSelected()) count++;
@@ -160,7 +167,6 @@ public class CreateAccount {
         return count <= 3;
     }
 
-    // Method to validate first name
     private boolean validateFirstName() {
         if (firstName.getText().matches("[a-zA-Z]+")) {
             return true;
@@ -170,7 +176,6 @@ public class CreateAccount {
         }
     }
 
-    // Method to validate last name
     private boolean validateLastName() {
         if (lastName.getText().matches("[a-zA-Z]+")) {
             return true;
@@ -180,7 +185,6 @@ public class CreateAccount {
         }
     }
 
-    // Method to validate email format
     private boolean validateEmail() {
         String emailPattern = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$";
         if (email.getText().matches(emailPattern)) {
@@ -190,7 +194,7 @@ public class CreateAccount {
             return false;
         }
     }
-    // Method to validate gender selection
+
     private boolean validateGenderSelection() {
         if (genderGroup.getSelectedToggle() != null) {
             return true;
@@ -200,7 +204,6 @@ public class CreateAccount {
         }
     }
 
-    // Method to validate password and confirm password
     private boolean validatePassword() {
         String passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         if (password.getText().matches(passwordPattern)) {
@@ -216,7 +219,6 @@ public class CreateAccount {
         }
     }
 
-    // Method to validate username
     private boolean validateUsername() {
         String usernamePattern = "^[a-zA-Z0-9]+$";
         if (username.getText().matches(usernamePattern)) {
@@ -227,66 +229,56 @@ public class CreateAccount {
         }
     }
 
-    // Method to validate that at least one checkbox is selected
     private boolean validateCheckboxSelection() {
-        if (checkAI.isSelected() || checkTech.isSelected() || checkSports.isSelected() || checkHealth.isSelected() || checkTravel.isSelected()
-                || checkBusiness.isSelected() || checkPolitics.isSelected() || checkEntertainment.isSelected()) {
-            return true;
-        } else {
-            showAlert("Please select at least one preference.", Alert.AlertType.ERROR);
-            return false;
-        }
+        return checkAI.isSelected() || checkTech.isSelected() || checkSports.isSelected() || checkHealth.isSelected() || checkTravel.isSelected()
+                || checkBusiness.isSelected() || checkPolitics.isSelected() || checkEntertainment.isSelected();
     }
 
-    // Method to validate date of birth
     private boolean validateDateOfBirth() {
         LocalDate selectedDate = dOB.getValue();
         LocalDate minDate = LocalDate.now().minusYears(5); // Minimum age of 5 years
 
-        if (selectedDate != null && selectedDate.isBefore(minDate)) {
-            return true;
-        } else {
-            showAlert("Date of Birth must be at least 5 years ago.", Alert.AlertType.ERROR);
-            return false;
-        }
+        return selectedDate != null && selectedDate.isBefore(minDate);
     }
 
-    // Method to show alert messages
     private void showAlert(String message, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setContentText(message);
-        alert.show();
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setContentText(message);
+            alert.show();
+        });
     }
 
-    // Method to clear all fields (refresh the form)
     private void clearFields() {
-        firstName.clear();
-        lastName.clear();
-        email.clear();
-        password.clear();
-        confirmPassword.clear();
-        viewPassword.clear();
-        viewConfirm.clear();
-        username.clear();
-        dOB.setValue(null);
-        genderGroup.selectToggle(null);
-        checkAI.setSelected(false);
-        checkTech.setSelected(false);
-        checkSports.setSelected(false);
-        checkHealth.setSelected(false);
-        checkTravel.setSelected(false);
-        checkEntertainment.setSelected(false);
-        checkBusiness.setSelected(false);
-        checkPolitics.setSelected(false);
+        javafx.application.Platform.runLater(() -> {
+            firstName.clear();
+            lastName.clear();
+            email.clear();
+            password.clear();
+            confirmPassword.clear();
+            viewPassword.clear();
+            viewConfirm.clear();
+            username.clear();
+            dOB.setValue(null);
+            genderGroup.selectToggle(null);
+            checkAI.setSelected(false);
+            checkTech.setSelected(false);
+            checkSports.setSelected(false);
+            checkHealth.setSelected(false);
+            checkTravel.setSelected(false);
+            checkEntertainment.setSelected(false);
+            checkBusiness.setSelected(false);
+            checkPolitics.setSelected(false);
+        });
     }
 
     @FXML
     public void onViewPassword(ActionEvent event) {
-        if(password.isVisible()) {
+        if (password.isVisible()) {
             password.setVisible(false);
             viewPassword.setVisible(true);
             viewPassword.setManaged(true);
-        } else{
+        } else {
             password.setVisible(true);
             viewPassword.setVisible(false);
             viewPassword.setManaged(false);
@@ -295,11 +287,11 @@ public class CreateAccount {
 
     @FXML
     public void onViewConfirm(ActionEvent event) {
-        if(confirmPassword.isVisible()) {
+        if (confirmPassword.isVisible()) {
             confirmPassword.setVisible(false);
             viewConfirm.setVisible(true);
             viewConfirm.setManaged(true);
-        } else{
+        } else {
             confirmPassword.setVisible(true);
             viewConfirm.setVisible(false);
             viewConfirm.setManaged(false);
@@ -308,17 +300,24 @@ public class CreateAccount {
 
     @FXML
     public void onClickLogin(ActionEvent event) {
-        try {
-            // Navigate to the signup page
-            Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 440, 280));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setTitle("User Login");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+                javafx.application.Platform.runLater(() -> {
+                    try {
+                        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        stage.setScene(new Scene(root, 440, 280));
+                        root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        stage.setTitle("User Login");
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void onClickReset(ActionEvent event) {

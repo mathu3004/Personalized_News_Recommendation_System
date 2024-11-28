@@ -11,48 +11,24 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ManageArticles {
+
+    // ExecutorService to manage concurrency
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
+
     public void onClickToAdd(ActionEvent event) {
-        try {
-            // Navigate to the signup page
-            Parent root = FXMLLoader.load(getClass().getResource("AddArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 633, 413));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setTitle("Add Articles");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> navigateToPage(event, "AddArticles.fxml", "Add Articles", 633, 413));
     }
 
     public void onClickEditDelete(ActionEvent event) {
-        try {
-            // Navigate to the signup page
-            Parent root = FXMLLoader.load(getClass().getResource("EditDeleteArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 666, 478));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setTitle("Edit/Delete Articles");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> navigateToPage(event, "EditDeleteArticles.fxml", "Edit/Delete Articles", 666, 478));
     }
 
     public void onClickLogout(ActionEvent event) {
-        try {
-            // Navigate to the signup page
-            Parent root = FXMLLoader.load(getClass().getResource("AdministratorLogin.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 434, 298));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setTitle("Admin Login");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> navigateToPage(event, "AdministratorLogin.fxml", "Admin Login", 434, 298));
     }
 
     public void onClickExit(ActionEvent event) {
@@ -71,22 +47,51 @@ public class ManageArticles {
             if (response == okButton) {
                 // Close the application
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.close();
+                javafx.application.Platform.runLater(stage::close);
             }
-    });
+        });
     }
 
     public void onClickView(ActionEvent event) {
+        executorService.execute(() -> navigateToPage(event, "AdminViewArticles.fxml", "View Articles", 875, 454));
+    }
+
+    private void navigateToPage(ActionEvent event, String fxmlFile, String title, int width, int height) {
         try {
-            // Navigate to the signup page
-            Parent root = FXMLLoader.load(getClass().getResource("AdminViewArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 875, 454));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setTitle("View Articles");
-            stage.show();
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setScene(new Scene(root, width, height));
+                    root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                    stage.setTitle(title);
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Simulate a background task for processing articles
+    public void processArticlesInBackground() {
+        executorService.execute(() -> {
+            System.out.println("Starting article processing...");
+            try {
+                // Simulate processing large datasets
+                Thread.sleep(5000); // Simulate a time-consuming task
+                System.out.println("Article processing completed.");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        });
+    }
+
+    // Shutdown ExecutorService when the application exits
+    public void shutdown() {
+        executorService.shutdown();
     }
 }

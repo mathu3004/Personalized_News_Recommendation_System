@@ -38,13 +38,18 @@ public class FetchArticlesCategory {
             List<Document> uncategorizedArticles = new ArrayList<>();
             articlesCollection.find(new Document("category", null)).into(uncategorizedArticles);
 
+            // Determine the optimal number of threads
+            int availableProcessors = Runtime.getRuntime().availableProcessors();
+            int threadCount = Math.min(availableProcessors, uncategorizedArticles.size());
+
+            System.out.println("Using " + threadCount + " threads for categorization...");
+
             // Create a thread pool
-            int threadCount = 4; // Adjust the number of threads as needed
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 
             // Divide work among threads
             List<Future<Void>> futures = new ArrayList<>();
-            int batchSize = uncategorizedArticles.size() / threadCount;
+            int batchSize = Math.max(1, uncategorizedArticles.size() / threadCount);
 
             for (int i = 0; i < threadCount; i++) {
                 int start = i * batchSize;
@@ -63,11 +68,17 @@ public class FetchArticlesCategory {
                 try {
                     future.get();
                 } catch (Exception e) {
+                    System.err.println("Error during batch processing: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
+
             // Shutdown the thread pool
             executorService.shutdown();
+            System.out.println("Categorization completed successfully.");
+        } catch (Exception e) {
+            System.err.println("Error during initialization: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -150,8 +161,6 @@ public class FetchArticlesCategory {
 
         return bestCategory;
     }
-
-
 
     static String preprocessText(String text) {
         return text.toLowerCase().replaceAll("[^a-zA-Z0-9\\s]", "").trim();

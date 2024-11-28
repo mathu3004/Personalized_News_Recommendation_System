@@ -21,7 +21,7 @@ public class UserHome {
 
             // Get the current stage from the event source
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 430)); // Set the new scene on the current stage
+            stage.setScene(new Scene(root, 600, 430));
             root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
             stage.setTitle(category + " Articles");
         } catch (IOException e) {
@@ -70,13 +70,10 @@ public class UserHome {
     }
 
     @FXML
-    public void onClickViewSaved(ActionEvent event) {
-        openCategoryView("Saved", event);
-    }
+    public void onClickViewSaved(ActionEvent event) {openCategoryView("Saved", event);}
 
     @FXML
-    public void onClickViewLiked(ActionEvent event) {
-        openCategoryView("Liked", event);
-    }
+    public void onClickViewLiked(ActionEvent event) {openCategoryView("Liked", event);}
 
+    public void onClickViewRead(ActionEvent event) {openCategoryView("Read", event);}
 }

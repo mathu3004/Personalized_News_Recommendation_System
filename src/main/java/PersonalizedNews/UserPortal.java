@@ -15,109 +15,142 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UserPortal implements Initializable {
 
     @FXML
     public StackPane ContentArea;
 
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
+
     // Utility method to load an FXML file into ContentArea
-    private void loadFXML(String fxmlFileName, String alertMessage, double width, double height, boolean applyCSS) throws IOException {
-        Parent fxml = FXMLLoader.load(getClass().getResource(fxmlFileName));
+    private void loadFXML(String fxmlFileName, String alertMessage, double width, double height, boolean applyCSS) {
+        executorService.execute(() -> {
+            try {
+                Parent fxml = FXMLLoader.load(getClass().getResource(fxmlFileName));
 
-        // Clear the current content
-        ContentArea.getChildren().clear();
-        // Set the loaded FXML as the new content
-        ContentArea.getChildren().add(fxml);
+                // Update UI on the JavaFX Application thread
+                Platform.runLater(() -> {
+                    try {
+                        // Clear the current content
+                        ContentArea.getChildren().clear();
+                        // Set the loaded FXML as the new content
+                        ContentArea.getChildren().add(fxml);
 
-        // Ensure scene is initialized before modifying the stage
-        ContentArea.sceneProperty().addListener((observable, oldScene, newScene) -> {
-            if (newScene != null) {
-                Stage stage = (Stage) newScene.getWindow();
-                if (stage != null) {
-                    stage.setWidth(width);
-                    stage.setHeight(height);
-                }
+                        // Adjust stage dimensions
+                        ContentArea.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                            if (newScene != null) {
+                                Stage stage = (Stage) newScene.getWindow();
+                                if (stage != null) {
+                                    stage.setWidth(width);
+                                    stage.setHeight(height);
+                                }
+                            }
+                        });
+
+                        // Conditionally apply the CSS stylesheet
+                        if (applyCSS) {
+                            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        }
+                        fxml.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+
+                        // Optional: Show an alert message after loading the FXML
+                        if (alertMessage != null && !alertMessage.isEmpty()) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Information");
+                            alert.setHeaderText(null);
+                            alert.setContentText(alertMessage);
+                            alert.showAndWait();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         });
-
-        // Conditionally apply the CSS stylesheet
-        if (applyCSS) {
-            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-        }
-        fxml.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
-
-        // Optional: Show an alert message after loading the FXML
-        if (alertMessage != null && !alertMessage.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information");
-            alert.setHeaderText(null);
-            alert.setContentText(alertMessage);
-            alert.showAndWait();
-        }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            // Load the initial view (UserHome) when the portal opens
-            loadFXML("UserHome.fxml", null, 855, 455, false);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        executorService.execute(() -> {
+            try {
+                // Load the initial view (UserHome) when the portal opens
+                Platform.runLater(() -> loadFXML("UserHome.fxml", null, 855, 455, false));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     @FXML
-    public void onClickDashboard() throws IOException {
+    public void onClickDashboard() {
         loadFXML("UserHome.fxml", "Welcome to the Dashboard.", 855, 455, false);
     }
 
     @FXML
-    public void onClickView() throws IOException {
-        try {
-            // Load the ViewArticles FXML file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewArticles.fxml"));
-            Parent fxml = loader.load();
+    public void onClickView() {
+        executorService.execute(() -> {
+            try {
+                // Load the ViewArticles FXML file
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewArticles.fxml"));
+                Parent fxml = loader.load();
 
-            // Retrieve the controller and initialize the username
-            ViewArticles controller = loader.getController();
-            String username = SessionManager.getInstance().getUsername();
-            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            if (username != null) {
-                controller.initializeUsername(); // Set the username and load articles
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("No Username Found");
-                alert.setHeaderText(null);
-                alert.setContentText("No username found in session. Please log in again.");
-                alert.showAndWait();
-                return;
+                // Retrieve the controller and initialize the username
+                ViewArticles controller = loader.getController();
+                String username = SessionManager.getInstance().getUsername();
+
+                Platform.runLater(() -> {
+                    if (username != null) {
+                        controller.initializeUsername(); // Set the username and load articles
+                        fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+
+                        // Display the ViewArticles page
+                        ContentArea.getChildren().clear();
+                        ContentArea.getChildren().add(fxml);
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("No Username Found");
+                        alert.setHeaderText(null);
+                        alert.setContentText("No username found in session. Please log in again.");
+                        alert.showAndWait();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            // Display the ViewArticles page
-            ContentArea.getChildren().clear();
-            ContentArea.getChildren().add(fxml);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     @FXML
-    public void onClickManage() throws IOException {
+    public void onClickManage() {
         loadFXML("ManageProfile.fxml", "Manage your saved articles.", 550, 679, true);
     }
 
     @FXML
     public void onClickLogout() {
-        try {
-            // Navigate back to the AdministratorLogin.fxml page
-            Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
-            Stage stage = (Stage) ContentArea.getScene().getWindow();
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-            stage.setScene(new Scene(root, 440, 280));
-            stage.setTitle("User Login");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        executorService.execute(() -> {
+            try {
+                // Navigate back to the UserLogin.fxml page
+                Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+
+                Platform.runLater(() -> {
+                    try {
+                        Stage stage = (Stage) ContentArea.getScene().getWindow();
+                        root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        stage.setScene(new Scene(root, 440, 280));
+                        stage.setTitle("User Login");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @FXML
@@ -135,10 +168,13 @@ public class UserPortal implements Initializable {
         // Handling user's choice
         alert.showAndWait().ifPresent(response -> {
             if (response == okButton) {
-                // Close the application
-                Stage stage = (Stage) ContentArea.getScene().getWindow();
-                stage.close();
+                Platform.exit(); // Close the application
             }
         });
+    }
+
+    // Shutdown ExecutorService when the application exits
+    public void shutdown() {
+        executorService.shutdown();
     }
 }

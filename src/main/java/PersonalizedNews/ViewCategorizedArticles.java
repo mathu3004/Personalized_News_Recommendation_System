@@ -82,7 +82,6 @@ public class ViewCategorizedArticles {
         }
         System.out.println("Logged in as: " + username);
         // Initially load all articles
-
     }
 
     @FXML
@@ -99,17 +98,18 @@ public class ViewCategorizedArticles {
             FindIterable<Document> documents;
             if (category == null) {
                 documents = collection.find();
-            } else if (category.equals("Saved") || category.equals("Liked")) {
+            } else if (category.equals("Saved") || category.equals("Liked") || category.equals("Read")) {
                 // Fetch user-specific saved or liked articles
                 Document userDoc = ratedCollection.find(Filters.eq("username", username)).first();
                 if (userDoc != null) {
                     List<Integer> articleIds;
                     if (category.equals("Saved")) {
                         articleIds = userDoc.getList("saved", Integer.class);
-                    } else { // "Liked"
+                    } else if (category.equals("Liked")){ // "Liked"
                         articleIds = userDoc.getList("liked", Integer.class);
+                    } else {
+                        articleIds = userDoc.getList("read", Integer.class);
                     }
-
                     documents = collection.find(Filters.in("articleId", articleIds));
                 } else {
                     documents = collection.find(Filters.eq("articleId", -1)); // Return no results if userDoc is null
@@ -132,14 +132,13 @@ public class ViewCategorizedArticles {
                 ));
             }
         }
-
         viewCategorizedTable.setItems(articles);
     }
 
     private void resetButtonStates(Article selectedArticle) {
         if (selectedArticle == null) return;
 
-        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoDatabase database = ViewArticles.getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch user document
@@ -178,7 +177,7 @@ public class ViewCategorizedArticles {
     }
 
     private void saveActionToDB(String action, int articleId) {
-        MongoDatabase database = DatabaseConnector.getDatabase();
+        MongoDatabase database = ViewArticles.getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch or initialize user document
@@ -275,7 +274,7 @@ public class ViewCategorizedArticles {
     public void onClickLike(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = ViewArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -309,7 +308,7 @@ public class ViewCategorizedArticles {
     public void onClickSkip(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = ViewArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -343,7 +342,7 @@ public class ViewCategorizedArticles {
     public void onClickSave(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = DatabaseConnector.getDatabase();
+            MongoDatabase database = ViewArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -385,7 +384,7 @@ public class ViewCategorizedArticles {
             Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 855, 525));
-            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+            root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
             stage.setTitle("User Dashboard");
             stage.show();
         } catch (IOException e) {

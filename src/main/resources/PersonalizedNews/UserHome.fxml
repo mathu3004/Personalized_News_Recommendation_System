@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="386.0" prefWidth="704.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
+<AnchorPane prefHeight="462.0" prefWidth="704.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserHome">
    <children>
       <Button layoutX="45.0" layoutY="107.0" mnemonicParsing="false" onAction="#onClickViewAI" text="AI">
          <font>
@@ -50,6 +50,11 @@
          </font>
       </Button>
       <Button layoutX="421.0" layoutY="298.0" mnemonicParsing="false" onAction="#onClickViewSaved" text="Saved Articles">
+         <font>
+            <Font name="Times New Roman Bold" size="25.0" />
+         </font>
+      </Button>
+      <Button layoutX="258.0" layoutY="383.0" mnemonicParsing="false" onAction="#onClickViewRead" text="Read Articles">
          <font>
             <Font name="Times New Roman Bold" size="25.0" />
          </font>

@@ -19,10 +19,10 @@ import org.bson.Document;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EditDeleteArticles {
 
@@ -40,9 +40,14 @@ public class EditDeleteArticles {
     public TextArea content;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("M/d/yyyy", Locale.ENGLISH);
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
 
     @FXML
     public void onClickCheck(ActionEvent event) {
+        executorService.execute(() -> fetchArticle(event));
+    }
+
+    private void fetchArticle(ActionEvent event) {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
@@ -57,17 +62,18 @@ public class EditDeleteArticles {
             Document article = collection.find(query).first();
 
             if (article != null) {
-                // Load article details into the fields
-                title.setText(article.getString("title"));
-                author.setText(article.getString("author"));
-                description.setText(article.getString("description"));
-                content.setText(article.getString("content"));
+                javafx.application.Platform.runLater(() -> {
+                    title.setText(article.getString("title"));
+                    author.setText(article.getString("author"));
+                    description.setText(article.getString("description"));
+                    content.setText(article.getString("content"));
 
-                // Parse publishedAt to LocalDate
-                String publishedAtStr = article.getString("publishedAt");
-                if (publishedAtStr != null && !publishedAtStr.isEmpty()) {
-                    publishedDate.setValue(DATE_FORMATTER.parse(publishedAtStr, LocalDate::from));
-                }
+                    String publishedAtStr = article.getString("publishedAt");
+                    if (publishedAtStr != null && !publishedAtStr.isEmpty()) {
+                        publishedDate.setValue(DATE_FORMATTER.parse(publishedAtStr, LocalDate::from));
+                    }
+                });
+
                 showAlert(Alert.AlertType.INFORMATION, "Load Success", "Article details loaded successfully!");
             } else {
                 showAlert(Alert.AlertType.ERROR, "Not Found", "No article found with the given Article ID!");
@@ -82,11 +88,14 @@ public class EditDeleteArticles {
 
     @FXML
     public void onClickUpdate(ActionEvent event) {
+        executorService.execute(() -> updateArticle(event));
+    }
+
+    private void updateArticle(ActionEvent event) {
         try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 
-            // Validate inputs
             if (!validateInputs()) {
                 return;
             }
@@ -95,16 +104,15 @@ public class EditDeleteArticles {
             String enteredTitle = title.getText().trim();
             String enteredAuthor = author.getText().trim();
 
-            // Check if title and author combination is unique
             Document titleAuthorQuery = new Document("title", enteredTitle)
                     .append("author", enteredAuthor)
-                    .append("articleId", new Document("$ne", enteredArticleID)); // Exclude the current article
+                    .append("articleId", new Document("$ne", enteredArticleID));
+
             if (collection.find(titleAuthorQuery).first() != null) {
                 showAlert(Alert.AlertType.ERROR, "Validation Error", "The same title and author combination already exists!");
                 return;
             }
 
-            // Update the article in the database
             Document updatedArticle = new Document("title", enteredTitle)
                     .append("author", enteredAuthor)
                     .append("description", description.getText().trim())
@@ -113,16 +121,8 @@ public class EditDeleteArticles {
 
             Document query = new Document("articleId", enteredArticleID);
             collection.updateOne(query, new Document("$set", updatedArticle));
-
+            FetchArticlesCategory.initialize();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article updated successfully!");
-
-            // Initialize FetchArticles in a separate thread to avoid UI blocking
-            new Thread(() -> {
-                System.out.println("Initializing FetchArticles...");
-                FetchArticlesCategory.initialize();
-            }).start();
-
-            // Clear all fields after successful update
             clearFields();
         } catch (NumberFormatException e) {
             showAlert(Alert.AlertType.ERROR, "Validation Error", "Article ID must be a valid number!");
@@ -133,9 +133,38 @@ public class EditDeleteArticles {
     }
 
     @FXML
-    public void onClickReset(ActionEvent event) {
-        // Clear all fields when reset is clicked
-        clearFields();
+    public void onClickDelete(ActionEvent event) {
+        executorService.execute(() -> deleteArticle(event));
+    }
+
+    private void deleteArticle(ActionEvent event) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+            MongoDatabase database = mongoClient.getDatabase("News");
+            MongoCollection<Document> collection = database.getCollection("Articles");
+
+            String enteredArticleID = articleID.getText().trim();
+            if (enteredArticleID.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Validation Error", "Article ID must not be empty!");
+                return;
+            }
+
+            Document query = new Document("articleId", Integer.parseInt(enteredArticleID));
+            Document article = collection.find(query).first();
+
+            if (article != null) {
+                collection.deleteOne(query);
+                FetchArticlesCategory.initialize();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Article deleted successfully!");
+                clearFields();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Not Found", "No article found with the given Article ID!");
+            }
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Validation Error", "Article ID must be a valid number!");
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private boolean validateInputs() {
@@ -152,69 +181,55 @@ public class EditDeleteArticles {
     }
 
     private void clearFields() {
-        articleID.clear();
-        title.clear();
-        author.clear();
-        description.clear();
-        content.clear();
-        publishedDate.setValue(null);
+        javafx.application.Platform.runLater(() -> {
+            articleID.clear();
+            title.clear();
+            author.clear();
+            description.clear();
+            content.clear();
+            publishedDate.setValue(null);
+        });
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(alertType);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
-    public void onClickDelete(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
-            MongoDatabase database = mongoClient.getDatabase("News");
-            MongoCollection<Document> collection = database.getCollection("Articles");
-
-            String enteredArticleID = articleID.getText().trim();
-
-            // Validate input
-            if (enteredArticleID.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Validation Error", "Article ID must not be empty!");
-                return;
-            }
-
-            Document query = new Document("articleId", Integer.parseInt(enteredArticleID));
-            Document article = collection.find(query).first();
-
-            if (article != null) {
-                collection.deleteOne(query);
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Article deleted successfully!");
-                // Initialize FetchArticles in a separate thread to avoid UI blocking
-                new Thread(() -> {
-                    System.out.println("Initializing FetchArticles...");
-                    FetchArticlesCategory.initialize();
-                }).start();
-                clearFields();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Not Found", "No article found with the given Article ID!");
-            }
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Validation Error", "Article ID must be a valid number!");
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
-            e.printStackTrace();
-        }
+    public void shutdown() {
+        executorService.shutdown();
     }
 
     public void onClickMain(ActionEvent event) {
+        executorService.execute(() -> navigateToMain(event));
+    }
+
+    private void navigateToMain(ActionEvent event) {
         try {
-            // Navigate to the signup page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 574, 400));
-            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
-            stage.setTitle("Admin Dashboard");
-            stage.show();
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setScene(new Scene(root, 574, 400));
+                    root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                    stage.setTitle("Admin Dashboard");
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void onClickReset(ActionEvent event) {
+        clearFields();
     }
 }

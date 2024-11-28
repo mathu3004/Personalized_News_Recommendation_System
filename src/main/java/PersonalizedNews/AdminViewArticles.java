@@ -20,6 +20,8 @@ import javafx.stage.Stage;
 import org.bson.Document;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AdminViewArticles {
 
@@ -41,6 +43,7 @@ public class AdminViewArticles {
     public TableColumn<Article, String> viewCategory;
 
     private final ObservableList<Article> articles = FXCollections.observableArrayList();
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
 
     @FXML
     public void initialize() {
@@ -53,8 +56,8 @@ public class AdminViewArticles {
         viewContent.setCellValueFactory(new PropertyValueFactory<>("content"));
         viewCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
 
-        // Load articles into the table
-        loadArticlesFromDB();
+        // Load articles into the table using concurrency
+        executorService.execute(this::loadArticlesFromDB);
     }
 
     private void loadArticlesFromDB() {
@@ -73,30 +76,44 @@ public class AdminViewArticles {
                         doc.getString("title"),
                         doc.getString("author"),
                         doc.getString("description"),
-                        doc.getString("publishedDate"),
-                        doc.getString("category"),
-                        doc.getString("content")
+                        doc.getString("publishedAt"),
+                        doc.getString("content"),
+                        doc.getString("category")
                 );
-                articles.add(article);
+                javafx.application.Platform.runLater(() -> articles.add(article));
             }
 
-            AdminViewArticlesTable.setItems(articles);
+            javafx.application.Platform.runLater(() -> AdminViewArticlesTable.setItems(articles));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void onClickBack(ActionEvent event) {
+        executorService.execute(() -> navigateToManageArticles(event));
+    }
+
+    private void navigateToManageArticles(ActionEvent event) {
         try {
-            // Navigate back to the Manage Articles page
             Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 574, 400));
-            root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
-            stage.setTitle("Admin Dashboard");
-            stage.show();
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    stage.setScene(new Scene(root, 574, 400));
+                    root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                    stage.setTitle("Admin Dashboard");
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // Shutdown ExecutorService to clean up threads when the application exits
+    public void shutdown() {
+        executorService.shutdown();
     }
 }
