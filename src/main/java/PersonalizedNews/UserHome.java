@@ -75,5 +75,6 @@ public class UserHome {
     @FXML
     public void onClickViewLiked(ActionEvent event) {openCategoryView("Liked", event);}
 
+    @FXML
     public void onClickViewRead(ActionEvent event) {openCategoryView("Read", event);}
 }

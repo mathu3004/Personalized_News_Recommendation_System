@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.ViewCustomArticles;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
@@ -50,7 +51,7 @@ public class ReadArticles {
 
     public void loadArticleDetails(int articleId) {
         executorService.execute(() -> {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> articles = database.getCollection("Articles");
             Document article = articles.find(new Document("articleId", articleId)).first();
 
@@ -71,7 +72,7 @@ public class ReadArticles {
 
     private void updateButtonStates() {
         executorService.execute(() -> {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -92,7 +93,7 @@ public class ReadArticles {
 
     private void saveActionToDB(String action) {
         executorService.execute(() -> {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -177,7 +178,7 @@ public class ReadArticles {
 
     public static void initializeUser(String username) {
         executorService.execute(() -> {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> userAccounts = database.getCollection("UserAccounts");
 
             Document userDoc = userAccounts.find(new Document("username", username)).first();

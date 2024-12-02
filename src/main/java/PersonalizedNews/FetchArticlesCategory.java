@@ -23,7 +23,7 @@ public class FetchArticlesCategory {
     }
 
     public static void initialize() {
-        String mongoUri = "mongodb://127.0.0.1:27017";
+        String mongoUri = "mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/";
 
         try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
             MongoDatabase database = mongoClient.getDatabase("News");
@@ -162,7 +162,7 @@ public class FetchArticlesCategory {
         return bestCategory;
     }
 
-    static String preprocessText(String text) {
+    public static String preprocessText(String text) {
         return text.toLowerCase().replaceAll("[^a-zA-Z0-9\\s]", "").trim();
     }
 }

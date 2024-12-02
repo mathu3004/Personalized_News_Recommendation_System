@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.ViewCustomArticles;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -100,7 +101,7 @@ public class UserPortal implements Initializable {
                 Parent fxml = loader.load();
 
                 // Retrieve the controller and initialize the username
-                ViewArticles controller = loader.getController();
+                ViewCustomArticles controller = loader.getController();
                 String username = SessionManager.getInstance().getUsername();
 
                 Platform.runLater(() -> {
@@ -133,25 +134,43 @@ public class UserPortal implements Initializable {
     @FXML
     public void onClickLogout() {
         executorService.execute(() -> {
+            // Use Platform.runLater to ensure UI interactions happen on the JavaFX Application Thread
+            Platform.runLater(() -> {
             try {
-                // Navigate back to the UserLogin.fxml page
-                Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Logout Confirmation");
+                alert.setHeaderText("Are you sure you want to logout?");
+                alert.setContentText("Press OK to logout or Cancel to stay.");
 
-                Platform.runLater(() -> {
-                    try {
-                        Stage stage = (Stage) ContentArea.getScene().getWindow();
-                        root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
-                        stage.setScene(new Scene(root, 440, 280));
-                        stage.setTitle("User Login");
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                // Customizing the buttons in the alert dialog
+                ButtonType okButton = new ButtonType("OK");
+                ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(okButton, cancelButton);
+
+                // Handling user's choice
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == okButton) {
+                        try {
+                            Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+
+                            Platform.runLater(() -> {
+                                Stage stage = (Stage) ContentArea.getScene().getWindow();
+                                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                                stage.setScene(new Scene(root, 440, 280));
+                                stage.setTitle("User Login");
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
+            });
         });
     }
+
 
     @FXML
     public void onClickExit() {

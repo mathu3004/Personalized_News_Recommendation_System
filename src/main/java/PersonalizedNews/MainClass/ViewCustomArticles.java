@@ -1,5 +1,7 @@
-package PersonalizedNews;
+package PersonalizedNews.MainClass;
 
+import PersonalizedNews.ReadArticles;
+import PersonalizedNews.SessionManager;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -30,7 +32,7 @@ import java.util.stream.Stream;
 
 import static PersonalizedNews.FetchArticlesCategory.preprocessText;
 
-public class ViewArticles {
+public class ViewCustomArticles {
     @FXML
     public Button saveButton;
     @FXML
@@ -61,7 +63,7 @@ public class ViewArticles {
     private String username;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private static final String CONNECTION_STRING = "mongodb://127.0.0.1:27017";
+    private static final String CONNECTION_STRING = "mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/";
     private static final String DATABASE_NAME = "News";
     private static MongoClient mongoClient = null;
 
@@ -347,17 +349,25 @@ public class ViewArticles {
             }
         }
 
-        // Rank available articles by similarity
-        return availableArticles.stream()
-                .sorted((a1, a2) -> {
-                    Map<CharSequence, Integer> vec1 = vectorizeContent(a1.getString("content"));
-                    Map<CharSequence, Integer> vec2 = vectorizeContent(a2.getString("content"));
-                    double score1 = cosineSimilarity.cosineSimilarity(userProfileVector, vec1);
-                    double score2 = cosineSimilarity.cosineSimilarity(userProfileVector, vec2);
-                    return Double.compare(score2, score1); // Descending order
+        // Rank available articles by similarity (KNN-like approach)
+        List<Document> recommendations = availableArticles.stream()
+                .map(article -> {
+                    Map<CharSequence, Integer> articleVector = vectorizeContent(article.getString("content"));
+                    double similarity = cosineSimilarity.cosineSimilarity(userProfileVector, articleVector);
+                    article.put("similarityScore", similarity); // Attach similarity score to article
+                    return article;
                 })
+                .sorted((a1, a2) -> Double.compare(
+                        a2.getDouble("similarityScore"),
+                        a1.getDouble("similarityScore")
+                )) // Sort by similarity in descending order
+                .limit(20) // Limit to top 20 recommendations
                 .collect(Collectors.toList());
+
+        return recommendations;
     }
+
+
 
     private Map<CharSequence, Integer> vectorizeContent(String content) {
         Map<CharSequence, Integer> vector = new HashMap<>();

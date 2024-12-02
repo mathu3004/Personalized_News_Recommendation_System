@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.User;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -62,7 +63,7 @@ public class UserLogin {
     }
 
     private void handleLogin(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             // Access the database and collection
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -79,9 +80,16 @@ public class UserLogin {
 
             // Query the database for the user
             Document query = new Document("username", enteredUsername).append("password", enteredPassword);
-            Document user = collection.find(query).first();
+            Document userDocument = collection.find(query).first();
 
-            if (user != null) {
+            if (userDocument != null) {
+                // Map Document to User
+                User user = new User(
+                        userDocument.getString("username"),
+                        userDocument.getString("email"),
+                        userDocument.getString("password")
+                );
+
                 Platform.runLater(() -> {
                     try {
                         // Login successful

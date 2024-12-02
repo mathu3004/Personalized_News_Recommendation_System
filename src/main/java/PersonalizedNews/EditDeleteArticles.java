@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.Article;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -48,7 +49,7 @@ public class EditDeleteArticles {
     }
 
     private void fetchArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 
@@ -59,18 +60,28 @@ public class EditDeleteArticles {
             }
 
             Document query = new Document("articleId", Integer.parseInt(enteredArticleID));
-            Document article = collection.find(query).first();
+            Document articleDoc = collection.find(query).first();
 
-            if (article != null) {
+            if (articleDoc != null) {
+                // Create an Article object
+                Article article = new Article(
+                        articleDoc.getInteger("articleId"),
+                        articleDoc.getString("title"),
+                        articleDoc.getString("author"),
+                        articleDoc.getString("description"),
+                        articleDoc.getString("publishedAt"),
+                        articleDoc.getString("content")
+                );
+
+                // Update UI fields
                 javafx.application.Platform.runLater(() -> {
-                    title.setText(article.getString("title"));
-                    author.setText(article.getString("author"));
-                    description.setText(article.getString("description"));
-                    content.setText(article.getString("content"));
-
-                    String publishedAtStr = article.getString("publishedAt");
-                    if (publishedAtStr != null && !publishedAtStr.isEmpty()) {
-                        publishedDate.setValue(DATE_FORMATTER.parse(publishedAtStr, LocalDate::from));
+                    articleID.setText(String.valueOf(article.getArticleId()));
+                    title.setText(article.getTitle());
+                    author.setText(article.getAuthor());
+                    description.setText(article.getDescription());
+                    content.setText(article.getContent());
+                    if (article.getPublishedDate() != null && !article.getPublishedDate().isEmpty()) {
+                        publishedDate.setValue(DATE_FORMATTER.parse(article.getPublishedDate(), LocalDate::from));
                     }
                 });
 
@@ -92,7 +103,7 @@ public class EditDeleteArticles {
     }
 
     private void updateArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 
@@ -100,27 +111,35 @@ public class EditDeleteArticles {
                 return;
             }
 
-            int enteredArticleID = Integer.parseInt(articleID.getText().trim());
-            String enteredTitle = title.getText().trim();
-            String enteredAuthor = author.getText().trim();
+            // Create an Article object from UI inputs
+            Article updatedArticle = new Article(
+                    Integer.parseInt(articleID.getText().trim()),
+                    title.getText().trim(),
+                    author.getText().trim(),
+                    description.getText().trim(),
+                    publishedDate.getValue().format(DATE_FORMATTER),
+                    content.getText().trim()
+            );
 
-            Document titleAuthorQuery = new Document("title", enteredTitle)
-                    .append("author", enteredAuthor)
-                    .append("articleId", new Document("$ne", enteredArticleID));
+            // Check for duplicate title-author combination
+            Document titleAuthorQuery = new Document("title", updatedArticle.getTitle())
+                    .append("author", updatedArticle.getAuthor())
+                    .append("articleId", new Document("$ne", updatedArticle.getArticleId()));
 
             if (collection.find(titleAuthorQuery).first() != null) {
                 showAlert(Alert.AlertType.ERROR, "Validation Error", "The same title and author combination already exists!");
                 return;
             }
 
-            Document updatedArticle = new Document("title", enteredTitle)
-                    .append("author", enteredAuthor)
-                    .append("description", description.getText().trim())
-                    .append("content", content.getText().trim())
-                    .append("publishedAt", publishedDate.getValue().format(DATE_FORMATTER));
+            // Update article in the database
+            Document query = new Document("articleId", updatedArticle.getArticleId());
+            collection.updateOne(query, new Document("$set", new Document("title", updatedArticle.getTitle())
+                    .append("author", updatedArticle.getAuthor())
+                    .append("description", updatedArticle.getDescription())
+                    .append("content", updatedArticle.getContent())
+                    .append("publishedAt", updatedArticle.getPublishedDate())
+                    .append("category", updatedArticle.getCategory())));
 
-            Document query = new Document("articleId", enteredArticleID);
-            collection.updateOne(query, new Document("$set", updatedArticle));
             FetchArticlesCategory.initialize();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article updated successfully!");
             clearFields();
@@ -138,7 +157,7 @@ public class EditDeleteArticles {
     }
 
     private void deleteArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 

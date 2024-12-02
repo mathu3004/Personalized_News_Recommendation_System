@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.Admin;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -29,6 +30,7 @@ public class AdministratorLogin {
     public PasswordField Password;
     @FXML
     public TextField PasswordText;
+
     private boolean isPasswordVisible = false;
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -41,13 +43,11 @@ public class AdministratorLogin {
     @FXML
     public void onClickView(ActionEvent event) {
         if (isPasswordVisible) {
-            // Switch back to hiding the password
             Password.setText(PasswordText.getText());
             Password.setVisible(true);
             PasswordText.setVisible(false);
             isPasswordVisible = false;
         } else {
-            // Switch to showing the password
             PasswordText.setText(Password.getText());
             PasswordText.setVisible(true);
             Password.setVisible(false);
@@ -61,47 +61,32 @@ public class AdministratorLogin {
     }
 
     private void handleLogin(ActionEvent event) {
-        // MongoDB connection setup
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
-            // Access the database and collection
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("AdminAccounts");
 
-            String enteredEmail = email.getText().trim();
-            String enteredAdminName = adminName.getText().trim();
-            String enteredPassword = isPasswordVisible ? PasswordText.getText().trim() : Password.getText().trim();
+            // Create Admin object from inputs
+            Admin admin = new Admin(
+                    adminName.getText().trim(),
+                    email.getText().trim(),
+                    isPasswordVisible ? PasswordText.getText().trim() : Password.getText().trim()
+            );
 
-            if (enteredPassword.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Password cannot be empty!");
+            if (!admin.isValid()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "All fields are required!");
                 return;
             }
 
-            Document query = new Document();
-            if (!enteredEmail.isEmpty()) {
-                query.append("email", enteredEmail);
-            }
-            else if (!enteredAdminName.isEmpty()) {
-                query.append("username", enteredAdminName);
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter either an email or an admin name!");
-                return;
-            }
-            query.append("password", enteredPassword);
+            // Build a query using the Admin class
+            Document query = admin.toQueryDocument();
+            Document adminDoc = collection.find(query).first();
 
-            // Query the database for the admin
-            Document admin = collection.find(query).first();
-
-            if (admin != null) {
-                // Login successful
+            if (adminDoc != null) {
                 showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to the Admin Dashboard!");
-
-                // Clear input fields
                 clearFields();
-
-                // Navigate to the admin dashboard
                 javafx.application.Platform.runLater(() -> navigateToDashboard(event));
             } else {
-                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid email, admin name, or password!");
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid credentials!");
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
@@ -170,7 +155,6 @@ public class AdministratorLogin {
         });
     }
 
-    // Shutdown ExecutorService when the application exits
     public void shutdown() {
         executorService.shutdown();
     }

@@ -1,5 +1,7 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.Article;
+import PersonalizedNews.MainClass.ViewCustomArticles;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -138,7 +140,7 @@ public class ViewCategorizedArticles {
     private void resetButtonStates(Article selectedArticle) {
         if (selectedArticle == null) return;
 
-        MongoDatabase database = ViewArticles.getDatabase();
+        MongoDatabase database = ViewCustomArticles.getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch user document
@@ -177,7 +179,7 @@ public class ViewCategorizedArticles {
     }
 
     private void saveActionToDB(String action, int articleId) {
-        MongoDatabase database = ViewArticles.getDatabase();
+        MongoDatabase database = ViewCustomArticles.getDatabase();
         MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
         // Fetch or initialize user document
@@ -274,7 +276,7 @@ public class ViewCategorizedArticles {
     public void onClickLike(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -308,7 +310,7 @@ public class ViewCategorizedArticles {
     public void onClickSkip(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
@@ -342,7 +344,7 @@ public class ViewCategorizedArticles {
     public void onClickSave(ActionEvent event) {
         Article selectedArticle = getSelectedArticle();
         if (selectedArticle != null) {
-            MongoDatabase database = ViewArticles.getDatabase();
+            MongoDatabase database = ViewCustomArticles.getDatabase();
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();

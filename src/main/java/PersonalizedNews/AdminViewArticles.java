@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.Article;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -61,7 +62,7 @@ public class AdminViewArticles {
     }
 
     private void loadArticlesFromDB() {
-        String mongoUri = "mongodb://127.0.0.1:27017";
+        String mongoUri = "mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/";
 
         try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
             MongoDatabase database = mongoClient.getDatabase("News");

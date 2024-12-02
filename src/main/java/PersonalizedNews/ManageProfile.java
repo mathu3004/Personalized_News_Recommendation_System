@@ -1,11 +1,11 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.User;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.bson.Document;
@@ -83,7 +83,7 @@ public class ManageProfile {
     }
 
     private void loadUserDetails() {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
@@ -106,30 +106,23 @@ public class ManageProfile {
             if (!enteredUsername.isEmpty()) query.append("username", enteredUsername);
             query.append("password", enteredCurrentPassword);
 
-            Document user = collection.find(query).first();
+            Document userDocument = collection.find(query).first();
 
-            if (user != null) {
-                Platform.runLater(() -> {
-                    // Populate fields with user data
-                    fName.setText(user.getString("firstName"));
-                    lName.setText(user.getString("lastName"));
-                    if ("Female".equalsIgnoreCase(user.getString("gender"))) {
-                        radioFemale.setSelected(true);
-                    } else if ("Male".equalsIgnoreCase(user.getString("gender"))) {
-                        radioMale.setSelected(true);
-                    }
-                    dOB.setValue(LocalDate.parse(user.getString("dateOfBirth")));
-                    setPreferences(user.getList("preferences", String.class));
+            if (userDocument != null) {
+                User user = new User(
+                        userDocument.getString("firstName"),
+                        userDocument.getString("lastName"),
+                        userDocument.getString("email"),
+                        userDocument.getString("username"),
+                        userDocument.getString("password"),
+                        LocalDate.parse(userDocument.getString("dateOfBirth")),
+                        userDocument.getString("gender"),
+                        userDocument.getList("preferences", String.class)
+                );
 
-                    // Load password into hidden field
-                    String loadedPassword = user.getString("password");
-                    newPassword.setText(loadedPassword);
-                    confirmNewPassword.setText(loadedPassword);
-                    viewNewPassword.setText(loadedPassword);
-                    viewNewConfirmPassword.setText(loadedPassword);
+                Platform.runLater(() -> populateFields(user));
 
-                    showAlert(Alert.AlertType.INFORMATION, "Load Success", "User details loaded successfully!");
-                });
+                showAlert(Alert.AlertType.INFORMATION, "Load Success", "User details loaded successfully!");
             } else {
                 showAlert(Alert.AlertType.ERROR, "User Not Found", "No user found with the provided details!");
             }
@@ -138,34 +131,72 @@ public class ManageProfile {
         }
     }
 
+    private void populateFields(User user) {
+        fName.setText(user.getFirstName());
+        lName.setText(user.getLastName());
+        email.setText(user.getEmail());
+        username.setText(user.getUsername());
+        dOB.setValue(user.getDateOfBirth());
+
+        if ("Female".equalsIgnoreCase(user.getGender())) {
+            radioFemale.setSelected(true);
+        } else if ("Male".equalsIgnoreCase(user.getGender())) {
+            radioMale.setSelected(true);
+        }
+
+        setPreferences(user.getPreferences());
+
+        newPassword.setText(user.getPassword());
+        confirmNewPassword.setText(user.getPassword());
+        viewNewPassword.setText(user.getPassword());
+        viewNewConfirmPassword.setText(user.getPassword());
+    }
+
     @FXML
     public void onClickUpdate() {
         executorService.execute(this::updateProfile);
     }
 
     private void updateProfile() {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
             // Validate inputs
             if (!validateInputs()) return;
 
-            Document update = new Document("$set", new Document()
-                    .append("firstName", fName.getText().trim())
-                    .append("lastName", lName.getText().trim())
-                    .append("gender", radioMale.isSelected() ? "Male" : "Female")
-                    .append("dateOfBirth", dOB.getValue().toString())
-                    .append("preferences", getSelectedPreferences())
-                    .append("password", newPassword.getText().trim()));
+            User updatedUser = new User(
+                    fName.getText().trim(),
+                    lName.getText().trim(),
+                    email.getText().trim(),
+                    username.getText().trim(),
+                    newPassword.getText().trim(),
+                    dOB.getValue(),
+                    radioMale.isSelected() ? "Male" : "Female",
+                    getSelectedPreferences()
+            );
 
             Document query = new Document("email", email.getText().trim());
-            collection.updateOne(query, update);
+            Document update = new Document("$set", mapUserToDocument(updatedUser));
 
+            collection.updateOne(query, update);
+            clearAllFields();
             showAlert(Alert.AlertType.INFORMATION, "Update Success", "Profile updated successfully!");
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
         }
+    }
+
+    private Document mapUserToDocument(User user) {
+        return new Document()
+                .append("firstName", user.getFirstName())
+                .append("lastName", user.getLastName())
+                .append("email", user.getEmail())
+                .append("username", user.getUsername())
+                .append("password", user.getPassword())
+                .append("dateOfBirth", user.getDateOfBirth().toString())
+                .append("gender", user.getGender())
+                .append("preferences", user.getPreferences());
     }
 
     @FXML

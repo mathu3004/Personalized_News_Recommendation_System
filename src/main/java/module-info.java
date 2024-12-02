@@ -22,4 +22,6 @@ module com.example.personalized_news_recommendation_system {
 
     // Export the package for other modules
     exports PersonalizedNews;
+    exports PersonalizedNews.MainClass;
+    opens PersonalizedNews.MainClass to java.base, javafx.fxml, javafx.graphics;
 }

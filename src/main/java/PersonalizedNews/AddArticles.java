@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.Article;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -46,7 +47,7 @@ public class AddArticles {
     }
 
     private void addArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 
@@ -76,13 +77,23 @@ public class AddArticles {
             // Format published date to M/d/yyyy
             String formattedDate = publishedDate.getValue().format(DATE_FORMATTER);
 
-            // Add the article to the database
-            Document newArticle = new Document("articleId", enteredArticleID)
-                    .append("title", enteredArticleName)
-                    .append("author", enteredAuthor)
-                    .append("publishedAt", formattedDate)
-                    .append("description", articleDescription.getText().trim())
-                    .append("content", articleContent.getText().trim());
+            // Create an Article object
+            Article article = new Article(
+                    enteredArticleID,
+                    enteredArticleName,
+                    enteredAuthor,
+                    articleDescription.getText().trim(),
+                    formattedDate,
+                    articleContent.getText().trim()
+            );
+
+            // Convert Article to MongoDB Document
+            Document newArticle = new Document("articleId", article.getArticleId())
+                    .append("title", article.getTitle())
+                    .append("author", article.getAuthor())
+                    .append("publishedAt", article.getPublishedDate())
+                    .append("description", article.getDescription())
+                    .append("content", article.getContent());
             collection.insertOne(newArticle);
 
             showAlert(Alert.AlertType.INFORMATION, "Success", "Article added successfully!");

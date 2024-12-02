@@ -1,5 +1,6 @@
 package PersonalizedNews;
 
+import PersonalizedNews.MainClass.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -94,7 +95,19 @@ public class CreateAccount {
                 return;
             }
 
-            try (MongoClient mongoClient = MongoClients.create("mongodb://127.0.0.1:27017")) {
+            // Create a User object
+            User newUser  = new User(
+                    firstName.getText(),
+                    lastName.getText(),
+                    email.getText(),
+                    username.getText(),
+                    password.getText(),
+                    dOB.getValue(),
+                    genderGroup.getSelectedToggle() == radioMale ? "Male" : "Female",
+                    getSelectedPreferences()
+            );
+
+            try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
                 MongoDatabase database = mongoClient.getDatabase("News");
                 MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
@@ -113,17 +126,17 @@ public class CreateAccount {
                 }
 
                 // Prepare user data
-                Document user = new Document("firstName", firstName.getText())
-                        .append("lastName", lastName.getText())
-                        .append("email", email.getText())
-                        .append("username", username.getText())
-                        .append("password", password.getText()) // Encrypt passwords in production!
-                        .append("dateOfBirth", dOB.getValue().toString())
-                        .append("gender", genderGroup.getSelectedToggle() == radioMale ? "Male" : "Female")
-                        .append("preferences", getSelectedPreferences());
+                Document userDoc = new Document("firstName", newUser .getFirstName())
+                        .append("lastName", newUser .getLastName())
+                        .append("email", newUser .getEmail())
+                        .append("username", newUser .getUsername())
+                        .append("password", newUser .getPassword()) // Remember to encrypt passwords in production!
+                        .append("dateOfBirth", newUser .getDateOfBirth().toString())
+                        .append("gender", newUser .getGender())
+                        .append("preferences", newUser .getPreferences());
 
                 // Insert into MongoDB
-                collection.insertOne(user);
+                collection.insertOne(userDoc);
 
                 showAlert("Account created successfully!", Alert.AlertType.INFORMATION);
                 javafx.application.Platform.runLater(() -> {
