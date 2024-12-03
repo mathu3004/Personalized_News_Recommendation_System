@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="430.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.ViewCategorizedArticles">
+<AnchorPane prefHeight="430.0" prefWidth="600.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.UserMaintainance.ViewCategorizedArticles">
    <children>
       <Text layoutX="197.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="View Articles">
          <font>

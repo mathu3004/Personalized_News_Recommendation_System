@@ -24,4 +24,12 @@ module com.example.personalized_news_recommendation_system {
     exports PersonalizedNews;
     exports PersonalizedNews.MainClass;
     opens PersonalizedNews.MainClass to java.base, javafx.fxml, javafx.graphics;
+    exports PersonalizedNews.AdminMaintainance;
+    opens PersonalizedNews.AdminMaintainance to java.base, javafx.fxml, javafx.graphics;
+    exports PersonalizedNews.UserMaintainance;
+    opens PersonalizedNews.UserMaintainance to java.base, javafx.fxml, javafx.graphics;
+    exports PersonalizedNews.Categorization;
+    opens PersonalizedNews.Categorization to java.base, javafx.fxml, javafx.graphics;
+    exports PersonalizedNews.Application;
+    opens PersonalizedNews.Application to java.base, javafx.fxml, javafx.graphics;
 }

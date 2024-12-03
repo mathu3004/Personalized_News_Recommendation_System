@@ -1,4 +1,4 @@
-package PersonalizedNews;
+package PersonalizedNews.UserMaintainance;
 
 public class SessionManager {
     private static SessionManager instance = null;

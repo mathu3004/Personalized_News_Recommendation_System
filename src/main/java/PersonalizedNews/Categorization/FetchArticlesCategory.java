@@ -1,4 +1,4 @@
-package PersonalizedNews;
+package PersonalizedNews.Categorization;
 
 import com.mongodb.client.*;
 import org.bson.Document;
@@ -23,8 +23,7 @@ public class FetchArticlesCategory {
     }
 
     public static void initialize() {
-        String mongoUri = "mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/";
-
+        String mongoUri = "mongodb://localhost:27017/";
         try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> articlesCollection = database.getCollection("Articles");

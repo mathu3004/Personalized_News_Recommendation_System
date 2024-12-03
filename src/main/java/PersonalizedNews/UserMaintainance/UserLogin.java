@@ -1,4 +1,4 @@
-package PersonalizedNews;
+package PersonalizedNews.UserMaintainance;
 
 import PersonalizedNews.MainClass.User;
 import com.mongodb.client.MongoClient;
@@ -63,7 +63,7 @@ public class UserLogin {
     }
 
     private void handleLogin(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
             // Access the database and collection
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");

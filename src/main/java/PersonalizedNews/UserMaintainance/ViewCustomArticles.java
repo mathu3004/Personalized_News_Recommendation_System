@@ -1,7 +1,6 @@
-package PersonalizedNews.MainClass;
+package PersonalizedNews.UserMaintainance;
 
-import PersonalizedNews.ReadArticles;
-import PersonalizedNews.SessionManager;
+import PersonalizedNews.MainClass.Article;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -30,7 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static PersonalizedNews.FetchArticlesCategory.preprocessText;
+import static PersonalizedNews.Categorization.FetchArticlesCategory.preprocessText;
 
 public class ViewCustomArticles {
     @FXML
@@ -63,7 +62,7 @@ public class ViewCustomArticles {
     private String username;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private static final String CONNECTION_STRING = "mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/";
+    private static final String CONNECTION_STRING = "mongodb://localhost:27017/";
     private static final String DATABASE_NAME = "News";
     private static MongoClient mongoClient = null;
 

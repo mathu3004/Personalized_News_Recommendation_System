@@ -1,6 +1,5 @@
-package PersonalizedNews;
+package PersonalizedNews.UserMaintainance;
 
-import PersonalizedNews.MainClass.ViewCustomArticles;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -1,6 +1,5 @@
-package PersonalizedNews;
+package PersonalizedNews.UserMaintainance;
 
-import PersonalizedNews.MainClass.ViewCustomArticles;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;

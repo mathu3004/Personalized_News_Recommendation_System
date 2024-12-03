@@ -1,5 +1,6 @@
-package PersonalizedNews;
+package PersonalizedNews.Application;
 
+import PersonalizedNews.Categorization.FetchArticlesCategory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

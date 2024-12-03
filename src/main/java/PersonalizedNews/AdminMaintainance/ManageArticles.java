@@ -1,4 +1,4 @@
-package PersonalizedNews;
+package PersonalizedNews.AdminMaintainance;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;

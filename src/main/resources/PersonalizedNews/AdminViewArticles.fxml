@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="454.0" prefWidth="875.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.AdminViewArticles">
+<AnchorPane prefHeight="454.0" prefWidth="875.0" style="-fx-background-color: #8d8072;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="PersonalizedNews.AdminMaintainance.AdminViewArticles">
    <children>
       <TableView fx:id="AdminViewArticlesTable" layoutX="39.0" layoutY="68.0" prefHeight="330.0" prefWidth="797.0" style="-fx-background-color: white;">
         <columns>

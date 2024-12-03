@@ -1,5 +1,6 @@
-package PersonalizedNews;
+package PersonalizedNews.AdminMaintainance;
 
+import PersonalizedNews.Categorization.FetchArticlesCategory;
 import PersonalizedNews.MainClass.Article;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -157,7 +158,7 @@ public class EditDeleteArticles {
     }
 
     private void deleteArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 

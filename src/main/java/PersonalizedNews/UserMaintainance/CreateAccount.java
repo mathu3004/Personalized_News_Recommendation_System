@@ -1,4 +1,4 @@
-package PersonalizedNews;
+package PersonalizedNews.UserMaintainance;
 
 import PersonalizedNews.MainClass.User;
 import javafx.event.ActionEvent;
@@ -107,7 +107,7 @@ public class CreateAccount {
                     getSelectedPreferences()
             );
 
-            try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004%40@cluster0.6dlta.mongodb.net/")) {
+            try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
                 MongoDatabase database = mongoClient.getDatabase("News");
                 MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
