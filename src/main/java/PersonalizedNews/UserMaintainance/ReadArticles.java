@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ReadArticles {
-
     @FXML
     public Label readTitle;
     @FXML
@@ -194,12 +193,12 @@ public class ReadArticles {
     public void onClickBackViewArticles(ActionEvent event) {
         executorService.execute(() -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/UserPortal.fxml"));
                 Platform.runLater(() -> {
                     try {
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(new Scene(root, 855, 525));
-                        root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
+                        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/GlowButton.css").toExternalForm());
                         stage.setTitle("User Dashboard");
                         stage.show();
                     } catch (Exception e) {

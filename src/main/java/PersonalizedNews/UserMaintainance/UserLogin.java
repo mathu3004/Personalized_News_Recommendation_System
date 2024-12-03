@@ -63,7 +63,7 @@ public class UserLogin {
     }
 
     private void handleLogin(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
             // Access the database and collection
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
@@ -97,11 +97,11 @@ public class UserLogin {
                         SessionManager.getInstance().setUsername(enteredUsername);
 
                         // Navigate to the dashboard or next page
-                        Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
+                        Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/UserPortal.fxml"));
                         showAlert(Alert.AlertType.INFORMATION, "Login Success", "Welcome to your dashboard!");
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(new Scene(root, 855, 525));
-                        root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
+                        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/GlowButton.css").toExternalForm());
                         stage.setTitle("User Dashboard");
 
                         // Clear input fields
@@ -123,12 +123,12 @@ public class UserLogin {
     public void onClickBackMain(ActionEvent event) {
         executorService.execute(() -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/WelcomePage.fxml"));
                 Platform.runLater(() -> {
                     try {
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(new Scene(root, 600, 450));
-                        root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Button.css").toExternalForm());
                         stage.setTitle("Welcome to Mark's News");
                         stage.show();
                     } catch (Exception e) {
@@ -145,12 +145,12 @@ public class UserLogin {
     public void onCLickSignup(ActionEvent event) {
         executorService.execute(() -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("CreateAccount.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/CreateAccount.fxml"));
                 Platform.runLater(() -> {
                     try {
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(new Scene(root, 651, 400));
-                        root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                         stage.setTitle("User Signup");
                         stage.show();
                     } catch (Exception e) {

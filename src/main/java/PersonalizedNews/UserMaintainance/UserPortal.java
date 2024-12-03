@@ -52,9 +52,9 @@ public class UserPortal implements Initializable {
 
                         // Conditionally apply the CSS stylesheet
                         if (applyCSS) {
-                            fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                            fxml.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                         }
-                        fxml.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                        fxml.getStylesheets().add(getClass().getResource("/PersonalizedNews/Button.css").toExternalForm());
 
                         // Optional: Show an alert message after loading the FXML
                         if (alertMessage != null && !alertMessage.isEmpty()) {
@@ -79,7 +79,7 @@ public class UserPortal implements Initializable {
         executorService.execute(() -> {
             try {
                 // Load the initial view (UserHome) when the portal opens
-                Platform.runLater(() -> loadFXML("UserHome.fxml", null, 855, 455, false));
+                Platform.runLater(() -> loadFXML("/PersonalizedNews/UserHome.fxml", null, 855, 455, false));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -88,7 +88,7 @@ public class UserPortal implements Initializable {
 
     @FXML
     public void onClickDashboard() {
-        loadFXML("UserHome.fxml", "Welcome to the Dashboard.", 855, 455, false);
+        loadFXML("/PersonalizedNews/UserHome.fxml", "Welcome to the Dashboard.", 855, 455, false);
     }
 
     @FXML
@@ -96,7 +96,7 @@ public class UserPortal implements Initializable {
         executorService.execute(() -> {
             try {
                 // Load the ViewArticles FXML file
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewArticles.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/ViewArticles.fxml"));
                 Parent fxml = loader.load();
 
                 // Retrieve the controller and initialize the username
@@ -106,7 +106,7 @@ public class UserPortal implements Initializable {
                 Platform.runLater(() -> {
                     if (username != null) {
                         controller.initializeUsername(); // Set the username and load articles
-                        fxml.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        fxml.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
 
                         // Display the ViewArticles page
                         ContentArea.getChildren().clear();
@@ -127,7 +127,7 @@ public class UserPortal implements Initializable {
 
     @FXML
     public void onClickManage() {
-        loadFXML("ManageProfile.fxml", "Manage your saved articles.", 550, 679, true);
+        loadFXML("/PersonalizedNews/ManageProfile.fxml", "Manage your saved articles.", 550, 679, true);
     }
 
     @FXML
@@ -150,11 +150,11 @@ public class UserPortal implements Initializable {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == okButton) {
                         try {
-                            Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+                            Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/UserLogin.fxml"));
 
                             Platform.runLater(() -> {
                                 Stage stage = (Stage) ContentArea.getScene().getWindow();
-                                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                                root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                                 stage.setScene(new Scene(root, 440, 280));
                                 stage.setTitle("User Login");
                             });

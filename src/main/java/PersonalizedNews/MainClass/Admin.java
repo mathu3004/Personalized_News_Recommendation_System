@@ -2,17 +2,56 @@ package PersonalizedNews.MainClass;
 
 import org.bson.Document;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 public class Admin extends Human {
     private String adminPosition;
+    private Set<Article> articlesManaged;
 
     // Constructor
     public Admin(String username, String email, String password) {
         super(username, email, password);
+        this.articlesManaged = new HashSet<>();
     }
 
     public Admin(String username, String email, String password, String adminPosition) {
         super(username, email, password);
         this.adminPosition = adminPosition;
+        this.articlesManaged = new HashSet<>();
+    }
+
+    // Methods for managing articles
+    public void addArticle(Article article) {
+        articlesManaged.add(article);
+        article.addAdmin(this);
+    }
+
+    public void deleteArticle(Article article) {
+        articlesManaged.remove(article);
+        article.removeAdmin(this);
+    }
+
+    public void editArticle(Article article, String title, String author, String description, String publishedDate, String content) {
+        if (articlesManaged.contains(article)) {
+            article.setTitle(title);
+            article.setContent(content);
+            article.setDescription(description);
+            article.setPublishedDate(publishedDate);
+            article.setAuthor(author);
+        }
+    }
+
+    public void viewArticles(Set<Article> allArticles) {
+        System.out.println("Articles managed by " + getUsername() + ":");
+        for (Article article : allArticles) {
+            System.out.println(article);
+        }
+    }
+
+    public Set<Article> getArticlesManaged() {
+        return articlesManaged;
     }
 
     public String getAdminPosition() {
@@ -45,10 +84,6 @@ public class Admin extends Human {
         }
         query.append("password", getPassword());
         return query;
-    }
-
-    public void manageArticles() {
-        System.out.println("Managing articles..");
     }
 
     @Override

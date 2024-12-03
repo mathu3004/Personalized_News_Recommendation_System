@@ -23,7 +23,7 @@ public class FetchArticlesCategory {
     }
 
     public static void initialize() {
-        String mongoUri = "mongodb://localhost:27017/";
+        String mongoUri = "mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004";
         try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> articlesCollection = database.getCollection("Articles");

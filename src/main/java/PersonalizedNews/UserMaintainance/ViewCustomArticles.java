@@ -62,7 +62,7 @@ public class ViewCustomArticles {
     private String username;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
-    private static final String CONNECTION_STRING = "mongodb://localhost:27017/";
+    private static final String CONNECTION_STRING = "mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004";
     private static final String DATABASE_NAME = "News";
     private static MongoClient mongoClient = null;
 
@@ -99,6 +99,14 @@ public class ViewCustomArticles {
             MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
 
             Document userDoc = ratedArticles.find(new Document("username", username)).first();
+            if (userDoc == null) {
+                userDoc = new Document("username", username)
+                        .append("liked", new ArrayList<>())
+                        .append("skipped", new ArrayList<>())
+                        .append("saved", new ArrayList<>())
+                        .append("read", new ArrayList<>());
+                ratedArticles.insertOne(userDoc);
+            }
             loadRecommendedArticles();
         });
     }
@@ -450,7 +458,7 @@ public class ViewCustomArticles {
             Platform.runLater(() -> {
             try {
                 // Load the ReadArticles view
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("ReadArticles.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/ReadArticles.fxml"));
                 Parent root = loader.load();
 
                 // Pass the article data to the ReadArticles controller
@@ -461,7 +469,7 @@ public class ViewCustomArticles {
                 // Set the scene and show the ReadArticles view
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 600, 453));
-                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                 stage.setTitle("Read Article");
                 stage.show();
             } catch (IOException e) {

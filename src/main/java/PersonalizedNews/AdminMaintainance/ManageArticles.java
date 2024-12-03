@@ -20,15 +20,15 @@ public class ManageArticles {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public void onClickToAdd(ActionEvent event) {
-        executorService.execute(() -> navigateToPage(event, "AddArticles.fxml", "Add Articles", 633, 413));
+        executorService.execute(() -> navigateToPage(event, "/PersonalizedNews/AddArticles.fxml", "Add Articles", 633, 413));
     }
 
     public void onClickEditDelete(ActionEvent event) {
-        executorService.execute(() -> navigateToPage(event, "EditDeleteArticles.fxml", "Edit/Delete Articles", 666, 478));
+        executorService.execute(() -> navigateToPage(event, "/PersonalizedNews/EditDeleteArticles.fxml", "Edit/Delete Articles", 666, 478));
     }
 
     public void onClickLogout(ActionEvent event) {
-        executorService.execute(() -> navigateToPage(event, "AdministratorLogin.fxml", "Admin Login", 434, 298));
+        executorService.execute(() -> navigateToPage(event, "/PersonalizedNews/AdministratorLogin.fxml", "Admin Login", 434, 298));
     }
 
     public void onClickExit(ActionEvent event) {
@@ -53,7 +53,7 @@ public class ManageArticles {
     }
 
     public void onClickView(ActionEvent event) {
-        executorService.execute(() -> navigateToPage(event, "AdminViewArticles.fxml", "View Articles", 875, 454));
+        executorService.execute(() -> navigateToPage(event, "/PersonalizedNews/AdminViewArticles.fxml", "View Articles", 875, 454));
     }
 
     private void navigateToPage(ActionEvent event, String fxmlFile, String title, int width, int height) {
@@ -63,7 +63,7 @@ public class ManageArticles {
                 try {
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     stage.setScene(new Scene(root, width, height));
-                    root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                     stage.setTitle(title);
                     stage.show();
                 } catch (Exception e) {

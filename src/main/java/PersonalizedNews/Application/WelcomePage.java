@@ -33,13 +33,13 @@ public class WelcomePage implements Initializable {
     public void onClickUser(ActionEvent event) {
         try {
             // Load User Login Page
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UserLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/UserLogin.fxml"));
             Parent root = loader.load();
 
             // Get the Stage from the current scene and set new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 440, 280));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
             stage.setTitle("User Login");
             stage.show();
         } catch (IOException e) {
@@ -50,13 +50,13 @@ public class WelcomePage implements Initializable {
     public void onClickAdministrator(ActionEvent event) {
         try {
             // Load Administrator Login Page
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("AdministratorLogin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/AdministratorLogin.fxml"));
             Parent root = loader.load();
 
             // Get the Stage from the current scene and set new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 434, 298));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
             stage.setTitle("Administrator Login");
             stage.show();
         } catch (IOException e) {

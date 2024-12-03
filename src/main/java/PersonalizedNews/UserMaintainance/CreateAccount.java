@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class CreateAccount {
-
     @FXML
     public TextField firstName;
     @FXML
@@ -63,7 +62,6 @@ public class CreateAccount {
     public CheckBox checkPolitics;
     @FXML
     public CheckBox checkEntertainment;
-
     private ToggleGroup genderGroup;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // Thread pool for concurrency
 
@@ -107,7 +105,7 @@ public class CreateAccount {
                     getSelectedPreferences()
             );
 
-            try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
+            try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
                 MongoDatabase database = mongoClient.getDatabase("News");
                 MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
@@ -315,12 +313,12 @@ public class CreateAccount {
     public void onClickLogin(ActionEvent event) {
         executorService.execute(() -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("UserLogin.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/UserLogin.fxml"));
                 javafx.application.Platform.runLater(() -> {
                     try {
                         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                         stage.setScene(new Scene(root, 440, 280));
-                        root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                         stage.setTitle("User Login");
                         stage.show();
                     } catch (Exception e) {

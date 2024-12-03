@@ -48,7 +48,7 @@ public class AddArticles {
     }
 
     private void addArticle(ActionEvent event) {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("Articles");
 
@@ -156,12 +156,12 @@ public class AddArticles {
 
     private void navigateToMain(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/ManageArticles.fxml"));
             javafx.application.Platform.runLater(() -> {
                 try {
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     stage.setScene(new Scene(root, 574, 400));
-                    root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Button.css").toExternalForm());
                     stage.setTitle("Admin Dashboard");
                     stage.show();
                 } catch (Exception e) {

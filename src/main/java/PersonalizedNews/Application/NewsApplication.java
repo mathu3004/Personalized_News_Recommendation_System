@@ -28,9 +28,9 @@ public class NewsApplication extends Application {
 
     private void initializeUI(Stage stage) throws Exception {
         // Load the FXML and set up the scene
-        Parent root = FXMLLoader.load(getClass().getResource("WelcomePage.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/WelcomePage.fxml"));
         Scene scene = new Scene(root, 600, 450);
-        root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+        root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Button.css").toExternalForm());
 
         // Load the application icon
         Image icon = new Image("/NEWSICON.png");

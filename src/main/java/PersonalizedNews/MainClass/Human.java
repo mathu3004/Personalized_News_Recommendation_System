@@ -6,14 +6,6 @@ public abstract class Human {
     private String username;
     private String email;
     private String password;
-    private ArrayList<Article> articles = new ArrayList<>();
-
-    public Human(String username, String email, String password, ArrayList<Article> articles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.articles = articles;
-    }
 
     public Human(String username, String email, String password) {
         this.username = username;
@@ -45,8 +37,6 @@ public abstract class Human {
         this.password = password;
     }
 
-
-
     // Abstract method to enforce implementation in subclasses
     public abstract boolean isValid();
 
@@ -57,7 +47,6 @@ public abstract class Human {
         return "Human{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }

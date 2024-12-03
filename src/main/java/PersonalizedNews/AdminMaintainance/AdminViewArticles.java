@@ -62,7 +62,7 @@ public class AdminViewArticles {
     }
 
     private void loadArticlesFromDB() {
-        String mongoUri = "mongodb://localhost:27017/";
+        String mongoUri = "mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004";
 
         try (MongoClient mongoClient = MongoClients.create(mongoUri)) {
             MongoDatabase database = mongoClient.getDatabase("News");
@@ -96,12 +96,12 @@ public class AdminViewArticles {
 
     private void navigateToManageArticles(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("ManageArticles.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/ManageArticles.fxml"));
             javafx.application.Platform.runLater(() -> {
                 try {
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     stage.setScene(new Scene(root, 574, 400));
-                    root.getStylesheets().add(getClass().getResource("Button.css").toExternalForm());
+                    root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Button.css").toExternalForm());
                     stage.setTitle("Admin Dashboard");
                     stage.show();
                 } catch (Exception e) {

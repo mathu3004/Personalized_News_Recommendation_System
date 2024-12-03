@@ -13,7 +13,7 @@ public class UserHome {
 
     public void openCategoryView(String category,ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("ViewCategorizedArticles.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/ViewCategorizedArticles.fxml"));
             Parent root = loader.load();
 
             ViewCategorizedArticles controller = loader.getController();
@@ -22,7 +22,7 @@ public class UserHome {
             // Get the current stage from the event source
             Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 600, 430));
-            root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+            root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
             stage.setTitle(category + " Articles");
         } catch (IOException e) {
             e.printStackTrace();

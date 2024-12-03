@@ -83,7 +83,7 @@ public class ManageProfile {
     }
 
     private void loadUserDetails() {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
 
@@ -158,7 +158,7 @@ public class ManageProfile {
     }
 
     private void updateProfile() {
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017/")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
             MongoDatabase database = mongoClient.getDatabase("News");
             MongoCollection<Document> collection = database.getCollection("UserAccounts");
 

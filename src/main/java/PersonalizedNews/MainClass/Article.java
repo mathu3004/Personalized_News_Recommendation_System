@@ -14,8 +14,8 @@ public class Article {
     private String publishedDate;
     private String category;
     private String content;
-    private Set<Human> human;
-    private int ratings;
+    private Set<Admin> admins;
+    private Set<User> users;
 
     public Article(int articleId, String title, String author, String description, String publishedDate, String content, String category) {
         this.articleId = articleId;
@@ -25,6 +25,8 @@ public class Article {
         this.publishedDate = publishedDate;
         this.content = content;
         this.category = category;
+        this.admins = new HashSet<>();
+        this.users = new HashSet<>();
     }
 
     public Article(int articleId, String category, String author, String publishedDate, String title, String description, RadioButton select) {
@@ -35,6 +37,8 @@ public class Article {
         this.title = title;
         this.description = description;
         this.select = select;
+        this.admins = new HashSet<>();
+        this.users = new HashSet<>();
     }
 
     public Article(int articleId, String title, String author, String description, String publishedDate, String content) {
@@ -44,10 +48,12 @@ public class Article {
         this.description = description;
         this.publishedDate = publishedDate;
         this.content = content;
+        this.admins = new HashSet<>();
+        this.users = new HashSet<>();
     }
 
     // Constructors
-    public Article(int articleId, String title, String author, String description, String publishedDate, String content, String category, int ratings, Set<Human> human) {
+    public Article(int articleId, String title, String author, String description, String publishedDate, String content, String category, Set<String> admins, Set<String> users) {
         this.articleId = articleId;
         this.title = title;
         this.author = author;
@@ -55,19 +61,8 @@ public class Article {
         this.publishedDate = publishedDate;
         this.content = content;
         this.category = category;
-        this.ratings = 0;
-        this.human = new HashSet<>();
-    }
-
-    public Article(int articleId, String title, String author, String description, String publishedDate, String content, String category, int ratings) {
-        this.articleId = articleId;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.publishedDate = publishedDate;
-        this.content = content;
-        this.category = category;
-        this.ratings = ratings;
+        this.admins = new HashSet<>();
+        this.users = new HashSet<>();
     }
 
     public int getArticleId() { return articleId; }
@@ -76,8 +71,16 @@ public class Article {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAuthor() {
         return author;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getDescription() {
@@ -88,8 +91,20 @@ public class Article {
         return publishedDate;
     }
 
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     public String getContent() {
         return content;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {
@@ -100,24 +115,29 @@ public class Article {
         return select;
     }
 
-    public int getRatings() {
-        return ratings;
+    // Methods to manage relationships
+    public void addAdmin(Admin admin) {
+        admins.add(admin);
     }
 
-    public Set<Human> getHuman() {
-        return human;
+    public void removeAdmin(Admin admin) {
+        admins.remove(admin);
     }
 
-    public void addHuman(Human human) {
-        this.human.add(human);
+    public void addUser(User user) {
+        users.add(user);
     }
 
-    public void removeHuman(Human human) {
-        this.human.remove(human);
+    public void removeUser(User user) {
+        users.remove(user);
     }
 
-    public void updateRatings(int ratings) {
-        this.ratings += ratings;
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public Set<Admin> getAdmins() {
+        return admins;
     }
 
     public String toString() {
@@ -130,8 +150,10 @@ public class Article {
                 ", content='" + content + '\'' +
                 ", category='" + category + '\'' +
                 ", select=" + select +
-                ", ratings=" + ratings +
-                ", human=" + human +
                 '}';
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

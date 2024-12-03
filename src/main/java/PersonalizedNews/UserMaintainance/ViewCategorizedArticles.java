@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewCategorizedArticles {
-
     @FXML
     public TableView<Article> viewCategorizedTable;
     @FXML
@@ -83,6 +82,21 @@ public class ViewCategorizedArticles {
         }
         System.out.println("Logged in as: " + username);
         // Initially load all articles
+        try (MongoClient mongoClient = MongoClients.create(CONNECTION_STRING)) {
+            MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
+            MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+            // Ensure RatedArticles document exists for the user
+            Document userDoc = ratedArticles.find(Filters.eq("username", username)).first();
+            if (userDoc == null) {
+                userDoc = new Document("username", username)
+                        .append("liked", new ArrayList<>())
+                        .append("skipped", new ArrayList<>())
+                        .append("saved", new ArrayList<>())
+                        .append("read", new ArrayList<>());
+                ratedArticles.insertOne(userDoc);
+            }
+        }
     }
 
     @FXML
@@ -249,7 +263,7 @@ public class ViewCategorizedArticles {
             showAlert("Success", "Read the article with ID " + selectedArticle.getArticleId(), Alert.AlertType.INFORMATION);
             try {
                 // Load the ReadArticles view
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("ReadArticles.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/PersonalizedNews/ReadArticles.fxml"));
                 Parent root = loader.load();
 
                 // Pass the article data to the ReadArticles controller
@@ -260,7 +274,7 @@ public class ViewCategorizedArticles {
                 // Set the scene and show the ReadArticles view
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.setScene(new Scene(root, 600, 453));
-                root.getStylesheets().add(getClass().getResource("Personalized_News.css").toExternalForm());
+                root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
                 stage.setTitle("Read Article");
                 stage.show();
             } catch (IOException e) {
@@ -382,10 +396,10 @@ public class ViewCategorizedArticles {
 
     public void onClickBackDashboard(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("UserPortal.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/UserPortal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root, 855, 525));
-            root.getStylesheets().add(getClass().getResource("GlowButton.css").toExternalForm());
+            root.getStylesheets().add(getClass().getResource("/PersonalizedNews/GlowButton.css").toExternalForm());
             stage.setTitle("User Dashboard");
             stage.show();
         } catch (IOException e) {
