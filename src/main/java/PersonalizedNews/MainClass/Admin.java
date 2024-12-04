@@ -2,7 +2,6 @@ package PersonalizedNews.MainClass;
 
 import org.bson.Document;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 

@@ -1,6 +1,11 @@
 package PersonalizedNews.UserMaintainance;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.bson.Document;
 
 import java.io.IOException;
 import java.net.URL;
@@ -194,5 +200,83 @@ public class UserPortal implements Initializable {
     // Shutdown ExecutorService when the application exits
     public void shutdown() {
         executorService.shutdown();
+    }
+
+    @FXML
+    public void onClickDeactivate(ActionEvent event) {
+            // Confirm the action with the user
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Deactivate Account");
+            alert.setHeaderText("Are you sure you want to deactivate your account?");
+            alert.setContentText("This action cannot be undone. Press OK to proceed or Cancel to abort.");
+
+            ButtonType okButton = new ButtonType("OK");
+            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(okButton, cancelButton);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == okButton) {
+                    String username = SessionManager.getInstance().getUsername();
+
+                    if (username != null) {
+                        executorService.execute(() -> {
+                            try (MongoClient mongoClient = MongoClients.create("mongodb+srv://mathu0404:Janu3004@cluster3004.bmusn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster3004")) {
+                                MongoDatabase database = mongoClient.getDatabase("News");
+
+                                // Collections
+                                MongoCollection<Document> userAccounts = database.getCollection("UserAccounts");
+                                MongoCollection<Document> ratedArticles = database.getCollection("RatedArticles");
+
+                                // Start Deletion Process
+                                try {
+                                    // Delete articles rated by the user
+                                    ratedArticles.deleteMany(new Document("username", username));
+
+                                    // Delete user account
+                                    userAccounts.deleteOne(new Document("username", username));
+
+                                    Platform.runLater(() -> {
+                                        // Show success message and redirect to login
+                                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                                        successAlert.setTitle("Account Deactivated");
+                                        successAlert.setHeaderText(null);
+                                        successAlert.setContentText("Your account has been successfully deactivated.");
+                                        successAlert.showAndWait();
+
+                                        // Redirect to login
+                                        try {
+                                            Parent root = FXMLLoader.load(getClass().getResource("/PersonalizedNews/CreateAccount.fxml"));
+                                            Stage stage = (Stage) ContentArea.getScene().getWindow();
+                                            root.getStylesheets().add(getClass().getResource("/PersonalizedNews/Personalized_News.css").toExternalForm());
+                                            stage.setScene(new Scene(root, 440, 280));
+                                            stage.setTitle("User Signup");
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Platform.runLater(() -> {
+                                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                                        errorAlert.setTitle("Error");
+                                        errorAlert.setHeaderText("Account Deactivation Failed");
+                                        errorAlert.setContentText("An error occurred while deactivating your account. Please try again later.");
+                                        errorAlert.showAndWait();
+                                    });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } else {
+                        // Show warning if username is null
+                        Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+                        warningAlert.setTitle("No Username Found");
+                        warningAlert.setHeaderText(null);
+                        warningAlert.setContentText("No username found in session. Please log in again.");
+                        warningAlert.showAndWait();
+                    }
+                }
+            });
     }
 }

@@ -66,8 +66,13 @@
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="40.0" />
                      </VBox.margin>
+                  </Button>
+                  <Button layoutX="10.0" layoutY="348.0" mnemonicParsing="false" onAction="#onClickDeactivate" prefHeight="34.0" prefWidth="166.0" text="Deactivate">
+                     <font>
+                        <Font name="Times New Roman Bold" size="18.0" />
+                     </font>
                   </Button>
                </children>
             </VBox>
