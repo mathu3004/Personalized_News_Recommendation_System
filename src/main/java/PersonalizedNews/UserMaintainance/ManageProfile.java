@@ -144,12 +144,11 @@ public class ManageProfile {
             radioMale.setSelected(true);
         }
 
-        setPreferences(user.getPreferences());
-
         newPassword.setText(user.getPassword());
         confirmNewPassword.setText(user.getPassword());
         viewNewPassword.setText(user.getPassword());
         viewNewConfirmPassword.setText(user.getPassword());
+        setPreferences(user.getPreferences());
     }
 
     @FXML
@@ -178,7 +177,6 @@ public class ManageProfile {
 
             Document query = new Document("email", email.getText().trim());
             Document update = new Document("$set", mapUserToDocument(updatedUser));
-
             collection.updateOne(query, update);
             clearAllFields();
             showAlert(Alert.AlertType.INFORMATION, "Update Success", "Profile updated successfully!");

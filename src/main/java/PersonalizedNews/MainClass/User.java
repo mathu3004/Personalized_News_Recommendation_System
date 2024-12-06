@@ -20,7 +20,7 @@ public class User extends Human {
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.preferences = new ArrayList<>();
+        this.preferences = preferences != null ? new ArrayList<>(preferences) : new ArrayList<>(); // Ensure preferences are stored
         this.likedArticles = new HashSet<>();
         this.savedArticles = new HashSet<>();
         this.readArticles = new HashSet<>();
@@ -73,7 +73,7 @@ public class User extends Human {
     }
 
     public void setPreferences(List<String> preferences) {
-        this.preferences = preferences;
+        this.preferences = preferences != null ? new ArrayList<>(preferences) : new ArrayList<>();
     }
 
     // Methods for managing articles
