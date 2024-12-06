@@ -1,0 +1,101 @@
+[{
+  "_id": {
+    "$oid": "673cddec560d5a1ebf627130"
+  },
+  "firstName": "Mathusha",
+  "lastName": "Kannathasan",
+  "email": "mathusha0404@gmail.com",
+  "username": "mathu3004",
+  "password": "Mathu30@",
+  "dateOfBirth": "2001-04-04",
+  "gender": "Female",
+  "preferences": [
+    "AI",
+    "Technology",
+    "Politics"
+  ]
+},
+{
+  "_id": {
+    "$oid": "673cdf2e71bbe632a3c721e0"
+  },
+  "firstName": "Joe",
+  "lastName": "Mass",
+  "email": "joe123@gmail.com",
+  "username": "joe123",
+  "password": "Joes123@",
+  "dateOfBirth": "2013-11-14",
+  "gender": "Female",
+  "preferences": [
+    "AI",
+    "Technology",
+    "Health"
+  ]
+},
+{
+  "_id": {
+    "$oid": "673ce0977eab7172f9272553"
+  },
+  "firstName": "Joe",
+  "lastName": "Mass",
+  "email": "joes123@gmail.com",
+  "username": "joes123",
+  "password": "Joes123@",
+  "dateOfBirth": "2013-11-27",
+  "gender": "Female",
+  "preferences": [
+    "Technology",
+    "Travel",
+    "Business"
+  ]
+},
+{
+  "_id": {
+    "$oid": "673dfa6c7f36617f26a94bbc"
+  },
+  "firstName": "Jathis",
+  "lastName": "Siva",
+  "email": "mathusha0504@gmail.com",
+  "username": "mathu3012",
+  "password": "Janu2004@",
+  "dateOfBirth": "2016-12-01",
+  "gender": "Male",
+  "preferences": [
+    "AI",
+    "Technology",
+    "Health"
+  ]
+},
+{
+  "_id": {
+    "$oid": "673d6f80eb225f04c8371c7b"
+  },
+  "firstName": "Shaithra",
+  "lastName": "Vilva",
+  "email": "shaithu0404@gmail.com",
+  "username": "shaithu3004",
+  "password": "Shaithu0404@",
+  "dateOfBirth": "2005-11-22",
+  "gender": "Female",
+  "preferences": [
+    "AI",
+    "Technology",
+    "Health"
+  ]
+},
+{
+  "_id": {
+    "$oid": "673daa8221583a168dfa152a"
+  },
+  "firstName": "Mathu",
+  "lastName": "Kannan",
+  "email": "mathusha0505@gmail.com",
+  "username": "mathu3011",
+  "password": "Janu3004@",
+  "dateOfBirth": "2014-11-12",
+  "gender": "Female",
+  "preferences": [
+    "AI",
+    "Technology"
+  ]
+}]
