@@ -1,7 +1,7 @@
-# Personalized News Platform
+# Mark's Personalized News Recommendation System
 
 ## Overview
-The **Mark's Personalized News Platform** is a user-centric application designed to deliver tailored news content based on user preferences and interactions. The platform incorporates AI/ML-driven categorization, personalized recommendations, and robust article management tools for administrators. It enhances user engagement and provides a seamless experience for both readers and content managers.
+The **Mark's Personalized News Recommendation System** is a user-centric application designed to deliver tailored news content based on user preferences and interactions. The platform incorporates AI/ML-driven categorization, personalized recommendations, and robust article management tools for administrators. It enhances user engagement and provides a seamless experience for both readers and content managers.
 
 ---
 
