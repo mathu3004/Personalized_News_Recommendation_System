@@ -47,8 +47,8 @@ The **Mark's Personalized News Platform** is a user-centric application designed
      - If using Gradle, configure JavaFX in `build.gradle`.
 
 4. **Database setup**:
-   - Create a MongoDB database named `News` and collections for `Articles`, `UserAccounts`, `AdminAccounts`, and `RatedArticles`.
-   - Import sample data into the collections, if available (you may provide an example JSON or script).
+   - Create a MongoDB database named `News` and collections for `Articles`, `UserAccounts`, `AdminAccounts`, `CategorizedArticles`, and `RatedArticles`.
+   - Import sample data into the collections.
 
 5. **Configure the database connection**:
    - Update the connection string in the source code (e.g., `CONNECTION_STRING` in `ViewCustomArticles` and related classes):
