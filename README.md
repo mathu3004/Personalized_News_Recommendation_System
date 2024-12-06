@@ -85,6 +85,7 @@ Personalized-News-Platform/
 |   |├── UserMaintainance/
 |   |├── Categorization/
 |   |├── MainClass/
+|   |├── Application/
 |├── resources/
 |├── README.md
 |├── pom.xml
